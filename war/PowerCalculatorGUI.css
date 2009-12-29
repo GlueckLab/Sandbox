@@ -1,0 +1,128 @@
+/** Add css rules here for your application. */
+
+/** header style **/
+body {
+	background: #c0b3a3;
+	margin: 0px;
+	padding: 0px;
+}
+
+#header {
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  height: 100px;
+}
+
+#ucdenver {
+	background: #C9AF50;	
+	color: #FFFFFF;
+}
+
+#powerCalcTitle {
+	font:20pt;
+	font-weight: bold;
+	background: #FFFFFF;
+	color: #204d89;	
+}
+
+#department {
+	background: #FFFFFF;
+	color: #C9AF50;
+	font-weight: bold;
+}
+/** top navbar style **/
+
+div#topNavBar {
+	width: 100%;
+	background: #204d89;
+}
+
+div#topNavBar ul {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #d9e8ef;
+}
+
+div#topNavBar li {
+	list-style-type: none;
+	display: inline;
+	float: right;
+	margin-right: 20px;
+	padding: 5px;
+}
+
+div#topNavBar li a {
+	text-decoration: none;
+	color: #d9e8ef;
+}
+
+div#topNavBar a:hover {
+	color:#666;
+}
+
+.powerCalculatorPanel {
+	height: 100%;
+	width: 100%;
+}
+
+.modelSelect-Header {
+	color: white;
+	padding: 10px;
+	width: 100%;
+	background-color: #aaaaaa;
+}
+
+.modelSelect .gwt-TreeItem {
+	font-size: 10pt;
+	padding: 0px;
+}
+
+.modelSelect  {
+	width: 200;
+}
+
+.modelSelect-OneSample .gwt-ListBox {
+	border: none;
+	width: 100%;
+}
+
+.modelSelect-OneSample .gwtListBoxItem {
+	padding: 5px;
+    font-weight: bold;
+}
+
+.modelSelect-TwoSample .gwt-Label {
+	width: 100%;
+	padding: 5px;
+    font-weight: bold;
+}
+
+.modelSelect-Multi .gwt-Label {
+	width: 100%;
+    padding: 5px;
+	font-weight: bold;
+}
+.modelSelect-Stack .gwt-StackPanel {
+    width: 15em; 
+}
+
+.modelSelect-Stack .gwt-StackPanel .gwt-StackPanelItem {
+	    border: 1px solid #AAAAAA;
+        background-color: #CCCCCC;
+        cursor: pointer;
+        cursor: hand; 
+
+}
+
+.modelSelect-Stack .gwt-StackPanel .gwt-StackPanelItem-selected {
+
+}
+
+.stepsLeftSelected .gwt-HTML {
+        cursor: hand; 
+}
+
+div#modelWorkPanel {
+	float: right;
+	width: 80%;
+}
+
