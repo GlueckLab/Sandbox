@@ -1,128 +1,108 @@
-/** Add css rules here for your application. */
+/** CSS for Power Calculator website 
+* 
+* Author: Sarah Kreidler
+*
+*/
 
-/** header style **/
+/* basic page style */
+
 body {
 	background: #c0b3a3;
 	margin: 0px;
 	padding: 0px;
 }
 
+/** header style **/
+
 #header {
   font-family:Verdana, Arial, Helvetica, sans-serif;
-  height: 100px;
 }
 
+/* UC Denver banner image */
 #ucdenver {
 	background: #C9AF50;	
 	color: #FFFFFF;
 }
 
+/* Main title bar */
 #powerCalcTitle {
-	font:20pt;
+	font-size: large;
 	font-weight: bold;
 	background: #FFFFFF;
 	color: #204d89;	
+	padding: 5px;
 }
 
+/* Department name */
 #department {
+	font-size: large;
 	background: #FFFFFF;
 	color: #C9AF50;
 	font-weight: bold;
-}
-/** top navbar style **/
-
-div#topNavBar {
-	width: 100%;
-	background: #204d89;
-}
-
-div#topNavBar ul {
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-size: small;
-	color: #d9e8ef;
-}
-
-div#topNavBar li {
-	list-style-type: none;
-	display: inline;
-	float: right;
-	margin-right: 20px;
 	padding: 5px;
 }
 
-div#topNavBar li a {
-	text-decoration: none;
+/** top navbar style **/
+
+#topNavBar {
+	width: 100%;
+	background-color: #204d89;
+	text-align: right;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
 	color: #d9e8ef;
+	padding: 5px;
 }
 
-div#topNavBar a:hover {
+#topNavBar a {
+	text-decoration: none;
+	color: #d9e8ef;
+	padding-right: 30px; 
+}
+
+#topNavBar a:hover {
 	color:#666;
 }
 
-.powerCalculatorPanel {
-	height: 100%;
+/* Style for "steps left" banner above the input wizard. */
+
+.stepsLeft {
+	width: 100%;
+	color: green;
+	font-size: large;
+	text-align: center;
+}
+
+.stepsLeft-selected {
+		color: blue;
+		font-size: 14pt;
+}
+
+.stepsLeft-deselected {
+	color: black;
+}
+
+/* style for middle input panel (GWT class) */
+
+.inputPanel {
+	height: 500;
+	width: 100%;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color: green;
+	text-align: center;
+}
+
+/* navigation bar style sheet */
+
+.wizardNavigationPanel {
 	width: 100%;
 }
 
-.modelSelect-Header {
-	color: white;
-	padding: 10px;
-	width: 100%;
-	background-color: #aaaaaa;
+.gwt-Button{
+	color: black;
+ 	background: #00FF00;
 }
 
-.modelSelect .gwt-TreeItem {
-	font-size: 10pt;
-	padding: 0px;
-}
-
-.modelSelect  {
-	width: 200;
-}
-
-.modelSelect-OneSample .gwt-ListBox {
-	border: none;
-	width: 100%;
-}
-
-.modelSelect-OneSample .gwtListBoxItem {
-	padding: 5px;
-    font-weight: bold;
-}
-
-.modelSelect-TwoSample .gwt-Label {
-	width: 100%;
-	padding: 5px;
-    font-weight: bold;
-}
-
-.modelSelect-Multi .gwt-Label {
-	width: 100%;
-    padding: 5px;
-	font-weight: bold;
-}
-.modelSelect-Stack .gwt-StackPanel {
-    width: 15em; 
-}
-
-.modelSelect-Stack .gwt-StackPanel .gwt-StackPanelItem {
-	    border: 1px solid #AAAAAA;
-        background-color: #CCCCCC;
-        cursor: pointer;
-        cursor: hand; 
-
-}
-
-.modelSelect-Stack .gwt-StackPanel .gwt-StackPanelItem-selected {
-
-}
-
-.stepsLeftSelected .gwt-HTML {
-        cursor: hand; 
-}
-
-div#modelWorkPanel {
-	float: right;
-	width: 80%;
+.gwt-Button:hover {
+	background: #C9AF50;
 }
 
