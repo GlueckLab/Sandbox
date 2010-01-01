@@ -17,6 +17,8 @@ public interface PowerCalculatorConstants extends Constants
 	public String previousButton();
 	
 	// constants for "steps left" navigation bar	
+	public String stepSpacer();
+	
 	public String startStep();
 	
 	public String studyStep();
