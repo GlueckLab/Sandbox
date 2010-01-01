@@ -12,11 +12,15 @@ public class StepsLeftPanel extends Composite implements NavigationListener
 	protected static final String STYLE = "stepsLeft";
     protected static final String SELECTED_STYLE = "selected";
     protected static final String DESELECTED_STYLE = "deselected";
-    protected static final int MAX_STEPS = 4;
     
-    int currentStep = 0;
+    protected static final int START_INDEX = 1;
+    protected static final int STUDY_INDEX = START_INDEX + 2;
+    protected static final int OPTIONS_INDEX = STUDY_INDEX + 2;
+    protected static final int RESULTS_INDEX = OPTIONS_INDEX + 2;
     
-    Grid grid = new Grid(1,MAX_STEPS);
+    protected int currentStep = 0;
+    
+    Grid grid = new Grid(1,RESULTS_INDEX+2);
     HTML startStep = new HTML(PowerCalculatorGUI.constants.startStep());
     HTML studyStep = new HTML(PowerCalculatorGUI.constants.studyStep());
     HTML powerSampleSizeStep = 
@@ -25,10 +29,20 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     
     public StepsLeftPanel()
     {
-        grid.setWidget(0,0, startStep);
-        grid.setWidget(0,1, studyStep);
-        grid.setWidget(0,2, powerSampleSizeStep);
-        grid.setWidget(0,3, resultsStep);
+    	HTML spacer = new HTML(PowerCalculatorGUI.constants.stepSpacer());
+        studyStep.setStyleName(STYLE);
+        studyStep.addStyleDependentName(DESELECTED_STYLE);
+        
+        grid.setWidget(0,0,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        grid.setWidget(0,START_INDEX, startStep);
+        grid.setWidget(0,START_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        grid.setWidget(0,STUDY_INDEX, studyStep);
+        grid.setWidget(0,STUDY_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        grid.setWidget(0,OPTIONS_INDEX, powerSampleSizeStep);
+        grid.setWidget(0,OPTIONS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        grid.setWidget(0,RESULTS_INDEX, resultsStep);
+        grid.setWidget(0,RESULTS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        
         
         startStep.setStyleName(STYLE);
         startStep.addStyleDependentName(SELECTED_STYLE);
@@ -39,6 +53,7 @@ public class StepsLeftPanel extends Composite implements NavigationListener
         resultsStep.setStyleName(STYLE);
         resultsStep.addStyleDependentName(DESELECTED_STYLE);
         
+        currentStep = START_INDEX;
         initWidget(grid);
     }
     
@@ -48,10 +63,9 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onNext()
     {
-        currentStep++;
-        if (currentStep < MAX_STEPS)
+        if (currentStep != RESULTS_INDEX)
         {
-            setStep(currentStep, currentStep - 1);
+            setStep(currentStep+2, currentStep);
         }
     }
     
@@ -61,10 +75,9 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onPrevious()
     {
-        currentStep--;
-        if (currentStep >= 0)
+        if (currentStep != START_INDEX)
         {
-            setStep(currentStep, currentStep + 1);
+            setStep(currentStep-2, currentStep);
         }
 
     }
@@ -74,10 +87,9 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onCancel()
     {
-    	if (currentStep > 0)
+    	if (currentStep != START_INDEX)
     	{
-    		setStep(0, currentStep);
-    		currentStep = 0;
+    		setStep(START_INDEX, currentStep);
     	}
     }
     
@@ -91,9 +103,7 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      * @param prevIndex
      */
     protected void setStep(int newIndex, int prevIndex)
-    {
-    	if (newIndex < 0 || newIndex > MAX_STEPS || prevIndex < 0 || prevIndex > MAX_STEPS) return;
-    	
+    {    	
         HTML selected = (HTML) grid.getWidget(0, newIndex);
         HTML previous = (HTML) grid.getWidget(0, prevIndex);
         
@@ -107,5 +117,6 @@ public class StepsLeftPanel extends Composite implements NavigationListener
         	previous.removeStyleDependentName(SELECTED_STYLE);
         	previous.addStyleDependentName(DESELECTED_STYLE);
         }
+        currentStep = newIndex;
     }
 }
