@@ -84,7 +84,7 @@ body {
 /* style for middle input panel (GWT class) */
 
 .inputPanel {
-	height: 500;
+	min-height: 300;
 	width: 100%;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	color: black;
@@ -106,3 +106,26 @@ body {
 	background: #C9AF50;
 }
 
+.matrix {
+	border: 1px solid #000000;
+	border-spacing: 0px;
+}
+
+.matrix td {
+	background: white;
+	border: 1px solid #000000;
+	border-spacing: 0px;
+}
+
+.matrixCell {
+	background: white;
+	border: 0;
+	width: 50px;
+}
+
+.matrixHeader {
+	width: 300px;
+}
+.matrixDimension {
+	width: 30px;
+}
