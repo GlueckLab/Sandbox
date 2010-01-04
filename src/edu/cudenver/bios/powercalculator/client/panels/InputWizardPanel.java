@@ -44,8 +44,8 @@ implements NavigationListener, StartListener
     	
         panel.add(startPanel);
         panel.add(uploadPanel);
-        panel.add(new Label("Power / Sample Size Options"));
-        panel.add(new Label("View Results"));
+        panel.add(optionsPanel);
+        panel.add(resultsPanel);
         panel.setStyleName(STYLE);
         panel.showWidget(0);
         initWidget(panel);

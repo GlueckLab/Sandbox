@@ -49,4 +49,14 @@ public interface PowerCalculatorConstants extends Constants
 	
 	public String glmm();
 	
+	// matrix input view names
+	public String matrixDimensionSeparator();
+	public String matrixBeta();
+	public String matrixDesignEssence();
+	public String matrixThetaNull();
+	public String matrixSigma();
+	public String matrixBetweenSubjectContrast();
+	public String matrixWithinSubjectContrast();
+	public String saveStudyButton();
+	
 }
