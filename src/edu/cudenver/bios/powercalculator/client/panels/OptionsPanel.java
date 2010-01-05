@@ -10,7 +10,7 @@ public class OptionsPanel extends Composite
 	{
 		VerticalPanel panel = new VerticalPanel();
 		
-		panel.add(new Button("options"));
+
 		initWidget(panel);
 	}
 }

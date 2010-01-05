@@ -1,97 +1,120 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
-
-import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class InputWizardPanel extends Composite 
 implements NavigationListener, StartListener
 {
-		
+    private static final String TEST_GLMM = "glmm";
+    private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
+    
 	// not using an enum here to allow easier comparison with visible 
 	// widget index from the DeckPanel
-	private static final int START_INDEX = 0;
-	private static final int INPUT_INDEX = 1;
-	private static final int OPTIONS_INDEX = 2;
-	private static final int RESULTS_INDEX = 3;
-	private static final int MAX_STEPS = 4;
+    private static final int START_INDEX = 0;
+    private static final int INPUT_INDEX = 1;
+    private static final int OPTIONS_INDEX = 2;
+    private static final int RESULTS_INDEX = 3;
 	
 	protected static final String STYLE = "inputPanel";
 	
+	protected NavigationPanel navPanel = new NavigationPanel();
 	// stack of panels for the wizard
-    DeckPanel panel = new DeckPanel();
+	protected DeckPanel panelStack = new DeckPanel();
     // start panel
-    StartPanel startPanel;
+	protected StartPanel startPanel = new StartPanel();;
     // potential input panels.  Added to the deck depending on the input type
     // selected on the start panel
-    UploadPanel uploadPanel;
-    BasicPanel basicPanel;
-    MatrixPanel matrixPanel;
-    OptionsPanel optionsPanel;
-    ResultsPanel resultsPanel;
+	protected UploadPanel uploadPanel = new UploadPanel();
+	protected BasicPanel basicPanel = new BasicPanel();
+	protected MatrixPanel matrixPanel = new MatrixPanel();
+	protected SimplePanel simplePanel = new SimplePanel();
+    // options panel (always in deck after input panel)
+	protected OptionsPanel optionsPanel = new OptionsPanel();
+    // results panel (always in deck after options panel)
+	protected ResultsPanel resultsPanel = new ResultsPanel();
 
     public InputWizardPanel()
     {
-    	startPanel = new StartPanel();
+        VerticalPanel container = new VerticalPanel();
+
     	startPanel.addListener(this);
-    	uploadPanel = new UploadPanel();
-    	basicPanel = new BasicPanel();
-    	matrixPanel = new MatrixPanel();
-    	optionsPanel = new OptionsPanel();
-    	resultsPanel = new ResultsPanel();
-    	
-        panel.add(startPanel);
-        panel.add(uploadPanel);
-        panel.add(optionsPanel);
-        panel.add(resultsPanel);
-        panel.setStyleName(STYLE);
-        panel.showWidget(0);
-        initWidget(panel);
+        panelStack.add(startPanel);
+        panelStack.add(uploadPanel);
+        panelStack.add(optionsPanel);
+        panelStack.add(resultsPanel);
+        panelStack.setStyleName(STYLE);
+        panelStack.showWidget(0);
+        
+        container.add(panelStack);
+        container.add(navPanel);
+        
+        // set up the navigation callbacks
+        navPanel.addNavigationListener(this);
+        navPanel.setPrevious(false, false);
+        navPanel.setNext(true, true);
+        initWidget(container);
     }
     
     public void onPrevious()
     {
-        int visibleIndex = panel.getVisibleWidget();
-        if (visibleIndex > 0)
+        int visibleIndex = panelStack.getVisibleWidget();
+        if (visibleIndex > START_INDEX)
         {
-        	panel.showWidget(visibleIndex-1);
+            panelStack.showWidget(--visibleIndex);
+            if (visibleIndex == START_INDEX)
+            {
+                navPanel.setPrevious(false, false);
+                navPanel.setNext(true, true);
+            }
+            else
+            {
+                navPanel.setNext(true, true);
+                navPanel.setPrevious(true, true);
+            }
         }
     }
     
     public void onNext()
     {    	
-        int visibleIndex = panel.getVisibleWidget();
-        if (visibleIndex < MAX_STEPS-1)
+        int visibleIndex = panelStack.getVisibleWidget();
+        if (visibleIndex < RESULTS_INDEX)
         {
-            panel.showWidget(visibleIndex+1);
+            panelStack.showWidget(++visibleIndex);
+            if (visibleIndex == RESULTS_INDEX)
+            {
+                navPanel.setNext(false, false);
+                navPanel.setPrevious(true, true);
+            }
+            else
+            {
+                navPanel.setNext(true, true);
+                navPanel.setPrevious(true, true);
+            }
         }
     }
     
     public void onCancel()
     {
-        panel.showWidget(0);
-    }
-    
-    public boolean canContinue()
-    {
-    	return true;
+        panelStack.showWidget(0);
+        navPanel.setNext(true, true);
+        navPanel.setPrevious(false, false);
     }
     
     public void onInputTypeSelect(StartPanel.InputType type)
     {
-		panel.remove(INPUT_INDEX);
+        panelStack.remove(INPUT_INDEX);
     	switch (type)
     	{
     	case BASIC:
-    		panel.insert(basicPanel, INPUT_INDEX);
+    	    panelStack.insert(basicPanel, INPUT_INDEX);
     		break;
     	case MATRIX:
-    		panel.insert(matrixPanel, INPUT_INDEX);
+    	    panelStack.insert(matrixPanel, INPUT_INDEX);
     		break;
     	case UPLOAD:
-    		panel.insert(uploadPanel, INPUT_INDEX);
+    	    panelStack.insert(uploadPanel, INPUT_INDEX);
     		break;
     	default:
     		break;    			
@@ -100,6 +123,15 @@ implements NavigationListener, StartListener
     
     public void onModelSelect(String modelName)
     {
-    	
+    	if (!TEST_GLMM.equals(modelName))
+    	{
+    	    panelStack.remove(INPUT_INDEX);
+    	    panelStack.insert(simplePanel, INPUT_INDEX);
+    	}
+    }
+    
+    public void addNavigationListener(NavigationListener listener)
+    {
+        navPanel.addNavigationListener(listener);
     }
 }

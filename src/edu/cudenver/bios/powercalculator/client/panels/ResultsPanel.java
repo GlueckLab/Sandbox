@@ -12,8 +12,9 @@ public class ResultsPanel extends Composite implements ClickHandler
 	public ResultsPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
+		VerticalPanel powerPanel = new VerticalPanel();
+		VerticalPanel sampleSizePanel = new VerticalPanel();
 		
-		panel.add(new Button("options"));
 		initWidget(panel);
 	}
 	

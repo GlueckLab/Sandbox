@@ -94,7 +94,7 @@ body {
 /* navigation bar style sheet */
 
 .wizardNavigationPanel {
-	width: 100%;
+	min-width: 500;
 }
 
 .gwt-Button{

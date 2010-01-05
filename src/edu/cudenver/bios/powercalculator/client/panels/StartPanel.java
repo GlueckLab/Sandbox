@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -30,9 +31,13 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		MATRIX,
 		UPLOAD
 	};
+
+	private static final String TEST_GLMM = "glmm";
+	private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
 	
 	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
 	protected VerticalPanel panel = new VerticalPanel();
+	protected VerticalPanel inputSelectPanel = new VerticalPanel();
 	RadioButton basicRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.basicInputRadioButton());
     RadioButton matrixRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.matrixInputRadioButton());
     RadioButton uploadRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.uploadInputRadioButton());
@@ -48,16 +53,19 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		panel.add(new Label(PowerCalculatorGUI.constants.startPanelModelText()));
 		modelList.addItem(PowerCalculatorGUI.constants.oneSampleStudentsT(), "onesamplestudentt");
 		modelList.addItem(PowerCalculatorGUI.constants.glmm(), "glmm");
+		modelList.setItemSelected(1, true); // select glmm as default
+		modelList.addChangeHandler(this);
 		panel.add(modelList);
-		panel.add(new Label(PowerCalculatorGUI.constants.startPanelStudyInputText()));
 		
 	    basicRb.addClickHandler(this);
 	    matrixRb.addClickHandler(this);
 	    uploadRb.addClickHandler(this);
 	    
-		panel.add(basicRb);
-		panel.add(matrixRb);
-		panel.add(uploadRb);
+	    inputSelectPanel.add(new Label(PowerCalculatorGUI.constants.startPanelStudyInputText()));
+		inputSelectPanel.add(basicRb);
+		inputSelectPanel.add(matrixRb);
+		inputSelectPanel.add(uploadRb);
+		panel.add(inputSelectPanel);
 		initWidget(panel);
 	}
 	
@@ -88,7 +96,19 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		Widget sender = (Widget) e.getSource();
 		if (sender == modelList)
 		{
-			notifyModel(modelList.getValue(modelList.getSelectedIndex()));
+		    String value = modelList.getValue(modelList.getSelectedIndex());
+		    if (value != null && !value.isEmpty())
+		    {
+		        if (TEST_GLMM.equals(value))
+		        {
+		            inputSelectPanel.setVisible(true);
+		        }
+		        else
+		        {
+		            inputSelectPanel.setVisible(false);
+		        }
+		    }
+			notifyModel(value);
 		}
 	}
 	

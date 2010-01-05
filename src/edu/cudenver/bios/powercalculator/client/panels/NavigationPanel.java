@@ -14,18 +14,20 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 public class NavigationPanel extends Composite
 {
     ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
-
+    protected Button next;
+    protected Button previous;
+    
     public NavigationPanel()
     {
         Grid grid = new Grid(1,2);
        
-        Button next = new Button(PowerCalculatorGUI.constants.nextButton(), new ClickHandler() {
+        next = new Button(PowerCalculatorGUI.constants.nextButton(), new ClickHandler() {
             public void onClick(ClickEvent event) {
                 notifyOnNext();
             }
         });
 
-        Button previous = new Button(PowerCalculatorGUI.constants.previousButton(), new ClickHandler() {
+        previous = new Button(PowerCalculatorGUI.constants.previousButton(), new ClickHandler() {
             public void onClick(ClickEvent event) {
                 notifyOnPrevious();
             }
@@ -48,6 +50,19 @@ public class NavigationPanel extends Composite
         for(NavigationListener listener: listeners)
             listener.onPrevious();
     }
+    
+    public void setNext(boolean enabled, boolean visible)
+    {
+        next.setEnabled(enabled);
+        next.setVisible(visible);
+    }
+    
+    public void setPrevious(boolean enabled, boolean visible)
+    {
+        previous.setEnabled(enabled);
+        previous.setVisible(visible);
+    }
+    
     public void addNavigationListener(NavigationListener listener)
     {
         listeners.add(listener);
