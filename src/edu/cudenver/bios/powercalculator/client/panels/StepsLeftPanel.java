@@ -29,7 +29,6 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     
     public StepsLeftPanel()
     {
-    	HTML spacer = new HTML(PowerCalculatorGUI.constants.stepSpacer());
         studyStep.setStyleName(STYLE);
         studyStep.addStyleDependentName(DESELECTED_STYLE);
         
@@ -42,7 +41,7 @@ public class StepsLeftPanel extends Composite implements NavigationListener
         grid.setWidget(0,OPTIONS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
         grid.setWidget(0,RESULTS_INDEX, resultsStep);
         grid.setWidget(0,RESULTS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        
+        grid.setStyleName(STYLE);
         
         startStep.setStyleName(STYLE);
         startStep.addStyleDependentName(SELECTED_STYLE);

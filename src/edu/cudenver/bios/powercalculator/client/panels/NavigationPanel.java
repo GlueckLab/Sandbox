@@ -7,7 +7,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
@@ -16,10 +18,11 @@ public class NavigationPanel extends Composite
     ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
     protected Button next;
     protected Button previous;
+    protected Button cancel;
     
     public NavigationPanel()
     {
-        Grid grid = new Grid(1,2);
+        HorizontalPanel panel = new HorizontalPanel();
        
         next = new Button(PowerCalculatorGUI.constants.nextButton(), new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -33,10 +36,18 @@ public class NavigationPanel extends Composite
             }
         });
         
-        grid.setWidget(0, 0, previous);
-        grid.setWidget(0, 1, next);
-        grid.setStyleName("wizardNavigationPanel");
-        initWidget(grid);
+        cancel = new Button(PowerCalculatorGUI.constants.cancelButton(), new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                notifyOnCancel();
+            }
+        });
+        
+        panel.add(previous);
+        panel.add(next);
+        panel.add(cancel);
+        panel.setStyleName("wizardNavigationPanel");
+                
+        initWidget(panel);
     }
     
     protected void notifyOnNext()
@@ -51,16 +62,25 @@ public class NavigationPanel extends Composite
             listener.onPrevious();
     }
     
-    public void setNext(boolean enabled, boolean visible)
+    protected void notifyOnCancel()
     {
-        next.setEnabled(enabled);
-        next.setVisible(visible);
+        for(NavigationListener listener: listeners)
+            listener.onCancel();
     }
     
-    public void setPrevious(boolean enabled, boolean visible)
+    public void setNext(boolean enabled)
+    {
+        next.setEnabled(enabled);
+    }
+    
+    public void setPrevious(boolean enabled)
     {
         previous.setEnabled(enabled);
-        previous.setVisible(visible);
+    }
+    
+    public void setCancel(boolean enabled)
+    {
+        cancel.setEnabled(enabled);
     }
     
     public void addNavigationListener(NavigationListener listener)

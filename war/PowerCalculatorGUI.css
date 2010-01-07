@@ -63,18 +63,27 @@ body {
 	color:#666;
 }
 
+/* Container for steps left and input wizard */
+.powerCalculatorPanel {
+	width: 90%;
+	margin-right: auto;
+	margin-left: auto;
+	border: 10px solid #ccc;
+	padding: 5px;
+}
+	
 /* Style for "steps left" banner above the input wizard. */
 
 .stepsLeft {
-	width: 100%;
-	color: green;
+	margin-right: auto;
+	margin-left: auto;
 	font-size: large;
 	text-align: center;
 }
 
 .stepsLeft-selected {
-		color: blue;
-		font-size: 14pt;
+	color: blue;
+	font-size: 14pt;
 }
 
 .stepsLeft-deselected {
@@ -84,26 +93,50 @@ body {
 /* style for middle input panel (GWT class) */
 
 .inputPanel {
-	min-height: 300;
-	width: 100%;
+	margin-right: auto;
+	margin-left: auto;
+	min-height: 200;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	color: black;
 	text-align: center;
+	padding: 30px;
 }
 
 /* navigation bar style sheet */
 
 .wizardNavigationPanel {
-	min-width: 500;
+	margin-right: auto;
+	margin-left: auto;
 }
 
-.gwt-Button{
-	color: black;
- 	background: #00FF00;
+.wizardNavigationPanel td {
+	padding: 20px;
+}
+
+.gwt-Button {
+	padding: 3px 5px;
+	text-decoration: none;
+	font-size: small;
+	cursor: pointer;
+	cursor: hand;
+	border: 1px outset #f00;
+}
+
+.gwt-Button:active {
+
 }
 
 .gwt-Button:hover {
 	background: #C9AF50;
+}
+
+.gwt-Button[disabled] {
+  cursor: default;
+  color: #888;
+}
+
+.gwt-Button[disabled]:hover {
+	background: none;
 }
 
 .matrix {
@@ -128,4 +161,16 @@ body {
 }
 .matrixDimension {
 	width: 30px;
+}
+
+.waitDialog {
+	background: #ddd;
+	padding: 10px;
+	border: 2px solid  #555;
+}
+
+.waitDialogText {
+	width: 180px;
+	height: 30px;
+	text-align: center;
 }

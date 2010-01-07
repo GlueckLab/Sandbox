@@ -13,8 +13,8 @@ public interface PowerCalculatorConstants extends Constants
 {
 	// wizard navigation buttons
 	public String nextButton();
-	
 	public String previousButton();
+	public String cancelButton();	
 	
 	// constants for "steps left" navigation bar	
 	public String stepSpacer();
@@ -27,12 +27,8 @@ public interface PowerCalculatorConstants extends Constants
 	
 	public String resultsStep();
 	
-	// Start panel constants
-	public String startPanelWelcomeText();
-	
+	// Start panel constants	
 	public String startPanelDescriptionText();
-	
-	public String startPanelInstructionsText();
 	
 	public String startPanelModelText();
 	

@@ -3,6 +3,7 @@ package edu.cudenver.bios.powercalculator.client.panels;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -32,6 +33,7 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		matrixHeader.setStyleName(HEADER_STYLE);
 
 		matrixHeader .add(new HTML(name));
+		matrixHeader.add(new Button("(details)"));
 		rowTextBox = new TextBox();
 		rowTextBox.addChangeHandler(this);
 		rowTextBox.setValue(Integer.toString(rows), false);

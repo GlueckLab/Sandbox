@@ -6,9 +6,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -36,7 +36,6 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 	private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
 	
 	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
-	protected VerticalPanel panel = new VerticalPanel();
 	protected VerticalPanel inputSelectPanel = new VerticalPanel();
 	RadioButton basicRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.basicInputRadioButton());
     RadioButton matrixRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.matrixInputRadioButton());
@@ -45,27 +44,32 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
     
 	public StartPanel()
 	{
-		panel.setStyleName("inputPanel");
-		panel.add(new Label(PowerCalculatorGUI.constants.startPanelWelcomeText()));
-		panel.add(new Label(PowerCalculatorGUI.constants.startPanelDescriptionText()));
-		panel.add(new Label(PowerCalculatorGUI.constants.startPanelInstructionsText()));
+		VerticalPanel panel = new VerticalPanel();
+		// add introductory text
+		panel.add(new HTML(PowerCalculatorGUI.constants.startPanelDescriptionText()));
 		
-		panel.add(new Label(PowerCalculatorGUI.constants.startPanelModelText()));
+		// add model selection list
+		HorizontalPanel modelPanel = new HorizontalPanel();
+		modelPanel.add(new HTML(PowerCalculatorGUI.constants.startPanelModelText()));
 		modelList.addItem(PowerCalculatorGUI.constants.oneSampleStudentsT(), "onesamplestudentt");
 		modelList.addItem(PowerCalculatorGUI.constants.glmm(), "glmm");
 		modelList.setItemSelected(1, true); // select glmm as default
 		modelList.addChangeHandler(this);
-		panel.add(modelList);
-		
-	    basicRb.addClickHandler(this);
-	    matrixRb.addClickHandler(this);
-	    uploadRb.addClickHandler(this);
+		modelPanel.add(modelList);
+		panel.add(modelPanel);
 	    
-	    inputSelectPanel.add(new Label(PowerCalculatorGUI.constants.startPanelStudyInputText()));
+		// build input selection panel - only visible if GLMM is selected as model
+	    inputSelectPanel.add(new HTML(PowerCalculatorGUI.constants.startPanelStudyInputText()));
 		inputSelectPanel.add(basicRb);
 		inputSelectPanel.add(matrixRb);
 		inputSelectPanel.add(uploadRb);
 		panel.add(inputSelectPanel);
+		
+		// add radio button callbacks for input type selection
+	    basicRb.addClickHandler(this);
+	    matrixRb.addClickHandler(this);
+	    uploadRb.addClickHandler(this);
+		
 		initWidget(panel);
 	}
 	
