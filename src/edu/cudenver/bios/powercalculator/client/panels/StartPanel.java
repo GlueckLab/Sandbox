@@ -32,15 +32,16 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		UPLOAD
 	};
 
+	private static final String INPUT_RADIO_GOUP = "inputRadioGroup";
 	private static final String TEST_GLMM = "glmm";
 	private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
 	
 	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
 	protected VerticalPanel inputSelectPanel = new VerticalPanel();
-	RadioButton basicRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.basicInputRadioButton());
-    RadioButton matrixRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.matrixInputRadioButton());
-    RadioButton uploadRb = new RadioButton("myRadioGroup", PowerCalculatorGUI.constants.uploadInputRadioButton());
-    ListBox modelList = new ListBox();
+	protected RadioButton basicRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.basicInputRadioButton());
+	protected RadioButton matrixRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.matrixInputRadioButton());
+	protected RadioButton uploadRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.uploadInputRadioButton());
+	protected ListBox modelList = new ListBox();
     
 	public StartPanel()
 	{
@@ -69,7 +70,7 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 	    basicRb.addClickHandler(this);
 	    matrixRb.addClickHandler(this);
 	    uploadRb.addClickHandler(this);
-		
+	    basicRb.setValue(true);
 		initWidget(panel);
 	}
 	
@@ -106,6 +107,12 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		        if (TEST_GLMM.equals(value))
 		        {
 		            inputSelectPanel.setVisible(true);
+		            if (basicRb.getValue())
+		            	notifyInputType(InputType.BASIC);
+		            else if (uploadRb.getValue())
+		            	notifyInputType(InputType.UPLOAD);
+		            else if (matrixRb.getValue())
+		            	notifyInputType(InputType.UPLOAD);
 		        }
 		        else
 		        {

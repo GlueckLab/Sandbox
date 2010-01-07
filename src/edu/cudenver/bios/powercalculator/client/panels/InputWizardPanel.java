@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -57,7 +58,7 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
 	
 	// currently selected model
 	protected String modelName = TEST_GLMM;
-	
+
     public InputWizardPanel()
     {
         VerticalPanel container = new VerticalPanel();
@@ -67,7 +68,7 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
         
         // add the default widgets to the stack of wizard panels - add the upload panel by default
         panelStack.add(startPanel);
-        panelStack.add(uploadPanel);
+        panelStack.add(basicPanel);
         panelStack.add(optionsPanel);
         panelStack.add(resultsPanel);
         panelStack.showWidget(0);
@@ -170,6 +171,10 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     	    panelStack.remove(INPUT_INDEX);
     	    panelStack.insert(simplePanel, INPUT_INDEX);
     	}
+    	else
+    	{
+    		
+    	}
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -183,15 +188,13 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, POWER_URL + modelName);
     	try 
     	{
-    		Window.alert(buildPowerRequestXML());
     		builder.setHeader("Content-Type", "text/xml");
     		builder.sendRequest(buildPowerRequestXML(), new RequestCallback() {
 
     			public void onError(Request request, Throwable exception) 
     			{
     				waitDialog.hide();
-    				Window.alert("Failed to calculate power: " + exception.getMessage());
-    				
+    				Window.alert("Failed to calculate power: " + exception.getMessage());	
     			}
 
     			public void onResponseReceived(Request request, Response response) 
@@ -217,7 +220,42 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
 
     private String buildPowerRequestXML()
     {
-    	return simplePanel.getStudyXML(true);
+    	StringBuffer buffer = new StringBuffer();
+    	
+		buffer.append("<power " + " curve='0' >");
+		
+    	if (TEST_GLMM.equals(modelName))
+    	{
+    		
+    	}
+    	else if (TEST_ONESAMPLESTUDENTST.equals(modelName))
+    	{
+    		buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
+    		buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
+    		buffer.append(" muA='" + simplePanel.getAlternativeMean() + "' ");
+    		buffer.append(" sigma='" + simplePanel.getSigma() + "' ");
+    		buffer.append(" sampleSize='" + optionsPanel.getSampleSize() + "' />");
+    	}
+
+ 		buffer.append("</power>");
+    	return buffer.toString();
+    }
+    
+    private String buildSampleSizeRequestXML()
+    {
+    	StringBuffer buffer = new StringBuffer();
+    	
+		buffer.append("<sampleSize " + " curve='0'>");
+    	if (TEST_GLMM.equals(modelName))
+    	{
+    		
+    	}
+    	else if (TEST_ONESAMPLESTUDENTST.equals(modelName))
+    	{
+    		
+    	}
+ 		buffer.append("</sampleSize>");
+    	return buffer.toString();
     }
     
     private DialogBox createWaitDialog()

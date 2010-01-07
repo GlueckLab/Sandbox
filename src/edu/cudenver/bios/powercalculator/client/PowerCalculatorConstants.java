@@ -46,13 +46,20 @@ public interface PowerCalculatorConstants extends Constants
 	public String glmm();
 	
 	// matrix input view names
+	public String matrixDimensionInvalidMessage();
 	public String matrixDimensionSeparator();
 	public String matrixBeta();
+	public String matrixBetaDetails();
 	public String matrixDesignEssence();
+	public String matrixDesignEssenceDetails();
 	public String matrixThetaNull();
+	public String matrixThetaNullDetails();
 	public String matrixSigma();
+	public String matrixSigmaDetails();
 	public String matrixBetweenSubjectContrast();
+	public String matrixBetweenSubjectContrastDetails();
 	public String matrixWithinSubjectContrast();
+	public String matrixWithinSubjectContrastDetails();
 	public String saveStudyButton();
 	
 }
