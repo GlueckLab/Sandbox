@@ -22,7 +22,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 	private static final int DEFAULT_COLS = 3;
 	private static final int DEFAULT_ROWS = 3;
 	//private static final String ECHO_URL = "/restcall/power/echo"; 
-	private static final String ECHO_URL = "http://localhost:10080/power/saveas"; 
+	private static final String ECHO_URL = "/restcall/power/saveas"; 
 	// matrix inputs
 	ResizableMatrix essence = new ResizableMatrix(PowerCalculatorGUI.constants.matrixDesignEssence(), DEFAULT_COLS, DEFAULT_ROWS, true);
 	ResizableMatrix withinContrast = new ResizableMatrix(PowerCalculatorGUI.constants.matrixWithinSubjectContrast(), DEFAULT_COLS, DEFAULT_ROWS, false);
@@ -78,4 +78,5 @@ public class MatrixPanel extends Composite implements ClickHandler
 		buffer.append(closeTag);
 		return buffer.toString();
 	}
+	
 }
