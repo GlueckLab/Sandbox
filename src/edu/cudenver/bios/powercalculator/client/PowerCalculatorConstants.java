@@ -11,6 +11,10 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface PowerCalculatorConstants extends Constants
 {
+    // model names supported by power REST service
+    public String testGLMM();
+    public String testOneSampleStudentsT();
+    
 	// wizard navigation buttons
 	public String nextButton();
 	public String previousButton();

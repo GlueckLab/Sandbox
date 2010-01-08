@@ -13,12 +13,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class MatrixPanel extends Composite implements ClickHandler
 {
+    private static final String STYLE = "matrixPanel";
 	// these default names derived from linear model theory.
 	// ensures that default matrix dimensions conform properly
 	private static final int DEFAULT_N = 3;
@@ -30,17 +32,17 @@ public class MatrixPanel extends Composite implements ClickHandler
 	//private static final String ECHO_URL = "/restcall/power/echo"; 
 	private static final String ECHO_URL = "/restcall/power/saveas"; 
 	// matrix inputs
-	ResizableMatrix essence = new ResizableMatrix(PowerCalculatorGUI.constants.matrixDesignEssence(), 
+	ResizableMatrix essence = new ResizableMatrix("design", PowerCalculatorGUI.constants.matrixDesignEssence(), 
 			PowerCalculatorGUI.constants.matrixDesignEssenceDetails(), DEFAULT_N, DEFAULT_Q, true);
-	ResizableMatrix withinContrast = new ResizableMatrix(PowerCalculatorGUI.constants.matrixWithinSubjectContrast(), 
+	ResizableMatrix withinContrast = new ResizableMatrix("withinSubjectContrast", PowerCalculatorGUI.constants.matrixWithinSubjectContrast(), 
 			PowerCalculatorGUI.constants.matrixWithinSubjectContrastDetails(), DEFAULT_P, DEFAULT_B, false);
-	ResizableMatrix betweenContrast = new ResizableMatrix(PowerCalculatorGUI.constants.matrixBetweenSubjectContrast(), 
+	ResizableMatrix betweenContrast = new ResizableMatrix("betweenSubjectContrast", PowerCalculatorGUI.constants.matrixBetweenSubjectContrast(), 
 			PowerCalculatorGUI.constants.matrixBetweenSubjectContrastDetails(), DEFAULT_A, DEFAULT_Q, false);
-	ResizableMatrix beta = new ResizableMatrix(PowerCalculatorGUI.constants.matrixBeta(), 
+	ResizableMatrix beta = new ResizableMatrix("beta", PowerCalculatorGUI.constants.matrixBeta(), 
 			PowerCalculatorGUI.constants.matrixBetaDetails(), DEFAULT_Q, DEFAULT_P, false);
-	ResizableMatrix sigma = new ResizableMatrix(PowerCalculatorGUI.constants.matrixSigma(), 
+	ResizableMatrix sigma = new ResizableMatrix("sigma", PowerCalculatorGUI.constants.matrixSigma(), 
 			PowerCalculatorGUI.constants.matrixSigmaDetails(), DEFAULT_P, DEFAULT_P, false);
-	ResizableMatrix thetaNull = new ResizableMatrix(PowerCalculatorGUI.constants.matrixThetaNull(), 
+	ResizableMatrix thetaNull = new ResizableMatrix("theta", PowerCalculatorGUI.constants.matrixThetaNull(), 
 			PowerCalculatorGUI.constants.matrixThetaNullDetails(), DEFAULT_A, DEFAULT_B, false);
 
 	FormPanel form = new FormPanel("_blank");
@@ -111,29 +113,32 @@ public class MatrixPanel extends Composite implements ClickHandler
 		formContainer.add(new Hidden("filename", "study.xml"));
 		form.add(formContainer);
 		panel.add(form);
+		
+		panel.setStyleName(STYLE);
+		
 		initWidget(panel);
 	}
 	
 	public void onClick(ClickEvent e)
 	{
-	    matrixXML.setValue(getStudyXML("<study>", "</study>"));
+	    matrixXML.setValue("<study><params>" + getStudyXML() + "</params></study>");
 	    form.submit();
 	}
-
 	
-	public String getStudyXML(String openTag, String closeTag)
+	public String getAlpha()
+	{
+	    return "0.05";
+	}
+	
+	public String getStudyXML()
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(openTag);
-		buffer.append("<params>");
 		buffer.append(essence.toXML());
 		buffer.append(withinContrast.toXML());
 		buffer.append(betweenContrast.toXML());
 		buffer.append(beta.toXML());
 		buffer.append(sigma.toXML());
 		buffer.append(thetaNull.toXML());
-		buffer.append("</params>");
-		buffer.append(closeTag);
 		return buffer.toString();
 	}
 	

@@ -9,9 +9,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -23,8 +21,9 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class ResizableMatrix extends Composite implements ChangeHandler
 {
+    protected static final String MATRIX_STYLE = "matrix";
 	protected static final String DIMENSION_STYLE = "matrixDimension";
-	protected static final String MATRIX_STYLE = "matrix";
+	protected static final String MATRIX_DATA_STYLE = "matrixData";
 	protected static final String MATRIX_CELL_STYLE = "matrixCell";
 	protected static final String HEADER_STYLE = "matrixHeader";
 	protected static final String DEFAULT_VALUE = "0";
@@ -33,29 +32,35 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	protected Grid matrixData;
 	protected TextBox rowTextBox;
 	protected TextBox columnTextBox;
-	protected HTML nameHTML;
+	protected HTML labelHTML;
 	protected boolean isSquare;
 	protected boolean isSymmetric;
+	protected String name;
+	protected boolean hasMetaData;
 	protected ArrayList<ResizableMatrixListener> listeners = new ArrayList<ResizableMatrixListener>();
 	
-	public ResizableMatrix(String name, String details, int rows, int cols, boolean hasMetaData)
+	public ResizableMatrix(String name, String label, String details, 
+	        int rows, int cols, boolean hasMetaData)
 	{
-		// overall layout panel
-		VerticalPanel matrixPanel = new VerticalPanel();
+	    this.name = name;
+	    this.hasMetaData = hasMetaData;
+	    
+		// overall layout panel    
+	    VerticalPanel matrixPanel = new VerticalPanel();
 
 		// pop-up with matrix description
 		final PopupPanel detailsPanel = new PopupPanel();
 		detailsPanel.add(new HTML(details));
 		
 		// matrix name
-		nameHTML = new HTML(name);
-		nameHTML.addMouseOverHandler(new MouseOverHandler() {
+		labelHTML = new HTML(label);
+		labelHTML.addMouseOverHandler(new MouseOverHandler() {
 			public void onMouseOver(MouseOverEvent e)
 			{
-				detailsPanel.showRelativeTo(nameHTML);
+				detailsPanel.showRelativeTo(labelHTML);
 			}
 		});
-		nameHTML.addMouseOutHandler(new MouseOutHandler() {
+		labelHTML.addMouseOutHandler(new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent e)
 			{
 				detailsPanel.hide();
@@ -71,28 +76,24 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		
 		// add name, dimensions to the matrix header
 		HorizontalPanel matrixHeader = new HorizontalPanel();
-		matrixHeader.add(nameHTML);
 		matrixHeader.add(rowTextBox);
 		matrixHeader.add(new HTML(PowerCalculatorGUI.constants.matrixDimensionSeparator()));
 		matrixHeader.add(columnTextBox);
+	    matrixHeader.add(labelHTML);
 		
 		// build matrix itself
-		if (hasMetaData)
-		{
-			// TODO: add row/column meta data entry panels
-		}
 		matrixData = new Grid(rows, cols);
 		// initialize cells to 0
 		initMatrixData();
 		
 		// add the widgets to the vertical panel
-		matrixPanel.add(nameHTML);
 		matrixPanel.add(matrixHeader);
 		matrixPanel.add(matrixData);
 		
 		// set up styles
+		matrixPanel.setStyleName(MATRIX_STYLE);
 		matrixHeader.setStyleName(HEADER_STYLE);
-		matrixData.setStyleName(MATRIX_STYLE);
+		matrixData.setStyleName(MATRIX_DATA_STYLE);
 		rowTextBox.setStyleName(DIMENSION_STYLE);
 		columnTextBox.setStyleName(DIMENSION_STYLE);
 		
@@ -220,11 +221,31 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		}
 	}
 	
+	public void setRowMetaData()
+	{
+	    
+	}
+	
 	public String toXML()
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		buffer.append("<matrix rows=" + matrixData.getRowCount() + " columns='" + matrixData.getColumnCount() + "'>");
+		if (hasMetaData)
+		{
+		    buffer.append("<essenceMatrix name='" + name + "'>");
+		    buffer.append("<columnMetaData>");
+		    for(int c = 0; c < matrixData.getColumnCount(); c++) 
+		        buffer.append("<c type='fixed' />");
+		    buffer.append("</columnMetaData>");
+		    buffer.append("<rowMetaData>");
+	        for(int r = 0; r < matrixData.getRowCount(); r++)
+	            buffer.append("<r reps='10' />");
+		    buffer.append("</rowMetaData>");
+		}
+		buffer.append("<matrix name='" + name + "' rows='" + 
+		        matrixData.getRowCount() + "' columns='" + 
+		        matrixData.getColumnCount() + "'>");
+
 		for(int r = 0; r < matrixData.getRowCount(); r++)
 		{
 			buffer.append("<r>");
@@ -236,6 +257,10 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 			buffer.append("</r>");
 		}
 		buffer.append("</matrix>");
+		if (hasMetaData)
+		{
+		    buffer.append("</essenceMatrix>");
+		}
 		return buffer.toString();
 	}
 	

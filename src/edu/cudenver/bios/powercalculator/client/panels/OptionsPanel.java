@@ -1,56 +1,86 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+
 public class OptionsPanel extends Composite
 {
-	protected CheckBox powerCheckBox = new CheckBox("Estimate power for the following sample size");
-	protected CheckBox sampleSizeCheckBox = new CheckBox("Estimate sample size for the following power");
+    private static final String SOLVE_FOR_GROUP = "solveFor";
+    
+    private static final int INDEX_SIMPLE_POWER = 0;
+    private static final int INDEX_SIMPLE_SAMPLE_SIZE = 1;
+    private static final int INDEX_LINEAR_MODEL_POWER = 2;
+    private static final int INDEX_LINEAR_MODEL_SAMPLE_SIZE = 3;
+    
+    // curve options
+    protected CheckBox showCurveCheckBox = new CheckBox("Show Curve");
+    
+    // simple sample size params
 	protected TextBox sampleSizeTextBox = new TextBox();
 	protected TextBox powerTextBox = new TextBox();
 	
-	public OptionsPanel()
+	protected DeckPanel deck;
+	protected String modelName;
+	
+	protected ArrayList<OptionsListener> listeners = new ArrayList<OptionsListener>();
+	
+	public OptionsPanel(String model)
 	{
+	    this.modelName = model;
 		VerticalPanel panel = new VerticalPanel();
 		
-		// build power options
-		panel.add(powerCheckBox);
-		HorizontalPanel powerPanel = new HorizontalPanel();
-		powerPanel.add(new HTML("Sample size: "));
-		powerPanel.add(sampleSizeTextBox);
-		sampleSizeTextBox.setEnabled(false);
-		panel.add(powerPanel);
-		
-		// build sample size options
-		panel.add(sampleSizeCheckBox);
-		HorizontalPanel sampleSizePanel = new HorizontalPanel();
-		sampleSizePanel.add(new HTML("Desired Power: "));
-		sampleSizePanel.add(powerTextBox);
-		powerTextBox.setEnabled(false);
-		panel.add(sampleSizePanel);
-		
-		// add handlers to enable/disable the power options
-		powerCheckBox.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				enablePowerOptions(powerCheckBox.getValue());
-			}
+		// radio buttons indicating which calculation is desired
+		HorizontalPanel selectPanel = new HorizontalPanel();
+		selectPanel.add(new HTML("Solve for: "));
+		RadioButton powerRb = new RadioButton(SOLVE_FOR_GROUP, "Power");
+		powerRb.addClickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent e)
+		    {
+		        if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
+		            deck.showWidget(INDEX_LINEAR_MODEL_POWER);
+		        else
+		            deck.showWidget(INDEX_SIMPLE_POWER);
+                notifyOnSolvingFor(true);
+		    }
 		});
-		sampleSizeCheckBox.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				enableSampleSizeOptions(powerCheckBox.getValue());
-			}
-		});
+		selectPanel.add(powerRb);
+
+		RadioButton sampleSizeRb = new RadioButton(SOLVE_FOR_GROUP, "Sample Size");
+        sampleSizeRb.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent e)
+            {
+                if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
+                    deck.showWidget(INDEX_LINEAR_MODEL_SAMPLE_SIZE);
+                else
+                    deck.showWidget(INDEX_SIMPLE_SAMPLE_SIZE);
+                notifyOnSolvingFor(false);
+            }
+        });
+		selectPanel.add(sampleSizeRb);
+		
+		// deck of possible option panels - power/sample size options
+		// differ depending on which model is selected
+		deck = new DeckPanel();
+		deck.add(this.createSimplePowerPanel());
+		deck.add(this.createSimpleSampleSizePanel());
+		deck.add(this.createLinearModelPowerPanel());
+		deck.add(this.createLinearModelSampleSizePanel());
+		
+		panel.add(selectPanel);
+		panel.add(deck);
+		panel.add(createCurveOptionsPanel());
 		
 		// set style 
 		
@@ -58,34 +88,81 @@ public class OptionsPanel extends Composite
 		initWidget(panel);
 	}
 	
-	private void enablePowerOptions(boolean enabled)
+	public void setModel(String modelName)
 	{
-		sampleSizeTextBox.setEnabled(enabled);
+	    this.modelName = modelName;
+	}
+
+	private VerticalPanel createCurveOptionsPanel()
+	{
+	    VerticalPanel panel = new VerticalPanel();
+	    
+	    panel.add(showCurveCheckBox);
+	    showCurveCheckBox.addClickHandler(new ClickHandler() {
+	        public void onClick(ClickEvent e)
+	        {
+	            notifyOnShowCurve(showCurveCheckBox.getValue());
+	        }
+	    });
+	    return panel;
 	}
 	
-	private void enableSampleSizeOptions(boolean enabled)
+	private HorizontalPanel createSimplePowerPanel()
 	{
-		powerTextBox.setEnabled(enabled);
+        HorizontalPanel powerPanel = new HorizontalPanel();
+        powerPanel.add(new HTML("Sample size: "));
+        powerPanel.add(sampleSizeTextBox);
+	    return powerPanel;
+	}
+	
+	private VerticalPanel createLinearModelPowerPanel()
+	{
+	       VerticalPanel panel = new VerticalPanel();
+	        return panel;
+	}
+	
+	private HorizontalPanel createSimpleSampleSizePanel()
+	{
+        HorizontalPanel sampleSizePanel = new HorizontalPanel();
+        sampleSizePanel.add(new HTML("Desired Power: "));
+        sampleSizePanel.add(powerTextBox);
+	    return sampleSizePanel;
+	}
+
+	private VerticalPanel createLinearModelSampleSizePanel()
+	{
+	    VerticalPanel panel = new VerticalPanel();
+	    return panel;
+	}
+
+	public String getPower()
+	{
+	    return powerTextBox.getText();
 	}
 	
 	public String getSampleSize()
 	{
-		return sampleSizeTextBox.getText();
+	    return sampleSizeTextBox.getText();
 	}
 	
-	public String getPower()
+	public String getRowMetaDataXML()
 	{
-		return powerTextBox.getText();
+	    // TODO: FINISH ME
+	    return "<rowMetaData></rowMetaData>";
 	}
 	
-	public void setModel()
+	public void addListener(OptionsListener listener)
 	{
-		
+	    listeners.add(listener);
 	}
-
-	private Grid createCurveOptionsPanel()
+	
+	private void notifyOnSolvingFor(boolean solveForPower)
 	{
-		Grid grid = new Grid(2,2);
-		return grid;
+	    for(OptionsListener listener: listeners) listener.onSolveFor(solveForPower);
+	}
+	
+	private void notifyOnShowCurve(boolean showCurve)
+	{
+	    for(OptionsListener listener: listeners) listener.onShowCurve(showCurve);
 	}
 }

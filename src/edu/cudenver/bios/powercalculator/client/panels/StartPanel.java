@@ -33,9 +33,7 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 	};
 
 	private static final String INPUT_RADIO_GOUP = "inputRadioGroup";
-	private static final String TEST_GLMM = "glmm";
-	private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
-	
+
 	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
 	protected VerticalPanel inputSelectPanel = new VerticalPanel();
 	protected RadioButton basicRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.basicInputRadioButton());
@@ -104,7 +102,7 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		    String value = modelList.getValue(modelList.getSelectedIndex());
 		    if (value != null && !value.isEmpty())
 		    {
-		        if (TEST_GLMM.equals(value))
+		        if (PowerCalculatorGUI.constants.testGLMM().equals(value))
 		        {
 		            inputSelectPanel.setVisible(true);
 		            if (basicRb.getValue())

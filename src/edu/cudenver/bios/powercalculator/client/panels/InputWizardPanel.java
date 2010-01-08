@@ -1,7 +1,6 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -10,22 +9,17 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.NamedNodeMap;
-import com.google.gwt.xml.client.XMLParser;
-import com.google.gwt.xml.client.Node;
 
-public class InputWizardPanel extends Composite implements NavigationListener, StartListener
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+
+public class InputWizardPanel extends Composite 
+implements NavigationListener, StartListener, OptionsListener
 {
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
 	private static final String POWER_URL = "/restcall/power/power/model/";
-    private static final String TEST_GLMM = "glmm";
-    private static final String TEST_ONESAMPLESTUDENTST = "onesamplestudentt";
+    private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize/model/";
     
 	// not using an enum here to allow easier comparison with visible 
 	// widget index from the DeckPanel
@@ -42,7 +36,7 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     // start panel
 	protected StartPanel startPanel = new StartPanel();
     // options panel (always in deck after input panel)
-	protected OptionsPanel optionsPanel = new OptionsPanel();
+	protected OptionsPanel optionsPanel = new OptionsPanel(PowerCalculatorGUI.constants.testGLMM());
     // results panel (always in deck after options panel)
 	protected ResultsPanel resultsPanel = new ResultsPanel();
 
@@ -57,8 +51,10 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
 	protected DialogBox waitDialog;
 	
 	// currently selected model
-	protected String modelName = TEST_GLMM;
-
+	protected String modelName = PowerCalculatorGUI.constants.testGLMM();
+	protected boolean showCurve = false;
+	protected boolean solveForPower = true;
+	
     public InputWizardPanel()
     {
         VerticalPanel container = new VerticalPanel();
@@ -81,6 +77,9 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
         
         // listen for start panel events to determine which input panel to display
     	startPanel.addListener(this);
+    	
+    	// listener for options panel events to determine if we are solving for sample size or power
+    	optionsPanel.addListener(this);
     	
         // enable next/cancel, disable previous button on start page
         navPanel.setPrevious(false);
@@ -166,15 +165,13 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     public void onModelSelect(String modelName)
     {
     	this.modelName = modelName;
-    	if (!TEST_GLMM.equals(modelName))
+    	if (!PowerCalculatorGUI.constants.testGLMM().equals(modelName))
     	{
     	    panelStack.remove(INPUT_INDEX);
     	    panelStack.insert(simplePanel, INPUT_INDEX);
     	}
-    	else
-    	{
-    		
-    	}
+    	// update the power/sample size options panel
+    	optionsPanel.setModel(modelName);
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -185,16 +182,22 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     private void retrieveResults()
     {    	
         waitDialog.center();
-    	RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, POWER_URL + modelName);
+    	RequestBuilder builder = null;
+    	if (solveForPower)
+    	    builder = new RequestBuilder(RequestBuilder.POST, POWER_URL + modelName);
+    	else
+            builder = new RequestBuilder(RequestBuilder.POST, SAMPLE_SIZE_URL + modelName);
+
     	try 
     	{
     		builder.setHeader("Content-Type", "text/xml");
-    		builder.sendRequest(buildPowerRequestXML(), new RequestCallback() {
+    		builder.sendRequest((solveForPower ? buildPowerRequestXML() : buildSampleSizeRequestXML()),
+    		        new RequestCallback() {
 
     			public void onError(Request request, Throwable exception) 
     			{
     				waitDialog.hide();
-    				Window.alert("Failed to calculate power: " + exception.getMessage());	
+    				Window.alert("Calculation failed: " + exception.getMessage());	
     			}
 
     			public void onResponseReceived(Request request, Response response) 
@@ -203,11 +206,15 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     				if (STATUS_CODE_OK == response.getStatusCode() ||
     						STATUS_CODE_CREATED == response.getStatusCode()) 
     				{
-    					resultsPanel.setResults(response.getText());
+    				    if (solveForPower)
+    				        resultsPanel.setPowerResults(response.getText());
+    				    else
+    				        resultsPanel.setSampleSizeResults(response.getText());
     				} 
     				else 
     				{
-    					Window.alert("Failed to calculate power: server error [HTTP STATUS " + response.getStatusCode() + "]");
+    					Window.alert("Calculation failed: [HTTP STATUS " + 
+    					        response.getStatusCode() + "] " + response.getText());
     				}
     			}
     		});
@@ -222,13 +229,18 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     {
     	StringBuffer buffer = new StringBuffer();
     	
-		buffer.append("<power " + " curve='0' >");
+		buffer.append("<power curve='" + showCurve + "' >");
 		
-    	if (TEST_GLMM.equals(modelName))
+    	if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
     	{
-    		
+    	    // add the row meta data to the essence matrix
+    	    //matrixPanel.getEssenceMatrix().addRowMetaData();
+    	    // return the 
+    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='hlt'>");
+    		buffer.append(matrixPanel.getStudyXML());
+    		buffer.append("</params>");
     	}
-    	else if (TEST_ONESAMPLESTUDENTST.equals(modelName))
+    	else if (PowerCalculatorGUI.constants.testOneSampleStudentsT().equals(modelName))
     	{
     		buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
     		buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
@@ -238,6 +250,7 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     	}
 
  		buffer.append("</power>");
+        //Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
@@ -245,16 +258,21 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
     {
     	StringBuffer buffer = new StringBuffer();
     	
-		buffer.append("<sampleSize " + " curve='0'>");
-    	if (TEST_GLMM.equals(modelName))
+		buffer.append("<sampleSize " + " curve='" + showCurve + "'>");
+    	if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
     	{
     		
     	}
-    	else if (TEST_ONESAMPLESTUDENTST.equals(modelName))
+    	else if (PowerCalculatorGUI.constants.testOneSampleStudentsT().equals(modelName))
     	{
-    		
+            buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
+            buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
+            buffer.append(" muA='" + simplePanel.getAlternativeMean() + "' ");
+            buffer.append(" sigma='" + simplePanel.getSigma() + "' ");
+            buffer.append(" power='" + optionsPanel.getPower() + "' />");
     	}
  		buffer.append("</sampleSize>");
+        //Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
@@ -266,5 +284,15 @@ public class InputWizardPanel extends Composite implements NavigationListener, S
         dialogBox.setStyleName("waitDialog");
         dialogBox.setWidget(text);
         return dialogBox;
+    }
+    
+    public void onShowCurve(boolean show)
+    {
+        showCurve = show;
+    }
+    
+    public void onSolveFor(boolean power)
+    {
+        solveForPower = power;
     }
 }
