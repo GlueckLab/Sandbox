@@ -74,21 +74,44 @@ body {
 	
 /* Style for "steps left" banner above the input wizard. */
 
-.stepsLeft {
+.stepsLeftPanel {
 	margin-right: auto;
 	margin-left: auto;
-	font-size: large;
-	text-align: center;
 }
 
-.stepsLeft-selected {
-	color: blue;
-	font-size: 14pt;
+.stepsLeftPanel .gwt-HTML {
+	padding: 10px;
 }
 
-.stepsLeft-deselected {
+.stepsLeftLabel {
+	font-size: 12pt;
+	padding: 10px;
+}
+
+.stepsLeftLabel-selected {
+	color: #C9AF50;
+}
+
+.stepsLeftLabel-deselected {
 	color: black;
 }
+
+.stepsLeftNumber {
+	font-size: 12pt;
+	padding: 10px;
+}
+
+.stepsLeftNumber-selected {
+	color: white;
+	background: url(images/circleOn.jpg) no-repeat 3px 8px;
+}
+
+.stepsLeftNumber-deselected {
+	background: url(images/circleOff.jpg) no-repeat 3px 8px;
+	color: white;
+}
+
+
 
 /* style for middle input panel (GWT class) */
 

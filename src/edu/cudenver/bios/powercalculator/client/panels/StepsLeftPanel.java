@@ -1,59 +1,71 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class StepsLeftPanel extends Composite implements NavigationListener
 {
-	protected static final String STYLE = "stepsLeft";
+	protected static final String STYLE = "stepsLeftLabel";
+	protected static final String PANEL_STYLE = "stepsLeftPanel";
+	protected static final String NUMBER_STYLE = "stepsLeftNumber";
     protected static final String SELECTED_STYLE = "selected";
     protected static final String DESELECTED_STYLE = "deselected";
-    
-    protected static final int START_INDEX = 1;
-    protected static final int STUDY_INDEX = START_INDEX + 2;
-    protected static final int OPTIONS_INDEX = STUDY_INDEX + 2;
-    protected static final int RESULTS_INDEX = OPTIONS_INDEX + 2;
-    
-    protected int currentStep = 0;
-    
-    Grid grid = new Grid(1,RESULTS_INDEX+2);
-    HTML startStep = new HTML(PowerCalculatorGUI.constants.startStep());
-    HTML studyStep = new HTML(PowerCalculatorGUI.constants.studyStep());
-    HTML powerSampleSizeStep = 
+        
+    protected HTML startStep = new HTML(PowerCalculatorGUI.constants.startStep());
+    protected Label startNumber = new Label("1");
+    protected HTML studyStep = new HTML(PowerCalculatorGUI.constants.studyStep());
+    protected Label studyNumber = new Label("2");
+    protected HTML optionsStep = 
         new HTML(PowerCalculatorGUI.constants.optionsStep());
-    HTML resultsStep = new HTML(PowerCalculatorGUI.constants.resultsStep());
+    protected Label optionsNumber = new Label("3");
+    protected HTML resultsStep = new HTML(PowerCalculatorGUI.constants.resultsStep());
+    protected Label resultsNumber = new Label("4");
+    
+    private Widget currentStep = startStep;
     
     public StepsLeftPanel()
-    {
-        studyStep.setStyleName(STYLE);
-        studyStep.addStyleDependentName(DESELECTED_STYLE);
+    {        
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.add(startNumber);
+        panel.add(startStep);
+        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        panel.add(studyNumber);
+        panel.add(studyStep);
+        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        panel.add(optionsNumber);
+        panel.add(optionsStep);
+        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
+        panel.add(resultsNumber);
+        panel.add(resultsStep);
+        panel.setStyleName(PANEL_STYLE);
         
-        grid.setWidget(0,0,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        grid.setWidget(0,START_INDEX, startStep);
-        grid.setWidget(0,START_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        grid.setWidget(0,STUDY_INDEX, studyStep);
-        grid.setWidget(0,STUDY_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        grid.setWidget(0,OPTIONS_INDEX, powerSampleSizeStep);
-        grid.setWidget(0,OPTIONS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        grid.setWidget(0,RESULTS_INDEX, resultsStep);
-        grid.setWidget(0,RESULTS_INDEX+1,new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        grid.setStyleName(STYLE);
-        
+        startNumber.setStyleName(NUMBER_STYLE);
+        startNumber.addStyleDependentName(SELECTED_STYLE);
         startStep.setStyleName(STYLE);
         startStep.addStyleDependentName(SELECTED_STYLE);
+        studyNumber.setStyleName(NUMBER_STYLE);
+        studyNumber.addStyleDependentName(DESELECTED_STYLE);
         studyStep.setStyleName(STYLE);
         studyStep.addStyleDependentName(DESELECTED_STYLE);
-        powerSampleSizeStep.setStyleName(STYLE);
-        powerSampleSizeStep.addStyleDependentName(DESELECTED_STYLE);
+        optionsNumber.setStyleName(NUMBER_STYLE);
+        optionsNumber.addStyleDependentName(DESELECTED_STYLE);
+        optionsStep.setStyleName(STYLE);
+        optionsStep.addStyleDependentName(DESELECTED_STYLE);
+        resultsNumber.setStyleName(NUMBER_STYLE);
+        resultsNumber.addStyleDependentName(DESELECTED_STYLE);
         resultsStep.setStyleName(STYLE);
         resultsStep.addStyleDependentName(DESELECTED_STYLE);
         
-        currentStep = START_INDEX;
-        initWidget(grid);
+        currentStep = startStep;
+        initWidget(panel);
     }
     
     /**
@@ -62,10 +74,12 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onNext()
     {
-        if (currentStep != RESULTS_INDEX)
-        {
-            setStep(currentStep+2, currentStep);
-        }
+        if (currentStep == startStep)
+            setStep(startNumber, startStep, studyNumber, studyStep);
+        else if (currentStep == studyStep)
+            setStep(studyNumber, studyStep, optionsNumber, optionsStep);
+        else if (currentStep == optionsStep)
+            setStep(optionsNumber, optionsStep, resultsNumber, resultsStep);
     }
     
     /**
@@ -74,10 +88,12 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onPrevious()
     {
-        if (currentStep != START_INDEX)
-        {
-            setStep(currentStep-2, currentStep);
-        }
+        if (currentStep == studyStep)
+            setStep(studyNumber, studyStep, startNumber, startStep);
+        else if (currentStep == optionsStep)
+            setStep(optionsNumber, optionsStep, studyNumber, studyStep);
+        else if (currentStep == resultsStep)
+            setStep(resultsNumber, resultsStep, optionsNumber, optionsStep);
 
     }
     
@@ -86,10 +102,13 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      */
     public void onCancel()
     {
-    	if (currentStep != START_INDEX)
-    	{
-    		setStep(START_INDEX, currentStep);
-    	}
+    	if (currentStep == studyStep)
+    	    setStep(studyNumber, studyStep, startNumber, startStep);
+    	else if (currentStep == optionsStep)
+            setStep(optionsNumber, optionsStep, startNumber, startStep);
+    	else if (currentStep == resultsStep)
+            setStep(resultsNumber, resultsStep, startNumber, startStep);
+
     }
     
     /**
@@ -101,21 +120,21 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      * @param newIndex
      * @param prevIndex
      */
-    protected void setStep(int newIndex, int prevIndex)
+    protected void setStep(Widget oldNumber, Widget oldStep,
+            Widget newNumber, Widget newStep)
     {    	
-        HTML selected = (HTML) grid.getWidget(0, newIndex);
-        HTML previous = (HTML) grid.getWidget(0, prevIndex);
+        currentStep = newStep;
         
-        if (selected != null) 
-        {
-        	selected.removeStyleDependentName(DESELECTED_STYLE);
-        	selected.addStyleDependentName(SELECTED_STYLE);
-        }
-        if (previous != null) 
-        {
-        	previous.removeStyleDependentName(SELECTED_STYLE);
-        	previous.addStyleDependentName(DESELECTED_STYLE);
-        }
-        currentStep = newIndex;
+        // deselect the old widgets
+        oldNumber.removeStyleDependentName(SELECTED_STYLE);
+        oldNumber.addStyleDependentName(DESELECTED_STYLE);
+        oldStep.removeStyleDependentName(SELECTED_STYLE);
+        oldStep.addStyleDependentName(DESELECTED_STYLE);
+        
+        // select the new widgets
+        newNumber.removeStyleDependentName(DESELECTED_STYLE);
+        newNumber.addStyleDependentName(SELECTED_STYLE);
+        newStep.removeStyleDependentName(DESELECTED_STYLE);
+        newStep.addStyleDependentName(SELECTED_STYLE);
     }
 }
