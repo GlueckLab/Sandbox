@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -37,8 +40,9 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	protected boolean isSymmetric;
 	protected String name;
 	protected boolean hasMetaData;
-	protected ArrayList<ResizableMatrixListener> listeners = new ArrayList<ResizableMatrixListener>();
-	
+	protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
+	protected ArrayList<MetaDataListener> mdListeners = new ArrayList<MetaDataListener>(); 
+
 	public ResizableMatrix(String name, String label, String details, 
 	        int rows, int cols, boolean hasMetaData)
 	{
@@ -81,6 +85,12 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		matrixHeader.add(columnTextBox);
 	    matrixHeader.add(labelHTML);
 		
+	    // build column meta data selection
+	    if (hasMetaData)
+	    {
+	        // TODO: how to display column md?
+	    }
+	    
 		// build matrix itself
 		matrixData = new Grid(rows, cols);
 		// initialize cells to 0
@@ -266,11 +276,21 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	
 	private void notifyOnMatrixResize(int rows, int cols)
 	{
-		for(ResizableMatrixListener listener: listeners) listener.onMatrixResize(rows, cols);
+		for(MatrixResizeListener listener: resizeListeners) listener.onMatrixResize(rows, cols);
 	}
 	
-	public void addListener(ResizableMatrixListener listener)
+	private void notifyOnRandomPredictor(boolean hasRandom)
 	{
-		listeners.add(listener);
+	    for(MetaDataListener listener: mdListeners) listener.onRandomPredictor(hasRandom);
+	}
+	
+	public void addMatrixResizeListener(MatrixResizeListener listener)
+	{
+		resizeListeners.add(listener);
+	}
+	
+	public void addRandomPredictorListener(MetaDataListener listener)
+	{
+	    mdListeners.add(listener);
 	}
 }
