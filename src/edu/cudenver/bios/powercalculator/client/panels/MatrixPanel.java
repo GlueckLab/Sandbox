@@ -2,6 +2,7 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -81,7 +82,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		panel.add(sigmaDeck);
 		
 		// add the save study link and associated form
-		panel.add(new Button(PowerCalculatorGUI.constants.saveStudyButton()));
+		panel.add(new Button(PowerCalculatorGUI.constants.saveStudyButton(), this));
 		form.setAction(ECHO_URL);
 		form.setMethod(FormPanel.METHOD_POST);
 		VerticalPanel formContainer = new VerticalPanel();
@@ -173,21 +174,25 @@ public class MatrixPanel extends Composite implements ClickHandler
 	public String getStudyXML()
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(essence.toXML());
-		buffer.append(withinContrast.toXML());
-		buffer.append(betweenContrast.toXML());
-		buffer.append(beta.toXML());
+		buffer.append("<essenceMatrix>");
+		buffer.append(essence.columnMetaDataToXML());
+		buffer.append(essence.matrixDataToXML());
+		buffer.append("</essenceMatrix>");
+		buffer.append(beta.matrixDataToXML());
+		buffer.append(thetaNull.matrixDataToXML());
+		buffer.append(withinContrast.matrixDataToXML());
+		buffer.append(betweenContrast.matrixDataToXML());
 		if (!hasBaselineCovariate)
 		{
-		    buffer.append(sigma.toXML());
+		    buffer.append(sigma.matrixDataToXML());
 		}
 		else
 		{
-		    buffer.append(sigmaCovariate.toXML());
-            buffer.append(sigmaOutcomes.toXML());
-            buffer.append(this.rhoCovariateOutcome.toXML());
+		    buffer.append(sigmaCovariate.matrixDataToXML());
+            buffer.append(sigmaOutcomes.matrixDataToXML());
+            buffer.append(this.rhoCovariateOutcome.matrixDataToXML());
 		}
-		buffer.append(thetaNull.toXML());
+		Window.alert(buffer.toString());
 		return buffer.toString();
 	}
 	

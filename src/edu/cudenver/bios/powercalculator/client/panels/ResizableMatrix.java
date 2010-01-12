@@ -4,14 +4,11 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -24,11 +21,14 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class ResizableMatrix extends Composite implements ChangeHandler
 {
+    protected static final String RANDOM = "random";
     protected static final String MATRIX_STYLE = "matrix";
 	protected static final String DIMENSION_STYLE = "matrixDimension";
 	protected static final String MATRIX_DATA_STYLE = "matrixData";
 	protected static final String MATRIX_CELL_STYLE = "matrixCell";
 	protected static final String HEADER_STYLE = "matrixHeader";
+	protected static final String META_DATA_STYLE = "matrixMetaData";
+	protected static final String META_DATA_CELL_STYLE = "matrixMetaDataCell";
 	protected static final String DEFAULT_VALUE = "0";
 	protected static final int MAX_ROWS = 50;
 	protected static final int MAX_COLS = 50;
@@ -39,7 +39,7 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	protected boolean isSquare;
 	protected boolean isSymmetric;
 	protected String name;
-	protected boolean hasMetaData;
+	protected ColumnMetaDataPanel metaData = null;
 	protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
 	protected ArrayList<MetaDataListener> mdListeners = new ArrayList<MetaDataListener>(); 
 
@@ -47,7 +47,6 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	        int rows, int cols, boolean hasMetaData)
 	{
 	    this.name = name;
-	    this.hasMetaData = hasMetaData;
 	    
 		// overall layout panel    
 	    VerticalPanel matrixPanel = new VerticalPanel();
@@ -88,7 +87,7 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	    // build column meta data selection
 	    if (hasMetaData)
 	    {
-	        // TODO: how to display column md?
+	        metaData = new ColumnMetaDataPanel(cols);
 	    }
 	    
 		// build matrix itself
@@ -98,6 +97,7 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		
 		// add the widgets to the vertical panel
 		matrixPanel.add(matrixHeader);
+		if (metaData != null) matrixPanel.add(metaData);
 		matrixPanel.add(matrixData);
 		
 		// set up styles
@@ -166,6 +166,8 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		{	
 			if (isSquare && newRows != newCols) return false;
 			
+		     if (metaData != null) metaData.resize(newCols);
+			
 			int oldRows = matrixData.getRowCount();
 			int oldCols = matrixData.getColumnCount();
 			if (newCols != oldCols || newRows != oldRows) 
@@ -231,27 +233,15 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 		}
 	}
 	
-	public void setRowMetaData()
+	public String columnMetaDataToXML()
 	{
-	    
+	    return metaData.toXML();
 	}
 	
-	public String toXML()
+	public String matrixDataToXML()
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		if (hasMetaData)
-		{
-		    buffer.append("<essenceMatrix name='" + name + "'>");
-		    buffer.append("<columnMetaData>");
-		    for(int c = 0; c < matrixData.getColumnCount(); c++) 
-		        buffer.append("<c type='fixed' />");
-		    buffer.append("</columnMetaData>");
-		    buffer.append("<rowMetaData>");
-	        for(int r = 0; r < matrixData.getRowCount(); r++)
-	            buffer.append("<r reps='10' />");
-		    buffer.append("</rowMetaData>");
-		}
 		buffer.append("<matrix name='" + name + "' rows='" + 
 		        matrixData.getRowCount() + "' columns='" + 
 		        matrixData.getColumnCount() + "'>");
@@ -267,10 +257,7 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 			buffer.append("</r>");
 		}
 		buffer.append("</matrix>");
-		if (hasMetaData)
-		{
-		    buffer.append("</essenceMatrix>");
-		}
+
 		return buffer.toString();
 	}
 	

@@ -171,6 +171,22 @@ body {
 	padding: 10px;
 }
 
+.columnMetaData {
+	width: 75px;
+	margin-top: 10px;
+}
+
+.columnMetaData td {
+	background: #ddd;
+	border: 1px solid #000;
+}
+
+.columnMetaDataCell {
+	border: 0;
+	width: 75px;
+	text-align: center;
+}
+
 .matrixData {
 	margin-top: 10px;
 }
@@ -184,7 +200,7 @@ body {
 .matrixCell {
 	background: white;
 	border: 0;
-	width: 50px;
+	width: 75px;
 }
 
 .matrixHeader {
