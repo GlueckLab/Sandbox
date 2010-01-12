@@ -1,5 +1,7 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -12,7 +14,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ColumnMetaDataPanel extends Composite
+public class ColumnMetaDataPanel extends Composite implements MetaDataListener
 {
     private static final String STYLE = "columnMetaData";
     private static final String CELL_STYLE = "columnMetaDataCell";   
@@ -31,14 +33,13 @@ public class ColumnMetaDataPanel extends Composite
         HTML label = new HTML("Fixed");
         HTML errorMsg = new HTML(null);
         
-        private ColumnMetaDataPanel parent;
+        private ArrayList<MetaDataListener> listeners = new ArrayList<MetaDataListener>();;
         private int column;
         
-        public ColumnMetaDataEntry(int columnIndex, ColumnMetaDataPanel parentPanel)
+        public ColumnMetaDataEntry(int columnIndex, MetaDataListener listener)
         {
             this.column = columnIndex;
-            this.parent = parentPanel;
-            
+            listeners.add(listener);
             // build the popup panel for selecting fixed/random
             VerticalPanel container = new VerticalPanel();
             container.add(fixedRb);
@@ -60,7 +61,7 @@ public class ColumnMetaDataPanel extends Composite
                     if (fixedRb.getValue())
                     {
                         label.setText("Fixed");
-                        parent.onFixed(column);
+                        for(MetaDataListener listener: listeners) listener.onFixed(column);
                         entryPanel.hide();
                     }
                     else
@@ -70,7 +71,7 @@ public class ColumnMetaDataPanel extends Composite
                             double mean = Double.parseDouble(meanTextBox.getValue());
                             double variance = Double.parseDouble(varianceTextBox.getValue());
                             label.setText("Random");
-                            parent.onRandom(column, mean, variance);
+                            for(MetaDataListener listener: listeners) listener.onRandom(column, mean, variance);
                             entryPanel.hide();
                         }
                         catch (Exception exp)
@@ -103,6 +104,10 @@ public class ColumnMetaDataPanel extends Composite
             initWidget(label);
         }
         
+        public void addListener(MetaDataListener listener) 
+        {
+            listeners.add(listener);
+        }
         private void setMeanVarianceEnabled(boolean enabled)
         {
             meanTextBox.setEnabled(enabled);
@@ -177,6 +182,7 @@ public class ColumnMetaDataPanel extends Composite
                 colMD.setFixed();
             }
         }     
+        // notify matrix panel that a random
     }
     
     public String toXML()
@@ -194,6 +200,15 @@ public class ColumnMetaDataPanel extends Composite
         }
         buffer.append("</columnMetaData>");
         return buffer.toString();
+    }
+    
+    public void addListener(MetaDataListener listener)
+    {
+        for(int c = 0; c < metaData.getColumnCount(); c++) 
+        {
+            ColumnMetaDataEntry colMD = (ColumnMetaDataEntry) metaData.getWidget(0, c);
+            colMD.addListener(listener);
+        }
     }
 }
 

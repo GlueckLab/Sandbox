@@ -41,7 +41,6 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	protected String name;
 	protected ColumnMetaDataPanel metaData = null;
 	protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
-	protected ArrayList<MetaDataListener> mdListeners = new ArrayList<MetaDataListener>(); 
 
 	public ResizableMatrix(String name, String label, String details, 
 	        int rows, int cols, boolean hasMetaData)
@@ -265,19 +264,14 @@ public class ResizableMatrix extends Composite implements ChangeHandler
 	{
 		for(MatrixResizeListener listener: resizeListeners) listener.onMatrixResize(rows, cols);
 	}
-	
-	private void notifyOnRandomPredictor(boolean hasRandom)
-	{
-	    for(MetaDataListener listener: mdListeners) listener.onRandomPredictor(hasRandom);
-	}
-	
+		
 	public void addMatrixResizeListener(MatrixResizeListener listener)
 	{
 		resizeListeners.add(listener);
 	}
 	
-	public void addRandomPredictorListener(MetaDataListener listener)
+	public void addMetaDataListener(MetaDataListener listener)
 	{
-	    mdListeners.add(listener);
+	    metaData.addListener(listener);
 	}
 }

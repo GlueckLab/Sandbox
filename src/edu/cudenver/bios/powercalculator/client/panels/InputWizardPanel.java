@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class InputWizardPanel extends Composite 
-implements NavigationListener, StartListener, OptionsListener
+implements NavigationListener, StartListener, OptionsListener, MatrixResizeListener
 {
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
@@ -77,6 +77,10 @@ implements NavigationListener, StartListener, OptionsListener
         
         // listen for start panel events to determine which input panel to display
     	startPanel.addListener(this);
+    	
+    	// listener for resize events on the essence matrix to allow 
+    	// updating power/sample size options 
+    	matrixPanel.addEssenceMatrixResizeListener(this);
     	
     	// listener for options panel events to determine if we are solving for sample size or power
     	optionsPanel.addListener(this);
@@ -294,5 +298,10 @@ implements NavigationListener, StartListener, OptionsListener
     public void onSolveFor(boolean power)
     {
         solveForPower = power;
+    }
+    
+    public void onMatrixResize(int rows, int cols)
+    {
+        Window.alert("Essence matrix row=" + rows + " cols=" + cols);
     }
 }

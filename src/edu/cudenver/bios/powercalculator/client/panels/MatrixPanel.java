@@ -57,11 +57,14 @@ public class MatrixPanel extends Composite implements ClickHandler
 	protected FormPanel form = new FormPanel("_blank");
 	protected Hidden matrixXML = new Hidden("data");
 	
-	protected boolean hasBaselineCovariate = false;
+	protected int covariateColumn = -1;
 	
 	public MatrixPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
+		
+		// table with alpha input, selection of test statistic,
+		// and selection of 
 		
 		// add each matrix to the panel
 		panel.add(essence);
@@ -105,13 +108,20 @@ public class MatrixPanel extends Composite implements ClickHandler
 				betweenContrast.setDimensions(betweenContrast.getRowDimension(), cols);
 			}
 		});
-		essence.addRandomPredictorListener(new MetaDataListener() {
-		    public void onRandomPredictor(boolean hasRandom)
+		essence.addMetaDataListener(new MetaDataListener() {
+		    public void onRandom(int col, double mean, double variance)
 		    {
-		        if (hasRandom)
-		            sigmaDeck.showWidget(COVARIATE_INDEX);
-		        else
+		        sigmaDeck.showWidget(COVARIATE_INDEX);
+		        covariateColumn = col;
+		    }
+		    
+		    public void onFixed(int col)
+		    {
+		        if (col == covariateColumn)
+		        {
+		            covariateColumn = -1;
 		            sigmaDeck.showWidget(FIXED_INDEX);
+		        }
 		    }
 		});
 		betweenContrast.addMatrixResizeListener(new MatrixResizeListener() {
@@ -182,7 +192,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		buffer.append(thetaNull.matrixDataToXML());
 		buffer.append(withinContrast.matrixDataToXML());
 		buffer.append(betweenContrast.matrixDataToXML());
-		if (!hasBaselineCovariate)
+		if (covariateColumn == -1)
 		{
 		    buffer.append(sigma.matrixDataToXML());
 		}
@@ -190,10 +200,14 @@ public class MatrixPanel extends Composite implements ClickHandler
 		{
 		    buffer.append(sigmaCovariate.matrixDataToXML());
             buffer.append(sigmaOutcomes.matrixDataToXML());
-            buffer.append(this.rhoCovariateOutcome.matrixDataToXML());
+            buffer.append(rhoCovariateOutcome.matrixDataToXML());
 		}
 		Window.alert(buffer.toString());
 		return buffer.toString();
 	}
 	
+	public void addEssenceMatrixResizeListener(MatrixResizeListener listener)
+	{
+	    essence.addMatrixResizeListener(listener);
+	}
 }
