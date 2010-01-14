@@ -24,19 +24,19 @@ public class NavigationPanel extends Composite
     {
         HorizontalPanel panel = new HorizontalPanel();
        
-        next = new Button(PowerCalculatorGUI.constants.nextButton(), new ClickHandler() {
+        next = new Button(PowerCalculatorGUI.constants.buttonNext(), new ClickHandler() {
             public void onClick(ClickEvent event) {
                 notifyOnNext();
             }
         });
 
-        previous = new Button(PowerCalculatorGUI.constants.previousButton(), new ClickHandler() {
+        previous = new Button(PowerCalculatorGUI.constants.buttonPrevious(), new ClickHandler() {
             public void onClick(ClickEvent event) {
                 notifyOnPrevious();
             }
         });
         
-        cancel = new Button(PowerCalculatorGUI.constants.cancelButton(), new ClickHandler() {
+        cancel = new Button(PowerCalculatorGUI.constants.buttonCancel(), new ClickHandler() {
             public void onClick(ClickEvent event) {
                 notifyOnCancel();
             }

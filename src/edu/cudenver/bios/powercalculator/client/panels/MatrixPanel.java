@@ -7,7 +7,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
@@ -40,32 +43,36 @@ public class MatrixPanel extends Composite implements ClickHandler
 	protected ResizableMatrix thetaNull = new ResizableMatrix("theta", PowerCalculatorGUI.constants.matrixThetaNull(), 
 	        PowerCalculatorGUI.constants.matrixThetaNullDetails(), DEFAULT_A, DEFAULT_B, false);
 	// variance/covariance matrix for fixed predictors
-	protected ResizableMatrix sigma = new ResizableMatrix("sigma", PowerCalculatorGUI.constants.matrixSigma(), 
-	        PowerCalculatorGUI.constants.matrixSigmaDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigma = new ResizableMatrix("sigmaError", PowerCalculatorGUI.constants.matrixSigmaError(), 
+	        PowerCalculatorGUI.constants.matrixSigmaErrorDetails(), DEFAULT_P, DEFAULT_P, false);
 	/* the following are needed for a baseline covariate */
 	// variance of the baseline covariate
-	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaG", PowerCalculatorGUI.constants.matrixSigma(), 
-	        PowerCalculatorGUI.constants.matrixSigmaDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaG", PowerCalculatorGUI.constants.matrixSigmaG(), 
+	        PowerCalculatorGUI.constants.matrixSigmaGDetails(), DEFAULT_P, DEFAULT_P, false);
 	// variance/covariance of the outcomes
-	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaY", PowerCalculatorGUI.constants.matrixSigma(), 
-	        PowerCalculatorGUI.constants.matrixSigmaDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaY", PowerCalculatorGUI.constants.matrixSigmaY(), 
+	        PowerCalculatorGUI.constants.matrixSigmaYDetails(), DEFAULT_P, DEFAULT_P, false);
 	// correlation of covariate and outcomes
-	protected ResizableMatrix rhoCovariateOutcome = new ResizableMatrix("rhoGY", PowerCalculatorGUI.constants.matrixSigma(), 
-	        PowerCalculatorGUI.constants.matrixSigmaDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix rhoCovariateOutcome = new ResizableMatrix("rhoGY", PowerCalculatorGUI.constants.matrixRhoGY(), 
+	        PowerCalculatorGUI.constants.matrixRhoGYDetails(), DEFAULT_P, DEFAULT_P, false);
 
 	protected DeckPanel sigmaDeck = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
 	protected Hidden matrixXML = new Hidden("data");
 	
+	protected TextBox alphaTextBox = new TextBox();
 	protected int covariateColumn = -1;
 	
 	public MatrixPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
 		
-		// table with alpha input, selection of test statistic,
-		// and selection of 
+		// build alpha input
+		Grid alpha = new Grid(1, 2);
+		alpha.setWidget(0, 0, new HTML(PowerCalculatorGUI.constants.textLabelAlpha()));
+		alpha.setWidget(0, 1, alphaTextBox);
 		
+		panel.add(alpha);
 		// add each matrix to the panel
 		panel.add(essence);
 		panel.add(beta);
@@ -85,7 +92,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		panel.add(sigmaDeck);
 		
 		// add the save study link and associated form
-		panel.add(new Button(PowerCalculatorGUI.constants.saveStudyButton(), this));
+		panel.add(new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this));
 		form.setAction(ECHO_URL);
 		form.setMethod(FormPanel.METHOD_POST);
 		VerticalPanel formContainer = new VerticalPanel();
@@ -122,6 +129,10 @@ public class MatrixPanel extends Composite implements ClickHandler
 		            covariateColumn = -1;
 		            sigmaDeck.showWidget(FIXED_INDEX);
 		        }
+		    }
+		    
+		    public void onRowName(int row, String name)
+		    {
 		    }
 		});
 		betweenContrast.addMatrixResizeListener(new MatrixResizeListener() {
@@ -172,20 +183,26 @@ public class MatrixPanel extends Composite implements ClickHandler
 	
 	public void onClick(ClickEvent e)
 	{
-	    matrixXML.setValue("<study><params>" + getStudyXML() + "</params></study>");
+	    matrixXML.setValue("<study><params alpha='" + alphaTextBox.getText() + "'>" + getStudyXML("") + "</params></study>");
 	    form.submit();
 	}
 	
 	public String getAlpha()
 	{
-	    return "0.05";
+	    return alphaTextBox.getText();
 	}
 	
-	public String getStudyXML()
+	public boolean validate()
+	{
+		return true;
+	}
+	
+	public String getStudyXML(String rowMetaData)
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<essenceMatrix>");
 		buffer.append(essence.columnMetaDataToXML());
+		buffer.append(rowMetaData);
 		buffer.append(essence.matrixDataToXML());
 		buffer.append("</essenceMatrix>");
 		buffer.append(beta.matrixDataToXML());
@@ -209,5 +226,10 @@ public class MatrixPanel extends Composite implements ClickHandler
 	public void addEssenceMatrixResizeListener(MatrixResizeListener listener)
 	{
 	    essence.addMatrixResizeListener(listener);
+	}
+	
+	public void addEssenceMatrixMetaDataListener(MetaDataListener listener)
+	{
+		essence.addMetaDataListener(listener);
 	}
 }

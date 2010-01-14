@@ -9,10 +9,17 @@ public class BasicPanel extends Composite
 	
 	public BasicPanel()
 	{
-		Button foo = new Button("Basic Entry");
 		VerticalPanel panel = new VerticalPanel();
 		
-		panel.add(foo);
+		panel.add(createIndependentVariablePanel());
 		initWidget(panel);
+	}
+	
+	private VerticalPanel createIndependentVariablePanel()
+	{
+		VerticalPanel panel = new VerticalPanel();	
+		
+		
+		return panel;
 	}
 }

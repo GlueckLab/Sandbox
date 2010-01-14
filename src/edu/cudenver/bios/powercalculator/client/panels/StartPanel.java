@@ -36,29 +36,30 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 
 	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
 	protected VerticalPanel inputSelectPanel = new VerticalPanel();
-	protected RadioButton basicRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.basicInputRadioButton());
-	protected RadioButton matrixRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.matrixInputRadioButton());
-	protected RadioButton uploadRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.uploadInputRadioButton());
+	protected RadioButton basicRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonBasicInput());
+	protected RadioButton matrixRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonMatrixInput());
+	protected RadioButton uploadRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonUploadInput());
 	protected ListBox modelList = new ListBox();
     
 	public StartPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
 		// add introductory text
-		panel.add(new HTML(PowerCalculatorGUI.constants.startPanelDescriptionText()));
+		panel.add(new HTML(PowerCalculatorGUI.constants.textStartPanelDescription()));
 		
 		// add model selection list
 		HorizontalPanel modelPanel = new HorizontalPanel();
-		modelPanel.add(new HTML(PowerCalculatorGUI.constants.startPanelModelText()));
-		modelList.addItem(PowerCalculatorGUI.constants.oneSampleStudentsT(), "onesamplestudentt");
-		modelList.addItem(PowerCalculatorGUI.constants.glmm(), "glmm");
+		modelPanel.add(new HTML(PowerCalculatorGUI.constants.listBoxModel()));
+		modelList.addItem(PowerCalculatorGUI.constants.labelOneSampleStudentsT(), 
+				PowerCalculatorGUI.constants.modelOneSampleStudentsT());
+		modelList.addItem(PowerCalculatorGUI.constants.labelGLMM(), PowerCalculatorGUI.constants.modelGLMM());
 		modelList.setItemSelected(1, true); // select glmm as default
 		modelList.addChangeHandler(this);
 		modelPanel.add(modelList);
 		panel.add(modelPanel);
 	    
 		// build input selection panel - only visible if GLMM is selected as model
-	    inputSelectPanel.add(new HTML(PowerCalculatorGUI.constants.startPanelStudyInputText()));
+	    inputSelectPanel.add(new HTML(PowerCalculatorGUI.constants.radioGroupLabelStudyInput()));
 		inputSelectPanel.add(basicRb);
 		inputSelectPanel.add(matrixRb);
 		inputSelectPanel.add(uploadRb);
@@ -72,6 +73,10 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		initWidget(panel);
 	}
 	
+	/**
+	 * 
+	 * @param listener 
+	 */
 	public void addListener(StartListener listener)
 	{
 		listeners.add(listener);
@@ -102,7 +107,7 @@ public class StartPanel extends Composite implements ClickHandler, ChangeHandler
 		    String value = modelList.getValue(modelList.getSelectedIndex());
 		    if (value != null && !value.isEmpty())
 		    {
-		        if (PowerCalculatorGUI.constants.testGLMM().equals(value))
+		        if (PowerCalculatorGUI.constants.modelGLMM().equals(value))
 		        {
 		            inputSelectPanel.setVisible(true);
 		            if (basicRb.getValue())

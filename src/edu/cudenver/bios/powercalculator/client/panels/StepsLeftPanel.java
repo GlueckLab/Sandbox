@@ -1,14 +1,10 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-
-import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class StepsLeftPanel extends Composite implements NavigationListener
@@ -19,14 +15,14 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     protected static final String SELECTED_STYLE = "selected";
     protected static final String DESELECTED_STYLE = "deselected";
         
-    protected HTML startStep = new HTML(PowerCalculatorGUI.constants.startStep());
+    protected HTML startStep = new HTML(PowerCalculatorGUI.constants.stepStart());
     protected Label startNumber = new Label("1");
-    protected HTML studyStep = new HTML(PowerCalculatorGUI.constants.studyStep());
+    protected HTML studyStep = new HTML(PowerCalculatorGUI.constants.stepStudy());
     protected Label studyNumber = new Label("2");
     protected HTML optionsStep = 
-        new HTML(PowerCalculatorGUI.constants.optionsStep());
+        new HTML(PowerCalculatorGUI.constants.stepOptions());
     protected Label optionsNumber = new Label("3");
-    protected HTML resultsStep = new HTML(PowerCalculatorGUI.constants.resultsStep());
+    protected HTML resultsStep = new HTML(PowerCalculatorGUI.constants.stepResults());
     protected Label resultsNumber = new Label("4");
     
     private Widget currentStep = startStep;

@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 
 public class InputWizardPanel extends Composite 
-implements NavigationListener, StartListener, OptionsListener, MatrixResizeListener
+implements NavigationListener, StartListener, OptionsListener
 {
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
@@ -36,7 +36,7 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     // start panel
 	protected StartPanel startPanel = new StartPanel();
     // options panel (always in deck after input panel)
-	protected OptionsPanel optionsPanel = new OptionsPanel(PowerCalculatorGUI.constants.testGLMM());
+	protected OptionsPanel optionsPanel = new OptionsPanel(PowerCalculatorGUI.constants.modelGLMM());
     // results panel (always in deck after options panel)
 	protected ResultsPanel resultsPanel = new ResultsPanel();
 
@@ -51,7 +51,7 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
 	protected DialogBox waitDialog;
 	
 	// currently selected model
-	protected String modelName = PowerCalculatorGUI.constants.testGLMM();
+	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();
 	protected boolean showCurve = false;
 	protected boolean solveForPower = true;
 	
@@ -80,7 +80,8 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     	
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
-    	matrixPanel.addEssenceMatrixResizeListener(this);
+    	matrixPanel.addEssenceMatrixResizeListener(optionsPanel);
+    	matrixPanel.addEssenceMatrixMetaDataListener(optionsPanel);
     	
     	// listener for options panel events to determine if we are solving for sample size or power
     	optionsPanel.addListener(this);
@@ -169,7 +170,7 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     public void onModelSelect(String modelName)
     {
     	this.modelName = modelName;
-    	if (!PowerCalculatorGUI.constants.testGLMM().equals(modelName))
+    	if (!PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
     	{
     	    panelStack.remove(INPUT_INDEX);
     	    panelStack.insert(simplePanel, INPUT_INDEX);
@@ -225,6 +226,7 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     	} 
     	catch (Exception e) 
     	{
+			waitDialog.hide();
     		Window.alert("Failed to send the request: " + e.getMessage());
     	}
     }
@@ -233,18 +235,15 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     {
     	StringBuffer buffer = new StringBuffer();
     	
-		buffer.append("<power curve='" + showCurve + "' >");
+		buffer.append("<power curve='" + showCurve + "' curveTitle='' curveXaxis='' curveYAxis='' >");
 		
-    	if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
+    	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
     	{
-    	    // add the row meta data to the essence matrix
-    	    //matrixPanel.getEssenceMatrix().addRowMetaData();
-    	    // return the 
-    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='hlt'>");
-    		buffer.append(matrixPanel.getStudyXML());
+    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='"+ optionsPanel.getStatistic() +"'>");
+    		buffer.append(matrixPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
     		buffer.append("</params>");
     	}
-    	else if (PowerCalculatorGUI.constants.testOneSampleStudentsT().equals(modelName))
+    	else if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
     	{
     		buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
     		buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
@@ -254,7 +253,7 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     	}
 
  		buffer.append("</power>");
-        //Window.alert(buffer.toString());
+        Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
@@ -263,11 +262,11 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
     	StringBuffer buffer = new StringBuffer();
     	
 		buffer.append("<sampleSize " + " curve='" + showCurve + "'>");
-    	if (PowerCalculatorGUI.constants.testGLMM().equals(modelName))
+    	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
     	{
     		
     	}
-    	else if (PowerCalculatorGUI.constants.testOneSampleStudentsT().equals(modelName))
+    	else if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
     	{
             buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
             buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
@@ -300,8 +299,4 @@ implements NavigationListener, StartListener, OptionsListener, MatrixResizeListe
         solveForPower = power;
     }
     
-    public void onMatrixResize(int rows, int cols)
-    {
-        Window.alert("Essence matrix row=" + rows + " cols=" + cols);
-    }
 }
