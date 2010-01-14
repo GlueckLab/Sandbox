@@ -268,6 +268,7 @@ implements ChangeHandler, MetaDataListener
 			ColumnMetaDataEntry colMD = (ColumnMetaDataEntry) matrixData.getWidget(0, c);
 			buffer.append(colMD.toXML());
 		}
+		buffer.append("</columnMetaData>");
 		return buffer.toString();
 	}
 	
@@ -275,10 +276,17 @@ implements ChangeHandler, MetaDataListener
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		int start = (hasMetaData ? 1 : 0);
-		buffer.append("<matrix name='" + name + "' rows='" + 
-		        matrixData.getRowCount() + "' columns='" + 
-		        matrixData.getColumnCount() + "'>");
+		int start = 0;
+		int rows = matrixData.getRowCount();
+		int cols = matrixData.getColumnCount();
+		if (hasMetaData)
+		{
+			start = 1;
+			rows--;
+			cols--;
+		}
+		buffer.append("<matrix name='" + name + "' rows='" +  rows + "' columns='" + 
+		        cols + "'>");
 
 		for(int r = start; r < matrixData.getRowCount(); r++)
 		{
