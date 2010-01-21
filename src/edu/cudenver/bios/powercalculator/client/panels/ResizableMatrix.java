@@ -272,6 +272,22 @@ implements ChangeHandler, MetaDataListener
 		return buffer.toString();
 	}
 	
+	public String rowNamesToXML()
+	{
+        StringBuffer buffer = new StringBuffer();
+	    if (hasMetaData)
+	    {
+	        buffer.append("<groupNames>");
+	        for(int r = 1; r < matrixData.getRowCount(); r++)
+	        {
+	            RowMetaDataEntry rowMD = (RowMetaDataEntry) matrixData.getWidget(r, 0);
+	            buffer.append("<r label='" + rowMD.getRowName() + "' />");
+	        }
+	        buffer.append("</groupNames>");
+	    }
+        return buffer.toString();
+	}
+	
 	public String matrixDataToXML()
 	{
 		StringBuffer buffer = new StringBuffer();

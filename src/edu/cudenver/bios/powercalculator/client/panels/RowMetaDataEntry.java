@@ -36,4 +36,9 @@ public class RowMetaDataEntry extends Composite
 	{
 		listeners.add(listener);
 	}
+	
+	public String getRowName()
+	{
+	    return rowMD.getText();
+	}
 }
