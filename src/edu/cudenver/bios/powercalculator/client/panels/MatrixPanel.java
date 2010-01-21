@@ -183,7 +183,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 	
 	public void onClick(ClickEvent e)
 	{
-	    matrixXML.setValue("<study><params alpha='" + alphaTextBox.getText() + "'>" + getStudyXML("") + "</params></study>");
+	    matrixXML.setValue("<study><params alpha='" + alphaTextBox.getText() + "'>" + getStudyXML(essence.rowNamesToXML()) + "</params></study>");
 	    form.submit();
 	}
 	
@@ -219,7 +219,6 @@ public class MatrixPanel extends Composite implements ClickHandler
             buffer.append(sigmaOutcomes.matrixDataToXML());
             buffer.append(rhoCovariateOutcome.matrixDataToXML());
 		}
-		Window.alert(buffer.toString());
 		return buffer.toString();
 	}
 	
