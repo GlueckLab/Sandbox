@@ -53,6 +53,7 @@ implements NavigationListener, StartListener, OptionsListener
 	// currently selected model
 	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();
 	protected boolean showCurve = false;
+	protected CurveOptions curveOpts = null;
 	protected boolean solveForPower = true;
 	
     public InputWizardPanel()
@@ -235,7 +236,8 @@ implements NavigationListener, StartListener, OptionsListener
     {
     	StringBuffer buffer = new StringBuffer();
     	
-		buffer.append("<power curve='" + showCurve + "' curveTitle='' curveXaxis='' curveYAxis='' >");
+		buffer.append("<power curve='" + showCurve + "' curveTitle='" + curveOpts.title + 
+		        "' curveXaxis='" + curveOpts.xAxisLabel + "' curveYAxis='" + curveOpts.yAxisLabel + "' >");
 		
     	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
     	{
@@ -289,9 +291,10 @@ implements NavigationListener, StartListener, OptionsListener
         return dialogBox;
     }
     
-    public void onShowCurve(boolean show)
+    public void onShowCurve(boolean show, CurveOptions opts)
     {
         showCurve = show;
+        curveOpts = opts;
     }
     
     public void onSolveFor(boolean power)

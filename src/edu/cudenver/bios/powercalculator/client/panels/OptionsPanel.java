@@ -244,7 +244,7 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 		testStatisticList.addItem("Hotelling Lawley Trace", "hlt");
 		testStatisticList.addItem("Univariate Approach To Repeated Measures", "unirep");
 		testStatisticList.addItem("Wilk's Lambda", "wl");
-		testStatisticList.addItem("Pillau Bartlett Trace", "pb");
+		testStatisticList.addItem("Pillau Bartlett Trace", "pbt");
 
 		// build the covariate adjustment method selection list
 		covariateAdjustList.addItem("Conditional Power", "cond");
@@ -310,7 +310,15 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 
 	private void notifyOnShowCurve(boolean showCurve)
 	{
-		for(OptionsListener listener: listeners) listener.onShowCurve(showCurve);
+	    CurveOptions curveOpts = null;
+	    if (showCurve)
+	    {
+	        curveOpts = new CurveOptions();
+	        curveOpts.title = curveTitleTextBox.getText();
+	        curveOpts.xAxisLabel = this.curveXAxisLabel.getText();
+	        curveOpts.yAxisLabel = this.curveYAxisLabel.getText();
+	    }
+		for(OptionsListener listener: listeners) listener.onShowCurve(showCurve, curveOpts);
 	}
 
 	public void onMatrixResize(int rows, int cols)

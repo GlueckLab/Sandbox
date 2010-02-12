@@ -4,5 +4,5 @@ public interface OptionsListener
 {
     public void onSolveFor(boolean solvingForPower);
     
-    public void onShowCurve(boolean showCurve);
+    public void onShowCurve(boolean showCurve, CurveOptions opts);
 }
