@@ -235,13 +235,16 @@ implements NavigationListener, StartListener, OptionsListener
     private String buildPowerRequestXML()
     {
     	StringBuffer buffer = new StringBuffer();
-    	
-		buffer.append("<power curve='" + showCurve + "' curveTitle='" + curveOpts.title + 
-		        "' curveXaxis='" + curveOpts.xAxisLabel + "' curveYAxis='" + curveOpts.yAxisLabel + "' >");
-		
+		buffer.append("<power curve='" + showCurve + "' ");
+		if (curveOpts != null)
+		    buffer.append("curveTitle='" + curveOpts.title + 
+		        "' curveXaxis='" + curveOpts.xAxisLabel + "' curveYAxis='" + curveOpts.yAxisLabel + "'");
+		buffer.append(">");
+
     	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
     	{
-    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='"+ optionsPanel.getStatistic() +"'>");
+    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='"+ optionsPanel.getStatistic() +
+    	            "' powerMethod='" + optionsPanel.getPowerMethod() +"'>");
     		buffer.append(matrixPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
     		buffer.append("</params>");
     	}

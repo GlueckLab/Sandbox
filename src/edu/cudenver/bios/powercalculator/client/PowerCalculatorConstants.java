@@ -63,8 +63,8 @@ public interface PowerCalculatorConstants extends Constants
 	public String matrixSigmaGDetails();
 	public String matrixSigmaY();
 	public String matrixSigmaYDetails();
-	public String matrixRhoGY();
-	public String matrixRhoGYDetails();
+	public String matrixSigmaYG();
+	public String matrixSigmaYGDetails();
 	public String matrixBetweenSubjectContrast();
 	public String matrixBetweenSubjectContrastDetails();
 	public String matrixWithinSubjectContrast();

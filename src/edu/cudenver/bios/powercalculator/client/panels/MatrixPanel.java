@@ -2,7 +2,6 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -47,14 +46,14 @@ public class MatrixPanel extends Composite implements ClickHandler
 	        PowerCalculatorGUI.constants.matrixSigmaErrorDetails(), DEFAULT_P, DEFAULT_P, false);
 	/* the following are needed for a baseline covariate */
 	// variance of the baseline covariate
-	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaG", PowerCalculatorGUI.constants.matrixSigmaG(), 
+	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaGaussianRandom", PowerCalculatorGUI.constants.matrixSigmaG(), 
 	        PowerCalculatorGUI.constants.matrixSigmaGDetails(), DEFAULT_P, DEFAULT_P, false);
 	// variance/covariance of the outcomes
-	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaY", PowerCalculatorGUI.constants.matrixSigmaY(), 
+	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaOutcome", PowerCalculatorGUI.constants.matrixSigmaY(), 
 	        PowerCalculatorGUI.constants.matrixSigmaYDetails(), DEFAULT_P, DEFAULT_P, false);
 	// correlation of covariate and outcomes
-	protected ResizableMatrix rhoCovariateOutcome = new ResizableMatrix("rhoGY", PowerCalculatorGUI.constants.matrixRhoGY(), 
-	        PowerCalculatorGUI.constants.matrixRhoGYDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaCovariateOutcome = new ResizableMatrix("sigmaOutcomeGaussianRandom", PowerCalculatorGUI.constants.matrixSigmaYG(), 
+	        PowerCalculatorGUI.constants.matrixSigmaYGDetails(), DEFAULT_P, DEFAULT_P, false);
 
 	protected DeckPanel sigmaDeck = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
@@ -83,7 +82,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		// deck panel since we have different variance/covariance matrices
 		// for all fixed predictors vs. a baseline covariate 
 	    VerticalPanel covariateSigma = new VerticalPanel();
-	    covariateSigma.add(rhoCovariateOutcome);
+	    covariateSigma.add(sigmaCovariateOutcome);
 	    covariateSigma.add(sigmaCovariate);
 	    covariateSigma.add(sigmaOutcomes);
 	    sigmaDeck.add(sigma);
@@ -217,7 +216,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		{
 		    buffer.append(sigmaCovariate.matrixDataToXML());
             buffer.append(sigmaOutcomes.matrixDataToXML());
-            buffer.append(rhoCovariateOutcome.matrixDataToXML());
+            buffer.append(sigmaCovariateOutcome.matrixDataToXML());
 		}
 		return buffer.toString();
 	}

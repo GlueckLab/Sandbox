@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -59,7 +58,8 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 
 	// statistical method lists for GLMM
 	protected ListBox testStatisticList = new ListBox();
-	protected ListBox covariateAdjustList = new ListBox();
+	protected ListBox powerMethodList = new ListBox();
+    protected ListBox unirepCorrectionList = new ListBox();
 
 	protected String modelName;
 
@@ -247,15 +247,15 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 		testStatisticList.addItem("Pillau Bartlett Trace", "pbt");
 
 		// build the covariate adjustment method selection list
-		covariateAdjustList.addItem("Conditional Power", "cond");
-		covariateAdjustList.addItem("Quantile Power", "quantile");
-		covariateAdjustList.addItem("Unconditional Power", "uncond");
+		powerMethodList.addItem("Conditional Power", "cond");
+		powerMethodList.addItem("Quantile Power", "quantile");
+		powerMethodList.addItem("Unconditional Power", "uncond");
 
 		Grid grid = new Grid(2,2);
 		grid.setWidget(0, 0, new HTML("Test Statistic: "));
 		grid.setWidget(0, 1, testStatisticList);
-		grid.setWidget(1, 0, new HTML("Covariate Adjustment Method: "));
-		grid.setWidget(1, 1, covariateAdjustList);
+		grid.setWidget(1, 0, new HTML("Power Approximation Method: "));
+		grid.setWidget(1, 1, powerMethodList);
 
 		return grid;
 	}
@@ -298,6 +298,16 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 		return testStatisticList.getValue(testStatisticList.getSelectedIndex());
 	}
 	
+	public String getPowerMethod()
+	{
+	    return powerMethodList.getValue(powerMethodList.getSelectedIndex());
+	}
+	
+	public String getUnivariateAdjustment()
+	{
+	    return unirepCorrectionList.getValue(unirepCorrectionList.getSelectedIndex());
+	}
+	
 	public void addListener(OptionsListener listener)
 	{
 		listeners.add(listener);
@@ -325,7 +335,6 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 	{
 		int oldRows = rowMetaData.getRowCount()-1;
 		rowMetaData.resize(rows+1, rowMetaData.getColumnCount()); //+1 for table header
-		Window.alert("rows=" + rows + " oldRows=" + oldRows);
 		if (rows > oldRows) 
 		{
 			// initialize the new rows
