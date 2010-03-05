@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 
 public class StepsLeftPanel extends Composite implements NavigationListener
 {

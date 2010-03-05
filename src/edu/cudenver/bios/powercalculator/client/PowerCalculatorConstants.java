@@ -11,13 +11,6 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface PowerCalculatorConstants extends Constants
 {
-    // model names supported by power REST service
-    public String modelGLMM();
-    public String modelOneSampleStudentsT();
-    // human-readable labels for the models
-	public String labelGLMM();
-	public String labelOneSampleStudentsT();
-
 	// wizard navigation button labels
 	public String buttonNext();
 	public String buttonPrevious();
@@ -34,13 +27,26 @@ public interface PowerCalculatorConstants extends Constants
 	public String stepResults();
 	
 	// Start panel constants	
+	public String textStartPanelHeader();
 	public String textStartPanelDescription();
+    public String buttonNewStudy();
+    public String buttonExistingStudy();    
+    
+    // create new study panel constants
+    public String textCreateNewStudyPanelHeader();
+    public String textCreateNewStudyPanelDescription();
 	public String listBoxModel();
-	public String radioGroupLabelStudyInput();
-	public String radioButtonBasicInput();
-	public String radioButtonMatrixInput();
-	public String radioButtonUploadInput();
-
+    // model names supported by power REST service
+    public String modelGLMM();
+    public String modelOneSampleStudentsT();
+    // human-readable labels for the models
+    public String labelGLMM();
+    public String labelOneSampleStudentsT();
+    
+    // upload existing study panel constants
+    public String textExistingStudyPanelHeader();
+    public String textExistingStudyPanelDescription();
+    
 	// text inputs
 	public String textLabelAlpha();
 	public String textLabelPower();

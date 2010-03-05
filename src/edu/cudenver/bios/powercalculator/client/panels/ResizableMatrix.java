@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
+import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
 public class ResizableMatrix extends Composite 
 implements ChangeHandler, MetaDataListener

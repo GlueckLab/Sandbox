@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
+
 public class ColumnMetaDataPanel extends Composite implements MetaDataListener
 {
     private static final String STYLE = "columnMetaData";

@@ -7,6 +7,8 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 
+import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
+
 public class RowMetaDataEntry extends Composite
 {
 	private static final String STYLE = "rowMetaData";

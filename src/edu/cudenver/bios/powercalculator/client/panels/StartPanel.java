@@ -1,20 +1,40 @@
+/*
+ * .NAME SOFTWARE, one line about what it does
+ * 
+ * Copyright (C) 2010 Regents of the University of Colorado.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Please contact Sarah Kreidler (sarah.kreidler@ucdenver.edu) for more information
+ * about this software.  Or visit the website at <>
+ */
+
 package edu.cudenver.bios.powercalculator.client.panels;
 
 import java.util.ArrayList;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 
 /**
  * Welcome / start panel in the input wizard for the power calculator 
@@ -24,115 +44,80 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
  * @author Owner
  *
  */
-public class StartPanel extends Composite implements ClickHandler, ChangeHandler
+public class StartPanel extends Composite implements ClickHandler
 {
-	public enum InputType {
-		BASIC,
-		MATRIX,
-		UPLOAD
-	};
+    private static final String CONTAINER_STYLE = "startPanel";
+    private static final String HEADER_STYLE = "startPanelHeader";
+    private static final String DESCRIPTION_STYLE = "startPanelDescription";
 
-	private static final String INPUT_RADIO_GOUP = "inputRadioGroup";
+    protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
 
-	protected ArrayList<StartListener> listeners = new ArrayList<StartListener>();
-	protected VerticalPanel inputSelectPanel = new VerticalPanel();
-	protected RadioButton basicRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonBasicInput());
-	protected RadioButton matrixRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonMatrixInput());
-	protected RadioButton uploadRb = new RadioButton(INPUT_RADIO_GOUP, PowerCalculatorGUI.constants.radioButtonUploadInput());
-	protected ListBox modelList = new ListBox();
+    protected Button newStudyButton = new Button(PowerCalculatorGUI.constants.buttonNewStudy(), this);
+    protected Button existingStudyButton = new Button(PowerCalculatorGUI.constants.buttonExistingStudy(), this);
     
-	public StartPanel()
-	{
-		VerticalPanel panel = new VerticalPanel();
-		// add introductory text
-		panel.add(new HTML(PowerCalculatorGUI.constants.textStartPanelDescription()));
-		
-		// add model selection list
-		HorizontalPanel modelPanel = new HorizontalPanel();
-		modelPanel.add(new HTML(PowerCalculatorGUI.constants.listBoxModel()));
-		modelList.addItem(PowerCalculatorGUI.constants.labelOneSampleStudentsT(), 
-				PowerCalculatorGUI.constants.modelOneSampleStudentsT());
-		modelList.addItem(PowerCalculatorGUI.constants.labelGLMM(), PowerCalculatorGUI.constants.modelGLMM());
-		modelList.setItemSelected(1, true); // select glmm as default
-		modelList.addChangeHandler(this);
-		modelPanel.add(modelList);
-		panel.add(modelPanel);
-	    
-		// build input selection panel - only visible if GLMM is selected as model
-	    inputSelectPanel.add(new HTML(PowerCalculatorGUI.constants.radioGroupLabelStudyInput()));
-		inputSelectPanel.add(basicRb);
-		inputSelectPanel.add(matrixRb);
-		inputSelectPanel.add(uploadRb);
-		panel.add(inputSelectPanel);
-		
-		// add radio button callbacks for input type selection
-	    basicRb.addClickHandler(this);
-	    matrixRb.addClickHandler(this);
-	    uploadRb.addClickHandler(this);
-	    basicRb.setValue(true);
-		initWidget(panel);
-	}
-	
-	/**
-	 * 
-	 * @param listener 
-	 */
-	public void addListener(StartListener listener)
-	{
-		listeners.add(listener);
-	}
-	
-	public void onClick(ClickEvent e)
-	{
-		Widget sender = (Widget) e.getSource();
-		if (sender == basicRb)
-		{
-			notifyInputType(InputType.BASIC);
-		}
-		else if (sender == matrixRb)
-		{
-			notifyInputType(InputType.MATRIX);
-		}
-		else if (sender == uploadRb)
-		{
-			notifyInputType(InputType.UPLOAD);
-		}
-	}
-	
-	public void onChange(ChangeEvent e)
-	{
-		Widget sender = (Widget) e.getSource();
-		if (sender == modelList)
-		{
-		    String value = modelList.getValue(modelList.getSelectedIndex());
-		    if (value != null && !value.isEmpty())
-		    {
-		        if (PowerCalculatorGUI.constants.modelGLMM().equals(value))
-		        {
-		            inputSelectPanel.setVisible(true);
-		            if (basicRb.getValue())
-		            	notifyInputType(InputType.BASIC);
-		            else if (uploadRb.getValue())
-		            	notifyInputType(InputType.UPLOAD);
-		            else if (matrixRb.getValue())
-		            	notifyInputType(InputType.UPLOAD);
-		        }
-		        else
-		        {
-		            inputSelectPanel.setVisible(false);
-		        }
-		    }
-			notifyModel(value);
-		}
-	}
-	
-	private void notifyInputType(InputType type)
-	{
-		for(StartListener listener: listeners) listener.onInputTypeSelect(type);
-	}
-	
-	private void notifyModel(String modelName)
-	{
-		for(StartListener listener: listeners) listener.onModelSelect(modelName);
-	}
+    public StartPanel()
+    {
+        VerticalPanel panel = new VerticalPanel();
+
+        // layout the widgets        
+        // add introductory text
+        HTML header = new HTML(PowerCalculatorGUI.constants.textStartPanelHeader());
+        HTML description = new HTML(PowerCalculatorGUI.constants.textStartPanelDescription());
+        panel.add(header);
+        panel.add(description);
+        // add buttons
+        panel.add(newStudyButton);
+        panel.add(existingStudyButton);
+        
+        // add style
+        panel.setStyleName(CONTAINER_STYLE);
+        header.setStyleName(HEADER_STYLE);
+        description.setStyleName(DESCRIPTION_STYLE);
+                
+        initWidget(panel);
+    }
+    
+    /**
+     * Notify the input wizard as to whether the user is
+     * creating a new study or uploading an existing design
+     */
+    public void onClick(ClickEvent e)
+    {
+        Widget sender = (Widget) e.getSource();
+        if (sender == newStudyButton)
+        {
+            notifyOnNewStudy();
+        }
+        else
+        {
+            notifyOnExistingStudy();
+        }
+    }
+    
+    /**
+     * Add a listener for "start events" which indicate if the user
+     * wants to create a new study, or upload an existing design
+     * 
+     * @param listener 
+     */
+    public void addListener(StartListener listener)
+    {
+        listeners.add(listener);
+    }
+    
+    /**
+     * Notify listeners about new study creation request
+     */
+    private void notifyOnNewStudy()
+    {
+        for(StartListener listener: listeners) listener.onNewStudy();
+    }
+    
+    /**
+     * Notify listeners about existing study request
+     */
+    private void notifyOnExistingStudy()
+    {
+        for(StartListener listener: listeners) listener.onExistingStudy();
+    }
 }

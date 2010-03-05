@@ -82,11 +82,22 @@ public class UploadPanel extends Composite
         formPanel.addSubmitCompleteHandler(new SubmitCompleteHandler() {
             public void onSubmitComplete(SubmitCompleteEvent event) 
             {
-                Document doc = XMLParser.parse(event.getResults());
-                if (doc != null)
-                    notifyOnStudyUpload(doc);
+
+                String results = event.getResults();
+                Window.alert(results);
+                if (results != null)
+                {
+                    Document doc = XMLParser.parse(event.getResults());
+                    if (doc != null)
+                        notifyOnStudyUpload(doc);
+                    else
+                        Window.alert("Uploaded file does not appear to contain a valid study description.  Please try another file.");
+                }
                 else
-                    Window.alert("Uploaded file does not appear to contain a valid study description.  Please try another file.");
+                {
+                    Window.alert("Failed to upload file.  Please try again");
+                }
+
             }
         });
 
