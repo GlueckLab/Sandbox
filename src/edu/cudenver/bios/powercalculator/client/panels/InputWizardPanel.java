@@ -49,7 +49,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
 	protected UploadPanel existingStudyPanel = new UploadPanel();
 	
     // options panel (always in deck after input panel)
-	protected OptionsPanel optionsPanel = new OptionsPanel(PowerCalculatorGUI.constants.modelGLMM());
+	protected OptionsPanel optionsPanel = new OptionsPanel();
     // results panel (always in deck after options panel)
 	protected ResultsPanel resultsPanel = new ResultsPanel();
 
@@ -95,13 +95,17 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         startOver(true);
         
         // setup callbacks between the panels
-        // upload panel notifies study design panel when study is uploaded
-        uploadPanel.addStudyUploadListener(this);
-        uploadPanel.addStudyUploadListener(studyDesignPanel);
         // listen for start panel to determine if we are creating a new study
         // or using an existing study
     	startPanel.addListener(this);
     	
+        // upload panel notifies study design panel when study is uploaded
+        uploadPanel.addStudyUploadListener(this);
+        uploadPanel.addStudyUploadListener(studyDesignPanel);
+        
+        // listen for model name changes from the create study panel
+        newStudyPanel.addModelSelectListener(studyDesignPanel);
+        newStudyPanel.addModelSelectListener(optionsPanel);
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
     	studyDesignPanel.addEssenceMatrixResizeListener(optionsPanel);
@@ -170,6 +174,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
             panelStack.showWidget(PANEL_STACK_OPTIONS);
             break;
         case PANEL_STACK_OPTIONS:
+            retrieveResults();
             panelStack.showWidget(PANEL_STACK_RESULTS);
             break;
         default:
@@ -183,18 +188,6 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     public void onCancel()
     {
         startOver(true);
-    }
-    
-    public void onModelSelect(String modelName)
-    {
-//    	this.modelName = modelName;
-//    	if (!PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-//    	{
-//    	    panelStack.remove(INPUT_INDEX);
-//    	    panelStack.insert(simplePanel, INPUT_INDEX);
-//    	}
-//    	// update the power/sample size options panel
-//    	optionsPanel.setModel(modelName);
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -211,95 +204,69 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     	else
             builder = new RequestBuilder(RequestBuilder.POST, SAMPLE_SIZE_URL + modelName);
 
-//    	try 
-//    	{
-//    		builder.setHeader("Content-Type", "text/xml");
-//    		builder.sendRequest((solveForPower ? buildPowerRequestXML() : buildSampleSizeRequestXML()),
-//    		        new RequestCallback() {
-//
-//    			public void onError(Request request, Throwable exception) 
-//    			{
-//    				waitDialog.hide();
-//    				Window.alert("Calculation failed: " + exception.getMessage());	
-//    			}
-//
-//    			public void onResponseReceived(Request request, Response response) 
-//    			{
-//    				waitDialog.hide();
-//    				if (STATUS_CODE_OK == response.getStatusCode() ||
-//    						STATUS_CODE_CREATED == response.getStatusCode()) 
-//    				{
-//    				    if (solveForPower)
-//    				        resultsPanel.setPowerResults(response.getText());
-//    				    else
-//    				        resultsPanel.setSampleSizeResults(response.getText());
-//    				} 
-//    				else 
-//    				{
-//    					Window.alert("Calculation failed: [HTTP STATUS " + 
-//    					        response.getStatusCode() + "] " + response.getText());
-//    				}
-//    			}
-//    		});
-//    	} 
-//    	catch (Exception e) 
-//    	{
-//			waitDialog.hide();
-//    		Window.alert("Failed to send the request: " + e.getMessage());
-//    	}
+    	try 
+    	{
+    		builder.setHeader("Content-Type", "text/xml");
+    		builder.sendRequest((solveForPower ? buildPowerRequestXML() : buildSampleSizeRequestXML()),
+    		        new RequestCallback() {
+
+    			public void onError(Request request, Throwable exception) 
+    			{
+    				waitDialog.hide();
+    				Window.alert("Calculation failed: " + exception.getMessage());	
+    			}
+
+    			public void onResponseReceived(Request request, Response response) 
+    			{
+    				waitDialog.hide();
+    				if (STATUS_CODE_OK == response.getStatusCode() ||
+    						STATUS_CODE_CREATED == response.getStatusCode()) 
+    				{
+    				    if (solveForPower)
+    				        resultsPanel.setPowerResults(response.getText());
+    				    else
+    				        resultsPanel.setSampleSizeResults(response.getText());
+    				} 
+    				else 
+    				{
+    					Window.alert("Calculation failed: [HTTP STATUS " + 
+    					        response.getStatusCode() + "] " + response.getText());
+    				}
+    			}
+    		});
+    	} 
+    	catch (Exception e) 
+    	{
+			waitDialog.hide();
+    		Window.alert("Failed to send the request: " + e.getMessage());
+    	}
     }
 
-//    private String buildPowerRequestXML()
-//    {
-//    	StringBuffer buffer = new StringBuffer();
-//		buffer.append("<power curve='" + showCurve + "' ");
-//		if (curveOpts != null)
-//		    buffer.append("curveTitle='" + curveOpts.title + 
-//		        "' curveXaxis='" + curveOpts.xAxisLabel + "' curveYAxis='" + curveOpts.yAxisLabel + "'");
-//		buffer.append(">");
-//
-//    	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-//    	{
-//    	    buffer.append("<params alpha='" + matrixPanel.getAlpha() + "' statistic='"+ optionsPanel.getStatistic() +
-//    	            "' powerMethod='" + optionsPanel.getPowerMethod() +"'>");
-//    		buffer.append(matrixPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
-//    		buffer.append("</params>");
-//    	}
-//    	else if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
-//    	{
-//    		buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
-//    		buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
-//    		buffer.append(" muA='" + simplePanel.getAlternativeMean() + "' ");
-//    		buffer.append(" sigma='" + simplePanel.getSigma() + "' ");
-//    		buffer.append(" sampleSize='" + optionsPanel.getSampleSize() + "' />");
-//    	}
-//
-// 		buffer.append("</power>");
-//        Window.alert(buffer.toString());
-//    	return buffer.toString();
-//    }
-//    
-//    private String buildSampleSizeRequestXML()
-//    {
-//    	StringBuffer buffer = new StringBuffer();
-//    	
-//		buffer.append("<sampleSize " + " curve='" + showCurve + "'>");
-//    	if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-//    	{
-//    		
-//    	}
-//    	else if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
-//    	{
-//            buffer.append("<params alpha='" + simplePanel.getAlpha() + "' ");
-//            buffer.append(" mu0='" + simplePanel.getNullMean() + "' ");
-//            buffer.append(" muA='" + simplePanel.getAlternativeMean() + "' ");
-//            buffer.append(" sigma='" + simplePanel.getSigma() + "' ");
-//            buffer.append(" power='" + optionsPanel.getPower() + "' />");
-//    	}
-// 		buffer.append("</sampleSize>");
-//        //Window.alert(buffer.toString());
-//    	return buffer.toString();
-//    }
+    private String buildPowerRequestXML()
+    {      
+    	StringBuffer buffer = new StringBuffer();
+    	buffer.append("<power " + optionsPanel.getGraphicsAttributes() + ">");
+
+		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
+		        optionsPanel.getPowerAttributes() + ">");
+		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+		buffer.append("</params></power>");
+        Window.alert(buffer.toString());
+    	return buffer.toString();
+    }
+    
+    private String buildSampleSizeRequestXML()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<sampleSize " + optionsPanel.getGraphicsAttributes() + ">");
+
+        buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
+                optionsPanel.getSampleSizeAttributes() + ">");
+        buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+        buffer.append("</params></sampleSize>");
+        Window.alert(buffer.toString());
+        return buffer.toString();
+    }
     
     private DialogBox createWaitDialog()
     {

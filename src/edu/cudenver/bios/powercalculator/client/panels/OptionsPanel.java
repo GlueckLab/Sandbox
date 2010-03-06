@@ -18,9 +18,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
+import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 
-public class OptionsPanel extends Composite implements MatrixResizeListener, MetaDataListener
+public class OptionsPanel extends Composite 
+implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 {
 	private static final String DEFAULT_REPS = "2";
 	private static final String DEFAULT_RATIO = "1";
@@ -64,11 +66,11 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 	protected ListBox powerMethodList = new ListBox();
     protected ListBox unirepCorrectionList = new ListBox();
 
-	protected String modelName;
+	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();;
 
 	protected ArrayList<OptionsListener> listeners = new ArrayList<OptionsListener>();
 
-	public OptionsPanel(String model)
+	public OptionsPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
 
@@ -78,13 +80,13 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
 		panel.add(createCurveOptionsPanel());
 
 		// set up the panel display based on the model name
-		setModel(model);
+		onModelSelect(modelName);
 		
 		// initialize widget
 		initWidget(panel);
 	}
 
-	public void setModel(String modelName)
+	public void onModelSelect(String modelName)
 	{
 		this.modelName = modelName;
 		updateDeck();
@@ -367,5 +369,48 @@ public class OptionsPanel extends Composite implements MatrixResizeListener, Met
     {
     	HTML label = (HTML) rowMetaData.getWidget(row, 0);
     	label.setText(name);
+    }
+    
+    public String getGraphicsAttributes()
+    {      
+        boolean showCurve = showCurveCheckBox.getValue();
+        if (showCurve)
+        {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("curve='" + showCurveCheckBox.getValue() + "' ");
+            buffer.append("curveTitle='" + curveTitleTextBox.getText() + "' ");
+            buffer.append("curveXaxis='" + curveXAxisLabel.getText() + "' ");
+            buffer.append("curveYAxis='" + curveYAxisLabel.getText() + "'");  
+            return buffer.toString();
+        }
+        else
+        {
+            // no graphics options set
+            return ""; 
+        }
+    }
+    
+    public String getPowerAttributes()
+    {
+        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
+        {
+            return "statistic='"+ getStatistic() + "' powerMethod='" + getPowerMethod() + "'";
+        }
+        else
+        {
+            return "sampleSize='" + getSampleSize() + "'";
+        }
+    }
+    
+    public String getSampleSizeAttributes()
+    {
+        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
+        {
+            return "statistic='"+ getStatistic() + "' powerMethod='" + getPowerMethod() +"'";
+        }
+        else
+        {
+            return "power='" + getPower() + "'";
+        }
     }
 }
