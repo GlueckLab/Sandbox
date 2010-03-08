@@ -23,9 +23,9 @@ public class SimplePanel extends Composite
         grid.setWidget(0, 0, new HTML(PowerCalculatorGUI.constants.textLabelAlpha()));
         grid.setWidget(0, 1, alpha);
         grid.setWidget(1, 0, new HTML(PowerCalculatorGUI.constants.textLabelMu0()));
-        grid.setWidget(1, 1, muA);
+        grid.setWidget(1, 1, mu0);
         grid.setWidget(2, 0, new HTML(PowerCalculatorGUI.constants.textLabelMuA()));
-        grid.setWidget(2, 1, mu0);
+        grid.setWidget(2, 1, muA);
         grid.setWidget(3, 0, new HTML(PowerCalculatorGUI.constants.textLabelSigma()));
         grid.setWidget(3, 1, sigma);
         panel.add(grid);

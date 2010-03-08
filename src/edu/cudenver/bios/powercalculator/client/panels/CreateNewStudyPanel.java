@@ -16,6 +16,11 @@ import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 
 public class CreateNewStudyPanel extends Composite implements ChangeHandler
 {
+    private static final String CONTAINER_STYLE = "newStudyPanel";
+    private static final String HEADER_STYLE = "newStudyHeader";
+    private static final String DESCRIPTION_STYLE = "newStudyDescription";
+    private static final String MODEL_CONTAINER_STYLE = "newStudyModelContainer";
+    
     protected ArrayList<ModelSelectListener> listeners = new ArrayList<ModelSelectListener>();
     protected ListBox modelList = new ListBox();
     
@@ -23,8 +28,10 @@ public class CreateNewStudyPanel extends Composite implements ChangeHandler
     {
         VerticalPanel panel = new VerticalPanel();
         // add study create instructions
-        panel.add(new HTML(PowerCalculatorGUI.constants.textCreateNewStudyPanelHeader()));
-        panel.add(new HTML(PowerCalculatorGUI.constants.textCreateNewStudyPanelDescription()));
+        HTML header = new HTML(PowerCalculatorGUI.constants.textCreateNewStudyPanelHeader());
+        HTML description = new HTML(PowerCalculatorGUI.constants.textCreateNewStudyPanelDescription());
+        panel.add(header);
+        panel.add(description);
 
         // add model selection list
         HorizontalPanel modelPanel = new HorizontalPanel();
@@ -36,6 +43,13 @@ public class CreateNewStudyPanel extends Composite implements ChangeHandler
         modelList.addChangeHandler(this);
         modelPanel.add(modelList);
         panel.add(modelPanel);
+        
+        // add style
+        panel.setStyleName(CONTAINER_STYLE);
+        header.setStyleName(HEADER_STYLE);
+        description.setStyleName(DESCRIPTION_STYLE);
+        modelPanel.setStyleName(MODEL_CONTAINER_STYLE);
+        
         initWidget(panel);
     }
     

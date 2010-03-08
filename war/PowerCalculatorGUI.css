@@ -8,8 +8,6 @@
 
 body {
 	background: #c0b3a3;
-	margin: 0px;
-	padding: 0px;
 }
 
 /** header style **/
@@ -66,12 +64,74 @@ body {
 /* Container for steps left and input wizard */
 .powerCalculatorPanel {
 	width: 100%;
-	margin-right: auto;
-	margin-left: auto;
+	margin: 0 auto;
 	border: 5px solid #ccc;
-	padding: 5px;
+	padding: 0px;	
 }
 	
+/* style for main wizard input panel (GWT class) */
+
+.inputPanel {
+	margin: 0 auto;
+	min-height: 400;
+	min-width: 400;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color: black;
+	text-align: center;
+	border: 1px solid black;
+	padding: 5px;
+}
+
+/**** Start Panel Style *****/
+
+.startPanelButtonContainer {
+	margin: 0 auto;	
+}
+
+.startPanel .gwt-Button {
+	margin-bottom: 10px;
+	float: center;
+	width: 250;
+	border: 5px solid #204d89;
+}
+
+.startPanelHeader {
+	margin: 0 auto;
+	text-align: center;
+	width: 80%;
+}
+
+.startPanelDescription {
+	margin: 0 auto;
+	text-align: left;
+	width: 60%;
+}
+	
+/* New study panel style */
+.newStudyPanel {
+	margin: 0 auto;	
+	spacing: 20px;
+	min-height: 200;
+}
+
+.newStudyModelContainer {
+	margin: 10 auto;	
+}
+
+.newStudyHeader {
+	font-weight: bold;
+	margin: 10 auto;
+	text-align: center;
+	width: 80%;
+}
+
+.newStudyDescription {
+	margin: 10 auto;
+	text-align: left;
+	width: 60%;
+}
+	
+
 /* Style for "steps left" banner above the input wizard. */
 
 .stepsLeftPanel {
@@ -114,18 +174,7 @@ body {
 
 
 
-/* style for middle input panel (GWT class) */
 
-.inputPanel {
-	margin-right: auto;
-	margin-left: auto;
-	min-height: 200;
-	min-width: 400;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	color: black;
-	text-align: center;
-	padding: 10px;
-}
 
 /* navigation bar style sheet */
 

@@ -13,13 +13,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class InputWizardPanel extends Composite 
-implements NavigationListener, StartListener, OptionsListener, StudyUploadListener
+implements NavigationListener, StartListener, OptionsListener, StudyUploadListener, ModelSelectListener
 {
     private static final int PANEL_STACK_START = 0;
     private static final int PANEL_STACK_NEW_STUDY = 1;
@@ -68,7 +69,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
 	protected CurveOptions curveOpts = null;
 	protected boolean solveForPower = true;
 	
-    public InputWizardPanel()
+    public InputWizardPanel() 
     {
         VerticalPanel container = new VerticalPanel();
 
@@ -104,6 +105,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         uploadPanel.addStudyUploadListener(studyDesignPanel);
         
         // listen for model name changes from the create study panel
+        newStudyPanel.addModelSelectListener(this);
         newStudyPanel.addModelSelectListener(studyDesignPanel);
         newStudyPanel.addModelSelectListener(optionsPanel);
     	// listener for resize events on the essence matrix to allow 
@@ -115,7 +117,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     	optionsPanel.addListener(this);
        
         // add style to container and panel stack
-        panelStack.setStyleName(STYLE);
+        //panelStack.setStyleName(STYLE);
         container.setStyleName(STYLE);
         
         // initialize the composite widget
@@ -308,5 +310,10 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     {
         Window.alert("hello?");
         this.onNext();
+    }
+    
+    public void onModelSelect(String modelName)
+    {
+        this.modelName = modelName;
     }
 }

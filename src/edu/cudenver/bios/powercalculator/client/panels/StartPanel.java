@@ -47,6 +47,7 @@ import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 public class StartPanel extends Composite implements ClickHandler
 {
     private static final String CONTAINER_STYLE = "startPanel";
+    private static final String BUTTON_CONTAINER_STYLE = "startPanelButtonContainer";
     private static final String HEADER_STYLE = "startPanelHeader";
     private static final String DESCRIPTION_STYLE = "startPanelDescription";
 
@@ -66,11 +67,14 @@ public class StartPanel extends Composite implements ClickHandler
         panel.add(header);
         panel.add(description);
         // add buttons
-        panel.add(newStudyButton);
-        panel.add(existingStudyButton);
+        VerticalPanel buttonContainer = new VerticalPanel();
+        buttonContainer.add(newStudyButton);
+        buttonContainer.add(existingStudyButton);
+        panel.add(buttonContainer);
         
         // add style
         panel.setStyleName(CONTAINER_STYLE);
+        buttonContainer.setStyleName(BUTTON_CONTAINER_STYLE);
         header.setStyleName(HEADER_STYLE);
         description.setStyleName(DESCRIPTION_STYLE);
                 

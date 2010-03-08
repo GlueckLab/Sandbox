@@ -78,7 +78,7 @@ implements StudyUploadListener, ModelSelectListener
             buffer.append("alpha='" + simplePanel.getAlpha() + "' ");
             buffer.append("mu0='" + simplePanel.getNullMean() + "' ");
             buffer.append("muA='" + simplePanel.getAlternativeMean() + "' ");
-            buffer.append("sigma='" + simplePanel.getSigma() + "'");
+            buffer.append("sigmaError='" + simplePanel.getSigma() + "'");
             return buffer.toString();
         }
     }
