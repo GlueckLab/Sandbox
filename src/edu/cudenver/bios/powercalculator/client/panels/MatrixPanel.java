@@ -64,6 +64,9 @@ public class MatrixPanel extends Composite implements ClickHandler
 	protected TextBox alphaTextBox = new TextBox();
 	protected int covariateColumn = -1;
 	
+    // build the advanced options panel
+    AdvancedLinearModelOptionsPanel advOpts = new AdvancedLinearModelOptionsPanel();
+    
 	public MatrixPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
@@ -74,6 +77,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 		alpha.setWidget(0, 1, alphaTextBox);
 		
 		panel.add(alpha);
+		panel.add(advOpts);
 		// add each matrix to the panel
 		panel.add(essence);
 		panel.add(beta);
@@ -196,6 +200,14 @@ public class MatrixPanel extends Composite implements ClickHandler
 	public boolean validate()
 	{
 		return true;
+	}
+	
+	public String getStudyAttributes()
+	{
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("alpha='" + alphaTextBox.getText() + "' ");
+        buffer.append(advOpts.getStudyAttributes());
+        return buffer.toString();
 	}
 	
 	public String getStudyXML(String rowMetaData)

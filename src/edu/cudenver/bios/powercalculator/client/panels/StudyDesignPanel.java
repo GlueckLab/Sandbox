@@ -54,7 +54,6 @@ implements StudyUploadListener, ModelSelectListener
     
     public void onModelSelect(String modelName)
     {
-        Window.alert("Study panel got model " + modelName);
         this.modelName = modelName;
         if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
         {
@@ -70,7 +69,7 @@ implements StudyUploadListener, ModelSelectListener
     {
         if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
         {
-            return "alpha='" + matrixPanel.getAlpha() + "'";
+            return matrixPanel.getStudyAttributes();
         }
         else
         {

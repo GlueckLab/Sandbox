@@ -247,8 +247,8 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     private String buildPowerRequestXML()
     {      
     	StringBuffer buffer = new StringBuffer();
-    	buffer.append("<power " + optionsPanel.getGraphicsAttributes() + ">");
-
+    	buffer.append("<power>");
+    	buffer.append(optionsPanel.getGraphicsOptions());
 		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
 		        optionsPanel.getPowerAttributes() + ">");
 		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
@@ -260,8 +260,8 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     private String buildSampleSizeRequestXML()
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<sampleSize " + optionsPanel.getGraphicsAttributes() + ">");
-
+        buffer.append("<sampleSize>");
+        buffer.append(optionsPanel.getGraphicsOptions());
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
                 optionsPanel.getSampleSizeAttributes() + ">");
         buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));

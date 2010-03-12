@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -22,22 +23,15 @@ import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 
 public class OptionsPanel extends Composite 
-implements MatrixResizeListener, MetaDataListener, ModelSelectListener
+implements MatrixResizeListener, MetaDataListener, ModelSelectListener,
+ClickHandler
 {
-	private static final String DEFAULT_REPS = "2";
-	private static final String DEFAULT_RATIO = "1";
-	private static final int DEFAULT_N = 3;
-
-	private static final int REPS_COLUMN = 1;
-	private static final int RATIO_COLUMN = 2;
-	
 	private static final String STYLE = "optionsPanel";
 	private static final String HEADER_STYLE = "optionsPanelHeader";
 	private static final String SOLVE_FOR_GROUP = "solveFor";
 
-	private static final int INDEX_SIMPLE_POWER = 0;
-	private static final int INDEX_SIMPLE_SAMPLE_SIZE = 1;
-	private static final int INDEX_LINEAR_MODEL = 2;
+	private static final int INDEX_TWO_GROUP = 0;
+	private static final int INDEX_LINEAR_MODEL = 1;
 
 	// solve for options
 	protected RadioButton powerRb = new RadioButton(SOLVE_FOR_GROUP, PowerCalculatorGUI.constants.radioButtonPower());
@@ -45,29 +39,19 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 
 	// deck panel containing all possible detail views
 	protected DeckPanel deck;
-
+	
 	// curve options
 	protected CheckBox showCurveCheckBox = new CheckBox(PowerCalculatorGUI.constants.checkBoxShowCurve());
 	protected TextBox curveTitleTextBox = new TextBox();
 	protected TextBox curveXAxisLabel = new TextBox();
 	protected TextBox curveYAxisLabel = new TextBox();
-	
-	// simple power / sample size options (for basic models such as T-test)
-	protected TextBox sampleSizeTextBox = new TextBox();
-	protected HTML sampleSizeLabel = new HTML(PowerCalculatorGUI.constants.textLabelSampleSize());
-	protected TextBox powerTextBox = new TextBox();
-	protected HTML powerLabel = new HTML(PowerCalculatorGUI.constants.textLabelPower());
-
-	// row meta data parameters for GLMM, +1 for table header
-	protected Grid rowMetaData = new Grid(DEFAULT_N+1, 3);
-
-	// statistical method lists for GLMM
-	protected ListBox testStatisticList = new ListBox();
-	protected ListBox powerMethodList = new ListBox();
-    protected ListBox unirepCorrectionList = new ListBox();
-
+    protected TextBox curveWidth = new TextBox();
+    protected TextBox curveHeight = new TextBox();
+    
+	protected LinearModelDetailsPanel glmmDetailsPanel;
+    protected TwoGroupDetailsPanel twoGroupDetailsPanel;
+    
 	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();;
-
 	protected ArrayList<OptionsListener> listeners = new ArrayList<OptionsListener>();
 
 	public OptionsPanel()
@@ -79,6 +63,10 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 		panel.add(createDetailsPanel());
 		panel.add(createCurveOptionsPanel());
 
+		// the details panels listen for options events
+		this.addListener(glmmDetailsPanel);
+		this.addListener(twoGroupDetailsPanel);
+		
 		// set up the panel display based on the model name
 		onModelSelect(modelName);
 		
@@ -89,39 +77,25 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 	public void onModelSelect(String modelName)
 	{
 		this.modelName = modelName;
-		updateDeck();
-	}
-
-	private void updateDeck()
-	{
-		if (powerRb.getValue())
-		{
-			if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-				deck.showWidget(INDEX_LINEAR_MODEL);
-			else
-				deck.showWidget(INDEX_SIMPLE_POWER);
-			notifyOnSolvingFor(true);
-		}
-		else
-		{
-			if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-				deck.showWidget(INDEX_LINEAR_MODEL);
-			else
-				deck.showWidget(INDEX_SIMPLE_SAMPLE_SIZE);
-			notifyOnSolvingFor(false);
-		}
+        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
+            deck.showWidget(INDEX_LINEAR_MODEL);
+        else
+            deck.showWidget(INDEX_TWO_GROUP);
 	}
 
 	private VerticalPanel createDetailsPanel()
 	{
 		VerticalPanel panel = new VerticalPanel();
+		
+		// create the sub panels
+		glmmDetailsPanel = new LinearModelDetailsPanel(powerRb.getValue());
+		twoGroupDetailsPanel = new TwoGroupDetailsPanel(powerRb.getValue());
 		// deck of possible option panels - power/sample size options
 		// differ depending on which model is selected
 		HTML deckHeader = new HTML(PowerCalculatorGUI.constants.panelLabelOptionsDetails());
 		deck = new DeckPanel();
-		deck.add(this.createSimplePowerPanel());
-		deck.add(this.createSimpleSampleSizePanel());
-		deck.add(this.createLinearModelPanel());
+		deck.add(twoGroupDetailsPanel);
+		deck.add(glmmDetailsPanel);
 
 		panel.add(deckHeader);
 		panel.add(deck);
@@ -141,18 +115,8 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 		HTML header = new HTML(PowerCalculatorGUI.constants.panelLabelOptionsSolveFor());
 
 		// add click handlers on the selection buttons
-		powerRb.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				updateDeck();
-			}
-		});
-		sampleSizeRb.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				updateDeck();
-			}
-		});
+		powerRb.addClickHandler(this);
+		sampleSizeRb.addClickHandler(this);
 
 		// layout the panel
 		selectPanel.add(header);
@@ -185,13 +149,18 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 		});
 
 		// title, label options
-		Grid grid = new Grid(3,2);
+		Grid grid = new Grid(5,2);
 		grid.setWidget(0,0, new HTML(PowerCalculatorGUI.constants.textLabelCurveTitle()));
 		grid.setWidget(0,1, curveTitleTextBox);
 		grid.setWidget(1,0, new HTML(PowerCalculatorGUI.constants.textLabelCurveXAxis()));
 		grid.setWidget(1,1, curveXAxisLabel);
 		grid.setWidget(2,0, new HTML(PowerCalculatorGUI.constants.textLabelCurveYAxis()));
 		grid.setWidget(2,1, curveYAxisLabel);
+		grid.setWidget(3, 0, new HTML("Width"));
+		grid.setWidget(3, 1, curveWidth);
+		grid.setWidget(4, 0, new HTML("Height"));
+		grid.setWidget(4, 1, curveHeight);
+	        
 		
 		// layout the panel
 		panel.add(header);
@@ -203,114 +172,6 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 		header.setStyleName(HEADER_STYLE);
 
 		return panel;
-	}
-
-	private HorizontalPanel createSimplePowerPanel()
-	{
-		HorizontalPanel panel = new HorizontalPanel();
-		
-		panel.add(new HTML(PowerCalculatorGUI.constants.textLabelSampleSize()));
-		panel.add(sampleSizeTextBox);
-
-		panel.setStyleName(STYLE);
-		return panel;
-	}
-
-	private HorizontalPanel createSimpleSampleSizePanel()
-	{
-		HorizontalPanel panel = new HorizontalPanel();
-		
-		panel.add(new HTML(PowerCalculatorGUI.constants.textLabelPower()));
-		panel.add(powerTextBox);
-
-		panel.setStyleName(STYLE);
-		return panel;
-	}
-	
-	private VerticalPanel createLinearModelPanel()
-	{
-		VerticalPanel panel = new VerticalPanel();
-
-		// initialize the row meta data
-		rowMetaData.setWidget(0, 0, new HTML("Group"));
-		rowMetaData.setWidget(0, 1, new HTML("#Subjects (n)"));
-		rowMetaData.setWidget(0, 2, new HTML("Ratio of Group Sizes"));
-		for(int r = 1; r < rowMetaData.getRowCount(); r++) initRow(r);
-		
-		
-		panel.add(createStatisticalMethodSelectionPanel());
-		panel.add(rowMetaData);
-		return panel;
-	}
-
-	private Grid createStatisticalMethodSelectionPanel()
-	{
-		// build test statistic selection list
-		testStatisticList.addItem("Hotelling Lawley Trace", "hlt");
-		testStatisticList.addItem("Univariate Approach To Repeated Measures", "unirep");
-		testStatisticList.addItem("Wilk's Lambda", "wl");
-		testStatisticList.addItem("Pillau Bartlett Trace", "pbt");
-
-		// build the covariate adjustment method selection list
-		powerMethodList.addItem("Conditional Power", "cond");
-		powerMethodList.addItem("Quantile Power", "quantile");
-		powerMethodList.addItem("Unconditional Power", "uncond");
-
-		Grid grid = new Grid(2,2);
-		grid.setWidget(0, 0, new HTML("Test Statistic: "));
-		grid.setWidget(0, 1, testStatisticList);
-		grid.setWidget(1, 0, new HTML("Power Approximation Method: "));
-		grid.setWidget(1, 1, powerMethodList);
-
-		return grid;
-	}
-
-	public String getPower()
-	{
-		return powerTextBox.getText();
-	}
-
-	public String getSampleSize()
-	{
-		return sampleSizeTextBox.getText();
-	}
-
-	public String getRowMetaDataXML()
-	{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("<rowMetaData>");
-		for(int r = 1; r < rowMetaData.getRowCount(); r++)
-		{
-			TextBox reps = (TextBox) rowMetaData.getWidget(r, REPS_COLUMN);
-			buffer.append("<r ");
-			if (powerRb.getValue() && !showCurveCheckBox.getValue())
-			{
-				buffer.append(" reps='" + reps.getValue() + "'");
-			}
-			else
-			{
-				TextBox ratio = (TextBox) rowMetaData.getWidget(r, RATIO_COLUMN);
-				buffer.append(" reps='" + reps.getValue() + "' ratio='" + ratio.getText() + "'");
-			}
-			buffer.append("/>");
-		}
-		buffer.append("</rowMetaData>");
-		return buffer.toString();
-	}
-
-	public String getStatistic()
-	{
-		return testStatisticList.getValue(testStatisticList.getSelectedIndex());
-	}
-	
-	public String getPowerMethod()
-	{
-	    return powerMethodList.getValue(powerMethodList.getSelectedIndex());
-	}
-	
-	public String getUnivariateAdjustment()
-	{
-	    return unirepCorrectionList.getValue(unirepCorrectionList.getSelectedIndex());
 	}
 	
 	public void addListener(OptionsListener listener)
@@ -336,51 +197,21 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
 		for(OptionsListener listener: listeners) listener.onShowCurve(showCurve, curveOpts);
 	}
 
-	public void onMatrixResize(int rows, int cols)
-	{
-		int oldRows = rowMetaData.getRowCount()-1;
-		rowMetaData.resize(rows+1, rowMetaData.getColumnCount()); //+1 for table header
-		if (rows > oldRows) 
-		{
-			// initialize the new rows
-			for(int r = oldRows; r < rows+1; r++) initRow(r);
-		}
-	}
-	
-	private void initRow(int row) 
-	{
-		HTML id = new HTML(Integer.toString(row));
-		rowMetaData.setWidget(row, 0, id);
-		
-		TextBox reps = new TextBox();
-		reps.setText(DEFAULT_REPS);				
-		rowMetaData.setWidget(row, 1, reps);
-		
-		TextBox ratio = new TextBox();
-		ratio.setText(DEFAULT_RATIO);				
-		rowMetaData.setWidget(row, 2, ratio);
-	}
-    
-	public void onFixed(int col) {}
-	
-	public void onRandom(int col, double mean, double variance) {}
-	
-    public void onRowName(int row, String name)
-    {
-    	HTML label = (HTML) rowMetaData.getWidget(row, 0);
-    	label.setText(name);
-    }
-    
-    public String getGraphicsAttributes()
+    public String getGraphicsOptions()
     {      
         boolean showCurve = showCurveCheckBox.getValue();
         if (showCurve)
         {
             StringBuffer buffer = new StringBuffer();
-            buffer.append("curve='" + showCurveCheckBox.getValue() + "' ");
-            buffer.append("curveTitle='" + curveTitleTextBox.getText() + "' ");
-            buffer.append("curveXaxis='" + curveXAxisLabel.getText() + "' ");
-            buffer.append("curveYAxis='" + curveYAxisLabel.getText() + "'");  
+            buffer.append("<curve ");
+            buffer.append("title='" + curveTitleTextBox.getText() + "' ");
+            buffer.append("xlabel='" + curveXAxisLabel.getText() + "' ");
+            buffer.append("ylabel='" + curveYAxisLabel.getText() + "' ");
+            if (!curveWidth.getText().isEmpty())
+                buffer.append("width='" + curveWidth.getText() + "' ");
+            if (!curveHeight.getText().isEmpty())
+                buffer.append("height='" + curveHeight.getText() + "' ");
+            buffer.append("/>");  
             return buffer.toString();
         }
         else
@@ -392,25 +223,60 @@ implements MatrixResizeListener, MetaDataListener, ModelSelectListener
     
     public String getPowerAttributes()
     {
-        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-        {
-            return "statistic='"+ getStatistic() + "' powerMethod='" + getPowerMethod() + "'";
-        }
+        if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
+            return "sampleSize='" + twoGroupDetailsPanel.getSampleSize() + "'";
         else
-        {
-            return "sampleSize='" + getSampleSize() + "'";
-        }
+            return "";
+            
     }
     
     public String getSampleSizeAttributes()
     {
         if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
         {
-            return "statistic='"+ getStatistic() + "' powerMethod='" + getPowerMethod() +"'";
+            return "power='" + glmmDetailsPanel.getPower() + "'";
         }
         else
         {
-            return "power='" + getPower() + "'";
+            return "power='" + twoGroupDetailsPanel.getPower() + "'";
         }
+    }
+        
+    public String getRowMetaDataXML()
+    {
+        return glmmDetailsPanel.getRowMetaDataXML();
+    }
+    
+    public void onMatrixResize(int rows, int cols)
+    {
+        LinearModelDetailsPanel panel = 
+            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
+        panel.onMatrixResize(rows, cols);
+    }
+    
+    public void onRowName(int row, String name)
+    {
+        LinearModelDetailsPanel panel = 
+            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
+        panel.onRowName(row, name);
+    }
+    
+    public void onFixed(int col) 
+    {
+        LinearModelDetailsPanel panel = 
+            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
+        panel.onFixed(col);
+    }
+    
+    public void onRandom(int col, double mean, double variance) 
+    {
+        LinearModelDetailsPanel panel = 
+            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
+        panel.onRandom(col, mean, variance);
+    }
+    
+    public void onClick(ClickEvent e)
+    {
+        notifyOnSolvingFor(powerRb.getValue());
     }
 }
