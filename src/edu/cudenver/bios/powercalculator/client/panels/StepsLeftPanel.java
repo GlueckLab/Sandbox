@@ -1,8 +1,10 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
@@ -12,19 +14,22 @@ public class StepsLeftPanel extends Composite implements NavigationListener
 {
 	protected static final String STYLE = "stepsLeftLabel";
 	protected static final String PANEL_STYLE = "stepsLeftPanel";
-	protected static final String NUMBER_STYLE = "stepsLeftNumber";
-    protected static final String SELECTED_STYLE = "selected";
+	protected static final String SELECTED_STYLE = "selected";
     protected static final String DESELECTED_STYLE = "deselected";
-        
+    protected static final String START_STEP_STYLE = "stepsLeftStart";    
+    protected static final String STUDY_STEP_STYLE = "stepsLeftStudy";    
+    protected static final String OPTIONS_STEP_STYLE = "stepsLeftOptions";    
+    protected static final String RESULTS_STEP_STYLE = "stepsLeftResults";    
+    
     protected HTML startStep = new HTML(PowerCalculatorGUI.constants.stepStart());
-    protected Label startNumber = new Label("1");
+    protected Label startNumber = new Label();
     protected HTML studyStep = new HTML(PowerCalculatorGUI.constants.stepStudy());
-    protected Label studyNumber = new Label("2");
+    protected Label studyNumber = new Label();
     protected HTML optionsStep = 
         new HTML(PowerCalculatorGUI.constants.stepOptions());
-    protected Label optionsNumber = new Label("3");
+    protected Label optionsNumber = new Label();
     protected HTML resultsStep = new HTML(PowerCalculatorGUI.constants.stepResults());
-    protected Label resultsNumber = new Label("4");
+    protected Label resultsNumber = new Label();
     
     private Widget currentStep = startStep;
     
@@ -44,19 +49,19 @@ public class StepsLeftPanel extends Composite implements NavigationListener
         panel.add(resultsStep);
         panel.setStyleName(PANEL_STYLE);
         
-        startNumber.setStyleName(NUMBER_STYLE);
+        startNumber.setStyleName(START_STEP_STYLE);
         startNumber.addStyleDependentName(SELECTED_STYLE);
         startStep.setStyleName(STYLE);
         startStep.addStyleDependentName(SELECTED_STYLE);
-        studyNumber.setStyleName(NUMBER_STYLE);
+        studyNumber.setStyleName(STUDY_STEP_STYLE);
         studyNumber.addStyleDependentName(DESELECTED_STYLE);
         studyStep.setStyleName(STYLE);
         studyStep.addStyleDependentName(DESELECTED_STYLE);
-        optionsNumber.setStyleName(NUMBER_STYLE);
+        optionsNumber.setStyleName(OPTIONS_STEP_STYLE);
         optionsNumber.addStyleDependentName(DESELECTED_STYLE);
         optionsStep.setStyleName(STYLE);
         optionsStep.addStyleDependentName(DESELECTED_STYLE);
-        resultsNumber.setStyleName(NUMBER_STYLE);
+        resultsNumber.setStyleName(RESULTS_STEP_STYLE);
         resultsNumber.addStyleDependentName(DESELECTED_STYLE);
         resultsStep.setStyleName(STYLE);
         resultsStep.addStyleDependentName(DESELECTED_STYLE);
@@ -121,7 +126,7 @@ public class StepsLeftPanel extends Composite implements NavigationListener
             Widget newNumber, Widget newStep)
     {    	
         currentStep = newStep;
-        
+
         // deselect the old widgets
         oldNumber.removeStyleDependentName(SELECTED_STYLE);
         oldNumber.addStyleDependentName(DESELECTED_STYLE);
