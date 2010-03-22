@@ -1,0 +1,277 @@
+/*
+ * GLIMMPSE (General Linear Multivariate Model Power and Sample size Estimator)
+ * Copyright (C) 2010 Regents of the University of Colorado.  
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ 
+ /*
+ * Styles for the input wizard and all subpanels
+ */
+
+.body {
+	background: #ccc; /*#A1AB61;*/
+	margin: 0px 0px;	
+}
+
+/* style for main wizard input panel (GWT class) */
+.inputPanel {
+	margin: 5px 5px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color: black;
+	text-align: center;
+	border: 1px solid black;
+	padding: 5px;
+	background: #fff;
+	width: 99%;
+}
+	
+.inputPanelDeck {
+	margin: 10px 10px;
+}
+
+/* New study panel style */
+.newStudyPanel {
+	margin: 0px auto;	
+	spacing: 20px;
+	min-height: 200;
+}
+
+.newStudyModelContainer {
+	margin: 10 auto;	
+}
+
+.newStudyHeader {
+	font-weight: bold;
+	margin: 10 auto;
+	text-align: center;
+	width: 80%;
+}
+
+.newStudyDescription {
+	margin: 10 auto;
+	text-align: left;
+	width: 60%;
+}
+	
+
+/* Style for "steps left" banner above the input wizard. */
+
+.stepsLeftPanel {
+	border-bottom: 1px solid #000;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.stepsLeftPanel .gwt-HTML {
+	padding: 5px;
+}
+
+.stepsLeftLabel {
+	font-size: 12pt;
+	margin-top: 5px;
+}
+
+.stepsLeftLabel-selected {
+	color: black; /*#22A45E;*/
+	font-weight: bold;
+}
+
+.stepsLeftLabel-deselected {
+	color: gray;
+	font-weight: normal;
+}
+
+.stepsLeftNumber {
+	font-size: 12pt;
+	min-height: 35px;
+	min-width: 35px;
+	color: white;
+	padding: 5px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: center;
+}
+
+.stepsLeftStart {
+	width: 40px;
+	height: 40px;
+}
+
+.stepsLeftStart-selected {
+	background: url(../images/stepOneOn.png) no-repeat 0px -4px;
+}
+
+.stepsLeftStart-deselected {
+	background: url(../images/stepOneOff.png) no-repeat 0px 0px;
+}
+
+.stepsLeftStudy {
+	width: 40px;
+	height: 40px;
+}
+
+.stepsLeftStudy-selected {
+	background: url(../images/stepTwoOn.png) no-repeat 0px -4px;
+}
+
+.stepsLeftStudy-deselected {
+	background: url(../images/stepTwoOff.png) no-repeat 0px 0px;
+}
+
+.stepsLeftOptions {
+	width: 40px;
+	height: 40px;	
+}
+
+.stepsLeftOptions-selected {
+	background: url(../images/stepThreeOn.png) no-repeat 0px -4px;
+	width: 40px;
+	height: 40px;
+}
+
+.stepsLeftOptions-deselected {
+	background: url(../images/stepThreeOff.png) no-repeat 0px 0px;
+}
+
+.stepsLeftResults {
+	width: 40px;
+	height: 40px;	
+}
+
+.stepsLeftResults-selected {
+	background: url(../images/stepFourOn.png) no-repeat 0px -4px;
+	width: 40px;
+	height: 40px;
+}
+
+.stepsLeftResults-deselected {
+	background: url(../images/stepFourOff.png) no-repeat 3px 0px;
+}
+
+
+.wizardNavigationPanelButton {
+	border: none;
+	text-decoration: none;
+	background: url(../images/buttonNavBg.png) no-repeat 4px 2px;
+	color: #fff;
+	width: 114px;
+	height: 40px;
+	margin: 5px 25px;
+}
+
+.wizardNavigationPanelButton:hover {
+	background: url(../images/buttonNavBgMouseOver.png) no-repeat 4px 2px;
+}
+
+/* navigation bar style sheet */
+
+.wizardNavigationPanel {
+	border-top: 1px solid #000;
+	margin: 5px auto;
+}
+
+.columnMetaData {
+	width: 75px;
+	margin-top: 10px;
+}
+
+.columnMetaData td {
+	background: #ddd;
+	border: 1px solid #000;
+}
+
+.columnMetaData {
+	border: 0;
+	width: 75px;
+	text-align: center;
+}
+
+.columnMetaDataPopup {
+	border: 10px solid #000;
+	background: white;
+}
+
+.rowMetaDataCell {
+	width: 50px;
+}
+
+.matrixPanel {
+}
+
+.matrix {
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.gwt-PopupPanel {
+	background: white;
+	border: 1px solid #000;
+	width: 50%;
+}
+
+.matrixData {
+	margin-top: 10px;
+}
+
+.matrixData td {
+	background: white;
+	border: 1px solid #000000;
+	border-spacing: 0px;
+}
+
+.matrixCell {
+	background: white;
+	border: 0;
+	width: 75px;
+}
+
+.matrixHeader {
+	border-bottom: 1px solid #000;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+.matrixDimensions .gwt-HTML {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.matrixDimensions .gwt-TextBox {
+	width: 30px;
+}
+
+.optionsPanel .gwt-TextBox {
+	margin-left: 10px;
+}
+
+.optionsPanelHeader {
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.waitDialog {
+	background: #ddd;
+	padding: 10px;
+	border: 2px solid  #555;
+}
+
+.waitDialogText {
+	width: 180px;
+	height: 30px;
+	text-align: center;
+}

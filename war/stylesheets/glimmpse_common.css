@@ -1,0 +1,100 @@
+/*
+ * GLIMMPSE (General Linear Multivariate Model Power and Sample size Estimator)
+ * Copyright (C) 2010 Regents of the University of Colorado.  
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/** 
+* Styles for header, navbar shared across all GLIMMPSE pages
+* 
+* Author: Sarah Kreidler
+*
+*/
+
+/* basic page style */
+
+body {
+	background: #ccc; /*#A1AB61;*/
+	margin: 0px 0px;
+}
+
+/** header style **/
+
+div#header {
+  font-family: Blippo, Arial, Helvetica, sans-serif;
+  background: #fff;
+  width: 100%;
+  height: 140px;
+  position: relative;
+  border-bottom: 2px solid black;
+}
+
+/* absolute positioning of all elements in the header bar */
+div#header div {
+	position: absolute;
+}
+
+/* logo image */
+div#glimmpse-logo img {
+	left: 0; top: 0;
+	width: 350;
+}
+
+/* Software name text */
+div#glimmpse-name {
+	left: 360; top: 25;
+	color: #005C84;
+	font-weight: bold;
+	font-size: larger;
+}
+
+div#glimmpse-owner {
+	bottom: 0; left: 20;
+	border-top: 1px dotted black;
+}
+
+div#glimmpse-owner a {
+	text-decoration: none;
+	color: #222;
+}
+
+div#glimmpse-owner a:hover {
+	text-decoration: none;
+	color: #005C84;
+}
+
+/** top navbar style **/
+
+div#horizontal-navbar {
+	width: 100%;
+	/*background-color: #204d89;*/
+	background-color: #005C84;
+	text-align: right;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color: #d9e8ef;
+	padding: 5px;
+	border-bottom: 1px solid black;
+}
+
+div#horizontal-navbar a {
+	text-decoration: none;
+	color: #d9e8ef;
+	padding-right: 30px; 
+}
+
+div#horizontal-navbar a:hover {
+	color:#fff;
+}
