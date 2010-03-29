@@ -321,6 +321,12 @@ implements ChangeHandler, MetaDataListener
 		return buffer.toString();
 	}
 	
+	public void setResizable(boolean allowResize)
+	{
+		rowTextBox.setEnabled(allowResize);
+		columnTextBox.setEnabled(allowResize);
+	}
+	
 	private void notifyOnMatrixResize(int rows, int cols)
 	{
 		for(MatrixResizeListener listener: resizeListeners) listener.onMatrixResize(rows, cols);
@@ -368,5 +374,19 @@ implements ChangeHandler, MetaDataListener
     {
     	// kick the callback up the chain
     	for(MetaDataListener listener: metaDataListeners) listener.onRowName(row, name);
+    }
+    
+    public void setData(int row, int col, String value)
+    {
+    	if (hasMetaData)
+    	{
+    		TextBox tb = (TextBox) matrixData.getWidget(row+1, col+1);
+    		tb.setText(value);
+    	}
+    	else
+    	{
+    		TextBox tb = (TextBox) matrixData.getWidget(row, col);
+    		tb.setText(value);
+    	}
     }
 }
