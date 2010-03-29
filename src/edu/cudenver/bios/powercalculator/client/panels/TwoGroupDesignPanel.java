@@ -60,7 +60,6 @@ public class TwoGroupDesignPanel extends Composite
     
     public void loadFromXMLDocument(Document doc)
     {
-    	Window.alert("loading!");
     	Node studyNode = doc.getElementsByTagName("study").item(0);
     	if (studyNode != null)
     	{

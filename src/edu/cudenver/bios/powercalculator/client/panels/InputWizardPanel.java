@@ -8,7 +8,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
@@ -30,8 +32,9 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
 
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
-	private static final String POWER_URL = "/restcall/power/power/model/";
-    private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize/model/";
+	private static final String POWER_URL = "/restcall/power/power";
+    private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize";
+	private static final String POWER_CURVE_URL = "/restcall/power/curve";
 	
 	protected static final String STYLE = "inputPanel";
 	protected static final String DECK_STYLE = "inputPanelDeck";
@@ -65,10 +68,23 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
 	protected CurveOptions curveOpts = null;
 	protected boolean solveForPower = true;
 	
+	// form used to submit an image request to fill a hidden Iframe on the 
+	// results panel.  IE versions 5-7 do not support inline images, so this needs
+	// to be a separate request.  Lame-o.
+	protected FormPanel curveForm = new FormPanel(ResultsPanel.POWER_CURVE_FRAME);
+	protected Hidden curveRequestHidden = new Hidden("curveRequest");
+	
     public InputWizardPanel() 
     {
         VerticalPanel container = new VerticalPanel();
 
+        // set up the image request submission form
+        curveForm.setAction(POWER_CURVE_URL);
+        curveForm.setMethod(FormPanel.METHOD_POST);
+        VerticalPanel formContainer = new VerticalPanel();
+        formContainer.add(curveRequestHidden);
+        curveForm.add(formContainer);
+        
         // create a wait dialog
         waitDialog = createWaitDialog();
         
@@ -83,6 +99,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
             // upload panel notifies study design panel when study is uploaded
             existingStudyPanel.addStudyUploadListener(this);
             existingStudyPanel.addStudyUploadListener(studyDesignPanel);
+            existingStudyPanel.addStudyUploadListener(optionsPanel);
         }
         else
         {
@@ -101,7 +118,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
         container.add(stepsLeftPanel);
         container.add(panelStack);
         container.add(navPanel);
-
+        container.add(curveForm);
         // set up the navigation callbacks
         navPanel.addNavigationListener(this);
 
@@ -115,7 +132,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     	
     	// listener for options panel events to determine if we are solving for sample size or power
     	optionsPanel.addListener(this);
-       
+    	optionsPanel.addListener(resultsPanel);
         // add style to container and panel stack
         panelStack.setStyleName(DECK_STYLE);
         container.setStyleName(STYLE);
@@ -185,13 +202,21 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     }
     
     private void retrieveResults()
+    {
+        retrievePowerSampleSizeResults();
+        curveForm.setAction(POWER_CURVE_URL);
+        curveRequestHidden.setValue(buildPowerCurveRequestXML());
+        curveForm.submit();
+    }
+    
+    private void retrievePowerSampleSizeResults()
     {    	
         waitDialog.center();
     	RequestBuilder builder = null;
     	if (solveForPower)
-    	    builder = new RequestBuilder(RequestBuilder.POST, POWER_URL + modelName);
+    	    builder = new RequestBuilder(RequestBuilder.POST, POWER_URL);
     	else
-            builder = new RequestBuilder(RequestBuilder.POST, SAMPLE_SIZE_URL + modelName);
+            builder = new RequestBuilder(RequestBuilder.POST, SAMPLE_SIZE_URL);
 
     	try 
     	{
@@ -202,7 +227,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     			public void onError(Request request, Throwable exception) 
     			{
     				waitDialog.hide();
-    				Window.alert("Calculation failed: " + exception.getMessage());	
+    				resultsPanel.setErrorResults("Calculation failed: " + exception.getMessage());	
     			}
 
     			public void onResponseReceived(Request request, Response response) 
@@ -218,7 +243,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     				} 
     				else 
     				{
-    					Window.alert("Calculation failed: [HTTP STATUS " + 
+    					resultsPanel.setErrorResults("Calculation failed: [HTTP STATUS " + 
     					        response.getStatusCode() + "] " + response.getText());
     				}
     			}
@@ -227,33 +252,41 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     	catch (Exception e) 
     	{
 			waitDialog.hide();
-    		Window.alert("Failed to send the request: " + e.getMessage());
+			resultsPanel.setErrorResults("Failed to send the request: " + e.getMessage());
     	}
     }
 
+    private String buildPowerCurveRequestXML()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<power modelName='" + modelName + "' >");
+        buffer.append(optionsPanel.getGraphicsOptions());
+        buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
+                optionsPanel.getPowerAttributes() + ">");
+        buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+        buffer.append("</params></power>");
+        return buffer.toString();
+    }
+    
     private String buildPowerRequestXML()
     {      
     	StringBuffer buffer = new StringBuffer();
-    	buffer.append("<power>");
-    	buffer.append(optionsPanel.getGraphicsOptions());
+    	buffer.append("<power modelName='" + modelName + "' >");
 		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
 		        optionsPanel.getPowerAttributes() + ">");
 		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
 		buffer.append("</params></power>");
-        Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
     private String buildSampleSizeRequestXML()
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<sampleSize>");
-        buffer.append(optionsPanel.getGraphicsOptions());
+        buffer.append("<sampleSize modelName='" + modelName + "' >");
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
                 optionsPanel.getSampleSizeAttributes() + ">");
         buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
         buffer.append("</params></sampleSize>");
-        Window.alert(buffer.toString());
         return buffer.toString();
     }
     
@@ -280,8 +313,9 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
    
 
     
-    public void onStudyUpload(Document doc)
+    public void onStudyUpload(Document doc, String modelName)
     {
+        onModelSelect(modelName);
         this.onNext();
     }
     

@@ -1,11 +1,13 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.NamedFrame;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -13,10 +15,13 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 import com.google.gwt.xml.client.NodeList;
 
-public class ResultsPanel extends Composite
+import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
+
+public class ResultsPanel extends Composite implements OptionsListener
 {
     final DeckPanel deck = new DeckPanel();
 
+    public static final String POWER_CURVE_FRAME = "powerCurveFrame";
     private static final int POWER_INDEX = 0;
     private static final int SAMPLE_SIZE_INDEX = 1;
 
@@ -30,19 +35,22 @@ public class ResultsPanel extends Composite
     protected VerticalPanel powerCurvePanel; 
     protected Image powerCurve;
     
+    // hidden iframe to hold the power curve image data
+    protected NamedFrame imageFrame = new NamedFrame(POWER_CURVE_FRAME);
+
     public ResultsPanel()
     {
         VerticalPanel panel = new VerticalPanel();
-
+        
         deck.add(createPowerResultsPanel());
         deck.add(createSampleSizeResultsPanel());
-
+        deck.showWidget(POWER_INDEX);
         // add the power/sample panels to the main panel
         panel.add(deck);
-
+        
         powerCurvePanel = createPowerCurvePanel();
         panel.add(powerCurvePanel);
-        powerCurvePanel.setVisible(false);
+        //powerCurvePanel.setVisible(false);
         
         // initialize the widget
         initWidget(panel);
@@ -65,8 +73,7 @@ public class ResultsPanel extends Composite
     {
         VerticalPanel panel = new VerticalPanel();
         panel.add(new HTML("Power Curve: "));
-        powerCurve = new Image();
-        panel.add(powerCurve);
+        panel.add(imageFrame);
         return panel;
     }
     
@@ -81,34 +88,10 @@ public class ResultsPanel extends Composite
         sampleSizePanel.add(sampleSizeGrid);
         return sampleSizePanel;
     }
-
-    public void clearResults()
-    {
-        // TODO: do we need to empty the values?
-        deck.setVisible(false);
-    }
-
-    private void setCurveResults(Document doc)
-    {
-        // parse the power curve
-        NodeList imageList = doc.getElementsByTagName("curveImg");
-        if (imageList.getLength() > 0)
-        {
-            Node node = imageList.item(0);
-            powerCurve.setUrl("data:image/jpg;base64," + node.getFirstChild().getNodeValue());
-            powerCurvePanel.setVisible(true);
-        }
-        else
-        {
-            powerCurvePanel.setVisible(false);
-        }
-    }
     
     public void setSampleSizeResults(String xmlResults)
     {
         Document doc = XMLParser.parse(xmlResults);
-
-        setCurveResults(doc);
 
         // get the calculated and simulated power
         NodeList sampleSizeList = doc.getElementsByTagName("sampleSize");
@@ -126,15 +109,12 @@ public class ResultsPanel extends Composite
             }
         }       
         
-        deck.showWidget(SAMPLE_SIZE_INDEX);
         deck.setVisible(true);
     }
 
     public void setPowerResults(String xmlResults)
     {
         Document doc = XMLParser.parse(xmlResults);
-
-        setCurveResults(doc);
 
         // get the calculated and simulated power
         NodeList powerList = doc.getElementsByTagName("power");
@@ -149,7 +129,27 @@ public class ResultsPanel extends Composite
             }
         }	
         
-        deck.showWidget(POWER_INDEX);
         deck.setVisible(true);
     }
+    
+    public void setErrorResults(String errMsg)
+    {
+        Window.alert(errMsg);
+    }
+    
+    
+    public void onShowCurve(boolean show, CurveOptions opts)
+    {
+        powerCurvePanel.setVisible(show);
+    }
+    
+    public void onSolveFor(boolean power)
+    {
+        Window.alert("hello?");
+        if (power)
+            deck.showWidget(SAMPLE_SIZE_INDEX);
+        else
+            deck.showWidget(POWER_INDEX);
+    }
+
 }

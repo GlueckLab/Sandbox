@@ -1,6 +1,5 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;

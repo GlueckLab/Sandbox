@@ -2,7 +2,6 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -11,7 +10,6 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Node;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
@@ -77,31 +75,15 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
         matrixPanel.addEssenceMatrixMetaDataListener(listener);
     }
     
-    public void onStudyUpload(Document studyDoc)
+    public void onStudyUpload(Document studyDoc, String modelName)
     {
-    	Node studyNode = studyDoc.getElementsByTagName("study").item(0);
-    	if (studyNode != null)
-    	{
-    		Window.alert("wtf");
-    		Node modelName = studyNode.getAttributes().getNamedItem("modelname");
-    		if (modelName != null)
-    		{
-        		Window.alert("wtf: " + modelName.getNodeValue());
-
-    	    	matrixPanel.loadFromXMLDocument(studyDoc);
-    			if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName.getNodeValue()))
-    			{
-    				twoGroupPanel.loadFromXMLDocument(studyDoc);
-    				designPanel.showWidget(TWO_GROUP);
-    			}
-    			else
-    			{
-    				linearModelPanel.loadFromXMLDocument(studyDoc);
-    				designPanel.showWidget(BASIC_GLMM);
-    			}
-    			tabs.selectTab(0);
-    		}
-    	}
+        matrixPanel.loadFromXMLDocument(studyDoc);
+        if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
+            twoGroupPanel.loadFromXMLDocument(studyDoc);
+        else
+            linearModelPanel.loadFromXMLDocument(studyDoc);
+        onModelSelect(modelName);
+        tabs.selectTab(0);
     }
     
     public void onModelSelect(String modelName)
@@ -151,7 +133,6 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     {
     	matrixXML.setValue("<study alpha='" + matrixPanel.getAlpha() + "' modelName='" + modelName + "'>" + 
     			matrixPanel.getStudyXML("") + "</study>");
-    	Window.alert(matrixXML.getValue());
     	form.submit();    	
     }
 }

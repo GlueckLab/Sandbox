@@ -15,16 +15,19 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Node;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
+import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class OptionsPanel extends Composite 
 implements MatrixResizeListener, MetaDataListener, ModelSelectListener,
-ClickHandler
+StudyUploadListener, ClickHandler
 {
 	private static final String STYLE = "optionsPanel";
 	private static final String HEADER_STYLE = "optionsPanelHeader";
@@ -278,5 +281,10 @@ ClickHandler
     public void onClick(ClickEvent e)
     {
         notifyOnSolvingFor(powerRb.getValue());
+    }
+    
+    public void onStudyUpload(Document doc, String modelName)
+    {
+        onModelSelect(modelName);
     }
 }
