@@ -46,6 +46,11 @@ public class NavigationPanel extends Composite
         panel.add(previous);
         panel.add(next);
         panel.add(cancel);
+        
+        // add style
+        previous.setStyleName("wizardNavigationPanelButton");
+        next.setStyleName("wizardNavigationPanelButton");
+        cancel.setStyleName("wizardNavigationPanelButton");
         panel.setStyleName("wizardNavigationPanel");
                 
         initWidget(panel);
