@@ -89,10 +89,14 @@ public class UploadPanel extends Composite
                 {
                 	try
                 	{
+                	    // make sure we at least have a study tag and model name specified
                 		Document doc = XMLParser.parse(results);
                     	Node studyNode = doc.getElementsByTagName("study").item(0);
                     	if (studyNode == null) throw new DOMException(DOMException.SYNTAX_ERR, "no study tag specified");
-                		notifyOnStudyUpload(doc);
+                    	Node modelName = studyNode.getAttributes().getNamedItem("modelname");
+                    	if (modelName == null)  throw new DOMException(DOMException.SYNTAX_ERR, "no model name specified");
+                		// notify listeners of the file upload
+                    	notifyOnStudyUpload(doc, modelName.getNodeValue());
                 	}
                 	catch (DOMException e)
                 	{
@@ -127,9 +131,9 @@ public class UploadPanel extends Composite
         listeners.add(listener);
     }
     
-    private void notifyOnStudyUpload(Document doc)
+    private void notifyOnStudyUpload(Document doc, String modelName)
     {
-        for(StudyUploadListener listener: listeners) listener.onStudyUpload(doc);
+        for(StudyUploadListener listener: listeners) listener.onStudyUpload(doc, modelName);
 
     }
 }
