@@ -16,18 +16,17 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
-import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class InputWizardPanel extends Composite 
-implements NavigationListener, StartListener, OptionsListener, StudyUploadListener, ModelSelectListener
+implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelectListener
 {
+	private static final String UPLOAD_PARAM = "u";
+	
     private static final int PANEL_STACK_START = 0;
-    private static final int PANEL_STACK_NEW_STUDY = 1;
-    private static final int PANEL_STACK_EXISTING_STUDY = 2;
-    private static final int PANEL_STACK_STUDY_DESIGN = 3;
-    private static final int PANEL_STACK_OPTIONS = 4;
-    private static final int PANEL_STACK_RESULTS = 5;
+    private static final int PANEL_STACK_STUDY_DESIGN = 1;
+    private static final int PANEL_STACK_OPTIONS = 2;
+    private static final int PANEL_STACK_RESULTS = 3;
 
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
@@ -35,19 +34,17 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize/model/";
 	
 	protected static final String STYLE = "inputPanel";
-	
+	protected static final String DECK_STYLE = "inputPanelDeck";
 	// top steps left panel
 	protected StepsLeftPanel stepsLeftPanel = new StepsLeftPanel();
 	// bottom navigation buttons
 	protected NavigationPanel navPanel = new NavigationPanel();
 	// stack of panels for the wizard
 	protected DeckPanel panelStack = new DeckPanel();
-    // start panel
-	protected StartPanel startPanel = new StartPanel();
 	// create study panel
-	protected CreateNewStudyPanel newStudyPanel = new CreateNewStudyPanel();
+	protected CreateNewStudyPanel newStudyPanel;
 	// upload existing study panel
-	protected UploadPanel existingStudyPanel = new UploadPanel();
+	protected UploadPanel existingStudyPanel;
 	
     // options panel (always in deck after input panel)
 	protected OptionsPanel optionsPanel = new OptionsPanel();
@@ -56,7 +53,6 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
 
     // potential input panels.  Added to the deck depending on the input type
     // selected on the start panel
-	protected UploadPanel uploadPanel = new UploadPanel();
 	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel();
 	
 	// wait dialog
@@ -78,9 +74,26 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         
         // add the widgets to the stack of wizard panels
         // NOTE: order matters here - must match stack index constants
-        panelStack.add(startPanel);
-        panelStack.add(newStudyPanel);
-        panelStack.add(existingStudyPanel);
+        String uploadStudy = Window.Location.getParameter(UPLOAD_PARAM);
+        if (uploadStudy != null && uploadStudy.equals("1"))
+        {
+        	existingStudyPanel = new UploadPanel();
+            panelStack.add(existingStudyPanel);
+            
+            // upload panel notifies study design panel when study is uploaded
+            existingStudyPanel.addStudyUploadListener(this);
+            existingStudyPanel.addStudyUploadListener(studyDesignPanel);
+        }
+        else
+        {
+        	newStudyPanel = new CreateNewStudyPanel();
+            panelStack.add(newStudyPanel);
+            
+            // listen for model name changes from the create study panel
+            newStudyPanel.addModelSelectListener(this);
+            newStudyPanel.addModelSelectListener(studyDesignPanel);
+            newStudyPanel.addModelSelectListener(optionsPanel);
+        }
         panelStack.add(studyDesignPanel);
         panelStack.add(optionsPanel);
         panelStack.add(resultsPanel);
@@ -93,21 +106,8 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         navPanel.addNavigationListener(this);
 
         // intialize the wizard
-        startOver(true);
-        
-        // setup callbacks between the panels
-        // listen for start panel to determine if we are creating a new study
-        // or using an existing study
-    	startPanel.addListener(this);
+        initWizard();
     	
-        // upload panel notifies study design panel when study is uploaded
-        uploadPanel.addStudyUploadListener(this);
-        uploadPanel.addStudyUploadListener(studyDesignPanel);
-        
-        // listen for model name changes from the create study panel
-        newStudyPanel.addModelSelectListener(this);
-        newStudyPanel.addModelSelectListener(studyDesignPanel);
-        newStudyPanel.addModelSelectListener(optionsPanel);
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
     	studyDesignPanel.addEssenceMatrixResizeListener(optionsPanel);
@@ -117,7 +117,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
     	optionsPanel.addListener(this);
        
         // add style to container and panel stack
-        //panelStack.setStyleName(STYLE);
+        panelStack.setStyleName(DECK_STYLE);
         container.setStyleName(STYLE);
         
         // initialize the composite widget
@@ -129,15 +129,9 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         int visibleIndex = panelStack.getVisibleWidget();
         switch(visibleIndex)
         {
-        case PANEL_STACK_NEW_STUDY:
-        case PANEL_STACK_EXISTING_STUDY:
-            startOver(false);
-            break;
         case PANEL_STACK_STUDY_DESIGN:
-            if (newStudy)
-                panelStack.showWidget(PANEL_STACK_NEW_STUDY);
-            else
-                panelStack.showWidget(PANEL_STACK_EXISTING_STUDY);
+                panelStack.showWidget(PANEL_STACK_START);
+                initWizard();
             break;
         case PANEL_STACK_OPTIONS:
             panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
@@ -152,13 +146,9 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         stepsLeftPanel.onPrevious();
     }
     
-    private void startOver(boolean clear)
+    private void initWizard()
     {
         panelStack.showWidget(PANEL_STACK_START);
-        // hide the nav panel and steps left on the start screen
-        navPanel.setVisible(false);
-        stepsLeftPanel.setVisible(false);
-        stepsLeftPanel.onCancel();
     }
     
     public void onNext()
@@ -166,10 +156,7 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         int visibleIndex = panelStack.getVisibleWidget();
         switch(visibleIndex)
         {
-        case PANEL_STACK_NEW_STUDY:
-            panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
-            break;
-        case PANEL_STACK_EXISTING_STUDY:
+        case PANEL_STACK_START:
             panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
             break;
         case PANEL_STACK_STUDY_DESIGN:
@@ -183,13 +170,13 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
             break;
         };
         
-        if (visibleIndex != PANEL_STACK_START)
-            stepsLeftPanel.onNext();
+        stepsLeftPanel.onNext();
     }
     
     public void onCancel()
     {
-        startOver(true);
+    	panelStack.showWidget(PANEL_STACK_START);
+    	stepsLeftPanel.onCancel();
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -291,24 +278,10 @@ implements NavigationListener, StartListener, OptionsListener, StudyUploadListen
         solveForPower = power;
     }
    
-    public void onNewStudy()
-    {
-        panelStack.showWidget(PANEL_STACK_NEW_STUDY);
-        stepsLeftPanel.setVisible(true);
-        navPanel.setVisible(true);
 
-    }
-    
-    public void onExistingStudy()
-    {
-        panelStack.showWidget(PANEL_STACK_EXISTING_STUDY);
-        stepsLeftPanel.setVisible(true);
-        navPanel.setVisible(true);
-    }
     
     public void onStudyUpload(Document doc)
     {
-        Window.alert("hello?");
         this.onNext();
     }
     
