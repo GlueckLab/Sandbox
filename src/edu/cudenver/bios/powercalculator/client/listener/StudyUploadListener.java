@@ -4,5 +4,5 @@ import com.google.gwt.xml.client.Document;
 
 public interface StudyUploadListener
 {
-	public void onStudyUpload(Document doc);
+	public void onStudyUpload(Document doc, String modelName);
 }
