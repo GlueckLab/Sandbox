@@ -13,12 +13,13 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.xml.client.DOMException;
 import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
-import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 
 /**
  * Panel which allows the user to upload a previously saved study design file.
@@ -82,20 +83,25 @@ public class UploadPanel extends Composite
         formPanel.addSubmitCompleteHandler(new SubmitCompleteHandler() {
             public void onSubmitComplete(SubmitCompleteEvent event) 
             {
-
+            	Window.alert(event.toDebugString());
                 String results = event.getResults();
-                Window.alert(results);
                 if (results != null)
                 {
-                    Document doc = XMLParser.parse(event.getResults());
-                    if (doc != null)
-                        notifyOnStudyUpload(doc);
-                    else
-                        Window.alert("Uploaded file does not appear to contain a valid study description.  Please try another file.");
+                	try
+                	{
+                		Document doc = XMLParser.parse(results);
+                    	Node studyNode = doc.getElementsByTagName("study").item(0);
+                    	if (studyNode == null) throw new DOMException(DOMException.SYNTAX_ERR, "no study tag specified");
+                		notifyOnStudyUpload(doc);
+                	}
+                	catch (DOMException e)
+                	{
+                        Window.alert("Uploaded file does not contain a valid study description [error: "+ e.getMessage() +"].  Please try another file.");
+                	}
                 }
                 else
                 {
-                    Window.alert("Failed to upload file.  Please try again");
+                	Window.alert("Failed to upload file.  Please try again");
                 }
 
             }
