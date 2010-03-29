@@ -83,7 +83,6 @@ public class UploadPanel extends Composite
         formPanel.addSubmitCompleteHandler(new SubmitCompleteHandler() {
             public void onSubmitComplete(SubmitCompleteEvent event) 
             {
-            	Window.alert(event.toDebugString());
                 String results = event.getResults();
                 if (results != null)
                 {
