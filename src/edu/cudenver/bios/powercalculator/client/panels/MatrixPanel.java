@@ -1,8 +1,6 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -11,12 +9,17 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.NamedNodeMap;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
+import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 
-public class MatrixPanel extends Composite implements ClickHandler
+public class MatrixPanel extends Composite implements ModelSelectListener
 {
     private static final String STYLE = "matrixPanel";
 	// these default names derived from linear model theory.
@@ -31,7 +34,6 @@ public class MatrixPanel extends Composite implements ClickHandler
 	private static final int FIXED_INDEX = 0;
 	private static final int COVARIATE_INDEX = 1;
 
-	private static final String ECHO_URL = "/restcall/power/saveas"; 
 	// matrix inputs
 	protected ResizableMatrix essence = new ResizableMatrix("design", PowerCalculatorGUI.constants.matrixDesignEssence(), 
 			PowerCalculatorGUI.constants.matrixDesignEssenceDetails(), DEFAULT_N, DEFAULT_Q, true);
@@ -96,15 +98,7 @@ public class MatrixPanel extends Composite implements ClickHandler
 	    sigmaDeck.showWidget(FIXED_INDEX);
 		panel.add(sigmaDeck);
 		
-		// add the save study link and associated form
-		panel.add(new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this));
-		form.setAction(ECHO_URL);
-		form.setMethod(FormPanel.METHOD_POST);
-		VerticalPanel formContainer = new VerticalPanel();
-		formContainer.add(matrixXML);
-		formContainer.add(new Hidden("filename", "study.xml"));
-		form.add(formContainer);
-		panel.add(form);
+
 		
 		// set matrix size restrictions
         sigma.setIsSquare(true);
@@ -186,12 +180,6 @@ public class MatrixPanel extends Composite implements ClickHandler
 		initWidget(panel);
 	}
 	
-	public void onClick(ClickEvent e)
-	{
-	    matrixXML.setValue("<study><params alpha='" + alphaTextBox.getText() + "'>" + getStudyXML(essence.rowNamesToXML()) + "</params></study>");
-	    form.submit();
-	}
-	
 	public String getAlpha()
 	{
 	    return alphaTextBox.getText();
@@ -244,4 +232,133 @@ public class MatrixPanel extends Composite implements ClickHandler
 	{
 		essence.addMetaDataListener(listener);
 	}
+	
+	public void onModelSelect(String modelName)
+	{
+		if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
+        {
+			essence.setDimensions(2, 2);
+			withinContrast.setDimensions(1, 1);
+			betweenContrast.setDimensions(1, 2);
+			beta.setDimensions(2, 1);
+			thetaNull.setDimensions(1, 1);
+			sigma.setDimensions(1, 1);
+			
+			advOpts.setVisible(false);
+			setResizable(false);
+        }   
+		else
+		{
+			advOpts.setVisible(true);
+			setResizable(true);
+		}
+	}
+	
+	private void setResizable(boolean allowResize)
+	{
+		essence.setResizable(allowResize);
+		withinContrast.setResizable(allowResize);
+		betweenContrast.setResizable(allowResize);
+		beta.setResizable(allowResize);
+		thetaNull.setResizable(allowResize);
+		sigma.setResizable(allowResize);
+		sigmaCovariate.setResizable(allowResize);
+		sigmaOutcomes.setResizable(allowResize);
+		sigmaCovariateOutcome.setResizable(allowResize);
+	}
+	
+	private void conformMatrices()
+	{
+		
+	}
+	
+	public void loadFromXMLDocument(Document doc)
+	{
+    	Node studyNode = doc.getElementsByTagName("study").item(0);
+    	if (studyNode != null)
+    	{
+    		Node alpha = studyNode.getAttributes().getNamedItem("alpha");
+    		if (alpha != null) 	alphaTextBox.setText(alpha.getNodeValue());
+
+    		// parse the essence matrix
+    		Node essenceNode = doc.getElementsByTagName("essencematrix").item(0);
+    		if (essenceNode != null) loadEssenceMatrixFromNode(essenceNode);
+    		
+    		// parse the remaining matrices
+    		NodeList matrixNodes = doc.getElementsByTagName("matrix");
+    		for(int i = 0; i < matrixNodes.getLength(); i++)
+    		{
+    			Node matrixNode = matrixNodes.item(i);
+    			NamedNodeMap attrs = matrixNode.getAttributes();
+    			Node nameNode = attrs.getNamedItem("name");
+    			if (nameNode != null)
+    			{
+    				String name = nameNode.getNodeValue();
+    				if (name.equals("beta"))
+    					loadMatrixFromNode(beta, matrixNode);
+    				else if (name.equals("withinSubjectContrast"))
+    					loadMatrixFromNode(betweenContrast, matrixNode);
+    				else if (name.equals("betweenSubjectContrast"))
+    					loadMatrixFromNode(withinContrast, matrixNode);
+    				else if (name.equals("theta"))
+    					loadMatrixFromNode(thetaNull, matrixNode);
+    				else if (name.equals("sigmaError"))
+    					loadMatrixFromNode(sigma, matrixNode);
+    				else if (name.equals("sigmaGaussianRandom"))
+    					loadMatrixFromNode(sigmaCovariate, matrixNode);
+    				else if (name.equals("sigmaOutcome"))
+    					loadMatrixFromNode(sigmaOutcomes, matrixNode);
+    				else if (name.equals("sigmaOutcomeGaussianRandom"))
+    					loadMatrixFromNode(sigmaCovariateOutcome, matrixNode);
+    			}
+    		}
+    	}
+	}
+	
+	private void loadEssenceMatrixFromNode(Node matrixNode)
+	{
+		NodeList children = matrixNode.getChildNodes();
+		Node rowMD = null;
+		Node colMD = null;
+		// locate the row/column meta data
+		for(int i = 0; i < children.getLength(); i++)
+		{
+			Node child = children.item(i);
+			String name = child.getNodeName();
+			if (name.equals("matrix"))
+				loadMatrixFromNode(essence, child);
+			else if (name.equals("rowMetaData"))
+				rowMD = child;
+			else if (name.equals("columnMetaData"))
+				colMD = child;
+		}
+		
+		// if we found meta data, fill in the details
+	}
+	
+	private void loadMatrixFromNode(ResizableMatrix matrixUI, Node matrixNode)
+	{
+
+		NamedNodeMap attrs = matrixNode.getAttributes();
+		Node rowNode = attrs.getNamedItem("rows");
+		Node colNode = attrs.getNamedItem("columns");
+		if (rowNode != null && colNode != null)
+		{
+			int rows = Integer.parseInt(rowNode.getNodeValue());
+			int cols = Integer.parseInt(colNode.getNodeValue());
+			matrixUI.setDimensions(rows, cols);
+			
+			NodeList rowNodeList = matrixNode.getChildNodes();
+			for(int r = 0; r < rowNodeList.getLength(); r++)
+			{
+				NodeList colNodeList = rowNodeList.item(r).getChildNodes();
+				for(int c = 0; c < colNodeList.getLength(); c++)
+				{
+					Node colItem = colNodeList.item(c).getFirstChild();
+					if (colItem != null) matrixUI.setData(r, c, colItem.getNodeValue());
+				}
+			}
+		}
+	}
+
 }
