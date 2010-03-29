@@ -142,8 +142,8 @@ public class ColumnMetaDataEntry extends Composite
 	public String toXML()
 	{
 		if (fixedRb.getValue())
-			return "<c type='fixed' />";
+			return "<c type='fixed'></c>";
 		else
-			return "<c type='random' mean='" + getMean() + "' variance='" + getVariance() + "' />";
+			return "<c type='random' mean='" + getMean() + "' variance='" + getVariance() + "'></c>";
 	}
 }
