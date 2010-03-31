@@ -1,6 +1,7 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -12,29 +13,131 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 
-public class TwoGroupDesignPanel extends Composite
+public class TwoGroupDesignPanel extends Composite implements ChangeHandler
 {
 	private static final String STYLE = "twoGroupDesignPanel";
+	private static final String MESSAGE_STYLE = "message";
+	private static final String ERROR_STYLE = "error";
+	private static final String OKAY_STYLE = "okay";
     protected TextBox alphaTextBox = new TextBox();
+    protected HTML alphaErrorHTML = new HTML("");
     protected TextBox mu0TextBox = new TextBox();
+    protected HTML mu0ErrorHTML = new HTML("");
     protected TextBox muATextBox = new TextBox();
+    protected HTML muAErrorHTML = new HTML("");
     protected TextBox sigmaTextBox = new TextBox();
+    protected HTML sigmaErrorHTML = new HTML("");
+    protected InputWizardStepListener wizard;
     
-    public TwoGroupDesignPanel()
+    public TwoGroupDesignPanel(InputWizardStepListener wizard)
     {
+        this.wizard = wizard;
+        
         // TODO: string constants!!!!
         VerticalPanel panel = new VerticalPanel();
-        Grid grid = new Grid(4,2);
+        Grid grid = new Grid(4,3);
         grid.setWidget(0, 0, new HTML(PowerCalculatorGUI.constants.textLabelAlpha()));
         grid.setWidget(0, 1, alphaTextBox);
+        grid.setWidget(0, 2, alphaErrorHTML);
         grid.setWidget(1, 0, new HTML(PowerCalculatorGUI.constants.textLabelMu0()));
         grid.setWidget(1, 1, mu0TextBox);
+        grid.setWidget(1, 2, mu0ErrorHTML);
         grid.setWidget(2, 0, new HTML(PowerCalculatorGUI.constants.textLabelMuA()));
         grid.setWidget(2, 1, muATextBox);
+        grid.setWidget(2, 2, muAErrorHTML);
         grid.setWidget(3, 0, new HTML(PowerCalculatorGUI.constants.textLabelSigma()));
         grid.setWidget(3, 1, sigmaTextBox);
+        grid.setWidget(3, 2, sigmaErrorHTML);
         panel.add(grid);
+              
+        // add validation callbacks
+        
+        // make sure alpha between 0, 1
+        alphaTextBox.addChangeHandler(new ChangeHandler() {
+                // 
+                public void onChange(ChangeEvent e)
+                {
+                    if (validAlpha(alphaTextBox.getText()))
+                    {
+                        displayOkay(alphaErrorHTML, PowerCalculatorGUI.constants.okay());
+                    }
+                    else
+                    {
+                        displayError(alphaErrorHTML, PowerCalculatorGUI.constants.errorAlphaInvalid());
+                        alphaTextBox.setText("");
+                    }
+                }
+        });
+        
+        // make sure mu0 is a valid mean
+        mu0TextBox.addChangeHandler(new ChangeHandler() {
+                // 
+                public void onChange(ChangeEvent e)
+                {
+                    if (validMean(mu0TextBox.getText()))
+                    {
+                        displayOkay(mu0ErrorHTML, PowerCalculatorGUI.constants.okay());
+                    }
+                    else
+                    {
+                        displayError(mu0ErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
+                        mu0TextBox.setText("");
+                    }                    
+                }
+        });
+        
+        // make sure muA is a valid mean
+        muATextBox.addChangeHandler(new ChangeHandler() {
+                // 
+                public void onChange(ChangeEvent e)
+                {
+                    if (validMean(muATextBox.getText()))
+                    {
+                        displayOkay(muAErrorHTML,PowerCalculatorGUI.constants.okay());
+                    }
+                    else
+                    {
+                        displayError(muAErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
+                        muATextBox.setText("");
+                    }                    
+                }
+        });
+        
+        // make sure sigma is a valid variance
+        sigmaTextBox.addChangeHandler(new ChangeHandler() {
+                // 
+                public void onChange(ChangeEvent e)
+                {
+                    if (validVariance(sigmaTextBox.getText()))
+                    {
+                        displayOkay(sigmaErrorHTML,PowerCalculatorGUI.constants.okay());
+                    }
+                    else
+                    {
+                        displayError(sigmaErrorHTML,PowerCalculatorGUI.constants.errorVarianceInvalid());
+                        sigmaTextBox.setText("");
+                    }                    
+                }
+        });
+        // add shared change handler for all text boxes - determines if 
+        // continue is allowed
+        alphaTextBox.addChangeHandler(this);
+        mu0TextBox.addChangeHandler(this);
+        muATextBox.addChangeHandler(this);
+        sigmaTextBox.addChangeHandler(this);
+        
+        // add style
+        alphaErrorHTML.setStyleName(MESSAGE_STYLE);
+        alphaErrorHTML.addStyleDependentName(OKAY_STYLE);
+        mu0ErrorHTML.setStyleName(MESSAGE_STYLE);
+        mu0ErrorHTML.addStyleDependentName(OKAY_STYLE);
+        muAErrorHTML.setStyleName(MESSAGE_STYLE);
+        muAErrorHTML.addStyleDependentName(OKAY_STYLE);
+        sigmaErrorHTML.setStyleName(MESSAGE_STYLE);
+        sigmaErrorHTML.addStyleDependentName(OKAY_STYLE);
+
         initWidget(panel);
     }
     
@@ -114,5 +217,92 @@ public class TwoGroupDesignPanel extends Composite
     			}
     		}
     	}
+    }
+    
+    public void onChange(ChangeEvent e)
+    {
+        if (!alphaTextBox.getText().isEmpty() &&
+                !mu0TextBox.getText().isEmpty() &&
+                !muATextBox.getText().isEmpty() &&
+                !sigmaTextBox.getText().isEmpty())
+            wizard.onStepComplete();
+        else
+            wizard.onStepInProgress();
+        
+    }
+    
+    private boolean validAlpha(String alpha)
+    {
+        if (alpha == null || alpha.isEmpty())
+            return false;
+        
+        try
+        {
+            double a = Double.parseDouble(alpha);
+            if (Double.isNaN(a) || (a <= 0) || a >= 1) 
+                return false;
+            else
+                return true;
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+    }
+    
+    private boolean validMean(String mean)
+    {
+        if (mean == null || mean.isEmpty())
+            return false;
+        
+        try
+        {
+            double m = Double.parseDouble(mean);
+            if (Double.isNaN(m)) 
+                return false;
+            else
+                return true;
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+    }
+    
+    private boolean validVariance(String variance)
+    {
+        if (variance == null || variance.isEmpty())
+            return false;
+        
+        try
+        {
+            double v = Double.parseDouble(variance);
+            if (Double.isNaN(v) || v < 0) 
+                return false;
+            else
+                return true;
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+    }
+    
+    private void displayError(HTML widget, String msg)
+    {
+        widget.removeStyleDependentName(OKAY_STYLE);
+        widget.removeStyleDependentName(ERROR_STYLE);
+
+        widget.addStyleDependentName(ERROR_STYLE);
+        widget.setHTML(msg);
+    }
+    
+    private void displayOkay(HTML widget, String msg)
+    {
+        widget.removeStyleDependentName(ERROR_STYLE);
+        widget.removeStyleDependentName(OKAY_STYLE);
+
+        widget.addStyleDependentName(OKAY_STYLE);
+        widget.setHTML(msg);
     }
 }

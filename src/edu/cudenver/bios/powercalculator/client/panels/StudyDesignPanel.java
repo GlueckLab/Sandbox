@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
@@ -26,7 +27,7 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     private static final int BASIC_GLMM = 0;
     private static final int TWO_GROUP = 1;
     protected BasicPanel linearModelPanel = new BasicPanel();
-    protected TwoGroupDesignPanel twoGroupPanel = new TwoGroupDesignPanel();
+    protected TwoGroupDesignPanel twoGroupPanel;
     protected MatrixPanel matrixPanel = new MatrixPanel();
     protected DeckPanel designPanel = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
@@ -35,8 +36,11 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     protected String modelName = PowerCalculatorGUI.constants.modelGLMM();
     TabPanel tabs = new TabPanel();
 
-    public StudyDesignPanel()
+    public StudyDesignPanel(InputWizardStepListener wizard)
     {
+        // create the subpanels
+        twoGroupPanel = new TwoGroupDesignPanel(wizard);
+        
     	VerticalPanel designContainer = new VerticalPanel();
         
     	// note, order must match indices listed above
@@ -135,4 +139,5 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     			matrixPanel.getStudyXML("") + "</study>");
     	form.submit();    	
     }
+    
 }

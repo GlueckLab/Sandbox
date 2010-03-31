@@ -89,4 +89,10 @@ public interface PowerCalculatorConstants extends Constants
 	
 	// error messages
 	public String errorMatrixDimensionInvalid();
+	public String errorAlphaInvalid();
+	public String errorMeanInvalid();
+	public String errorVarianceInvalid();
+	
+	// ok messages
+	public String okay();
 }

@@ -2,16 +2,15 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -27,7 +26,7 @@ import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class OptionsPanel extends Composite 
 implements MatrixResizeListener, MetaDataListener, ModelSelectListener,
-StudyUploadListener, ClickHandler
+StudyUploadListener, ClickHandler, ChangeHandler
 {
 	private static final String STYLE = "optionsPanel";
 	private static final String HEADER_STYLE = "optionsPanelHeader";
@@ -286,5 +285,10 @@ StudyUploadListener, ClickHandler
     public void onStudyUpload(Document doc, String modelName)
     {
         onModelSelect(modelName);
+    }
+    
+    public void onChange(ChangeEvent e)
+    {
+        
     }
 }

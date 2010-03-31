@@ -15,13 +15,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class InputWizardPanel extends Composite 
-implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelectListener
+implements NavigationListener, OptionsListener, 
+StudyUploadListener, ModelSelectListener, InputWizardStepListener
 {
 	private static final String UPLOAD_PARAM = "u";
 	
@@ -56,7 +58,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
 
     // potential input panels.  Added to the deck depending on the input type
     // selected on the start panel
-	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel();
+	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel(this);
 	
 	// wait dialog
 	protected DialogBox waitDialog;
@@ -75,7 +77,7 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
 	protected Hidden curveRequestHidden = new Hidden("curveRequest");
 	
     public InputWizardPanel() 
-    {
+    {       
         VerticalPanel container = new VerticalPanel();
 
         // set up the image request submission form
@@ -166,15 +168,18 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     private void initWizard()
     {
         panelStack.showWidget(PANEL_STACK_START);
+        navPanel.setPrevious(false);
     }
     
     public void onNext()
     {    	
+        navPanel.setPrevious(true);
         int visibleIndex = panelStack.getVisibleWidget();
         switch(visibleIndex)
         {
         case PANEL_STACK_START:
             panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
+            navPanel.setNext(false);
             break;
         case PANEL_STACK_STUDY_DESIGN:
             panelStack.showWidget(PANEL_STACK_OPTIONS);
@@ -322,5 +327,15 @@ implements NavigationListener, OptionsListener, StudyUploadListener, ModelSelect
     public void onModelSelect(String modelName)
     {
         this.modelName = modelName;
+    }
+    
+    public void onStepInProgress()
+    {  
+        navPanel.setNext(false);
+    }
+    
+    public void onStepComplete()
+    {
+        navPanel.setNext(true);
     }
 }
