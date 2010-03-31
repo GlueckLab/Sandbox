@@ -176,6 +176,10 @@
 	background: url(../images/buttonNavBgMouseOver.png) no-repeat 4px 2px;
 }
 
+.wizardNavigationPanelButton[disabled] {
+	background: url(../images/buttonNavBgDisabled.png) no-repeat 4px 2px;
+}
+
 /* navigation bar style sheet */
 
 .wizardNavigationPanel {
@@ -275,3 +279,16 @@
 	height: 30px;
 	text-align: center;
 }
+
+.message-error {
+	color: maroon;
+	font-weight: bold;
+	background: #fcc;
+}
+
+.message-okay {
+	color: green;
+	font-weight: bold;
+	background: #fff;
+}
+
