@@ -230,3 +230,9 @@
 	background: #fff;
 }
 
+.powerCurveFrame {
+	border: 0;
+	height: 320px;
+	width: 320px;
+	overflow: hidden;
+}
