@@ -1,5 +1,7 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -14,8 +16,10 @@ import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
+import edu.cudenver.bios.powercalculator.client.listener.StudyDesignChangeListener;
 
-public class TwoGroupDesignPanel extends Composite implements ChangeHandler
+public class TwoGroupDesignPanel extends Composite 
+implements ChangeHandler, StudyDesignChangeListener
 {
 	private static final String STYLE = "twoGroupDesignPanel";
 	private static final String MESSAGE_STYLE = "message";
@@ -30,11 +34,14 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
     protected TextBox sigmaTextBox = new TextBox();
     protected HTML sigmaErrorHTML = new HTML("");
     protected InputWizardStepListener wizard;
+    protected int stepIndex = -1;
     
-    public TwoGroupDesignPanel(InputWizardStepListener wizard)
+    ArrayList<StudyDesignChangeListener> listeners = new ArrayList<StudyDesignChangeListener>();
+    
+    public TwoGroupDesignPanel(InputWizardStepListener wizard, int stepIndex)
     {
         this.wizard = wizard;
-        
+        this.stepIndex = stepIndex;
         // TODO: string constants!!!!
         VerticalPanel panel = new VerticalPanel();
         Grid grid = new Grid(4,3);
@@ -59,15 +66,18 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
                 // 
                 public void onChange(ChangeEvent e)
                 {
+                    String alpha = alphaTextBox.getText();
                     if (validAlpha(alphaTextBox.getText()))
                     {
                         displayOkay(alphaErrorHTML, PowerCalculatorGUI.constants.okay());
                     }
                     else
                     {
+                        alpha = "";
                         displayError(alphaErrorHTML, PowerCalculatorGUI.constants.errorAlphaInvalid());
-                        alphaTextBox.setText("");
+                        alphaTextBox.setText(alpha);
                     }
+                    for(StudyDesignChangeListener listener: listeners) listener.onAlpha(alpha);
                 }
         });
         
@@ -76,15 +86,18 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
                 // 
                 public void onChange(ChangeEvent e)
                 {
-                    if (validMean(mu0TextBox.getText()))
+                    String mu0 = mu0TextBox.getText();
+                    if (validMean(mu0))
                     {
                         displayOkay(mu0ErrorHTML, PowerCalculatorGUI.constants.okay());
                     }
                     else
                     {
+                        mu0 = "";
                         displayError(mu0ErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
-                        mu0TextBox.setText("");
-                    }                    
+                        mu0TextBox.setText(mu0);
+                    }      
+                    for(StudyDesignChangeListener listener: listeners) listener.onBeta(0,0,mu0);
                 }
         });
         
@@ -93,15 +106,18 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
                 // 
                 public void onChange(ChangeEvent e)
                 {
-                    if (validMean(muATextBox.getText()))
+                    String muA = muATextBox.getText();
+                    if (validMean(muA))
                     {
                         displayOkay(muAErrorHTML,PowerCalculatorGUI.constants.okay());
                     }
                     else
                     {
+                        muA = "";
                         displayError(muAErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
-                        muATextBox.setText("");
-                    }                    
+                        muATextBox.setText(muA);
+                    }    
+                    for(StudyDesignChangeListener listener: listeners) listener.onBeta(1,0,muA);
                 }
         });
         
@@ -110,15 +126,19 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
                 // 
                 public void onChange(ChangeEvent e)
                 {
-                    if (validVariance(sigmaTextBox.getText()))
+                    String sigma = sigmaTextBox.getText();
+                    if (validVariance(sigma))
                     {
                         displayOkay(sigmaErrorHTML,PowerCalculatorGUI.constants.okay());
                     }
                     else
                     {
+                        sigma = "";
                         displayError(sigmaErrorHTML,PowerCalculatorGUI.constants.errorVarianceInvalid());
                         sigmaTextBox.setText("");
-                    }                    
+                    }      
+                    for(StudyDesignChangeListener listener: listeners) listener.onSigmaError(0,0,sigma);
+
                 }
         });
         // add shared change handler for all text boxes - determines if 
@@ -225,9 +245,9 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
                 !mu0TextBox.getText().isEmpty() &&
                 !muATextBox.getText().isEmpty() &&
                 !sigmaTextBox.getText().isEmpty())
-            wizard.onStepComplete();
+            wizard.onStepComplete(stepIndex);
         else
-            wizard.onStepInProgress();
+            wizard.onStepInProgress(stepIndex);
         
     }
     
@@ -305,4 +325,49 @@ public class TwoGroupDesignPanel extends Composite implements ChangeHandler
         widget.addStyleDependentName(OKAY_STYLE);
         widget.setHTML(msg);
     }
+    
+    /*** functions to coordinate between matrix and design view panels ***/
+    public void addStudyDesignChangeListener(StudyDesignChangeListener listener)
+    {
+        listeners.add(listener);
+    }
+    
+    public void onAlpha(String alpha)
+    {
+        alphaTextBox.setText(alpha);
+    }
+    
+    public void onDesign(int row, int col, String value) {}
+    
+    public void onDesignRowMetaData(int row, String name) {}
+    
+    public void onDesignColumnMetaData(int col, boolean isRandom, String mean, String variance) {}
+        
+    public void onBeta(int row, int col, String value) 
+    {
+        if (col == 0)
+        {
+            if (row == 0)
+                mu0TextBox.setText(value);
+            else if (row == 1)
+                muATextBox.setText(value);
+        }
+    }
+    
+    public void onTheta(int row, int col, String value) {}
+    
+    public void onBetweenSubjectContrast(int row, int col, String value) {}
+
+    public void onWithinSubjectContrast(int row, int col, String value) {}
+
+    public void onSigmaError(int row, int col, String value) 
+    {
+        if (row == 0 && col == 0) sigmaTextBox.setText(value);
+    }  
+    
+    public void onSigmaOutcome(int row, int col, String value) {}
+    
+    public void onSigmaCovariateOutcome(int row, int col, String value) {}
+    
+    public void onSigmaCovariate(int row, int col, String value) {}
 }

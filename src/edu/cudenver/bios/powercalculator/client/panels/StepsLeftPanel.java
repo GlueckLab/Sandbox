@@ -16,53 +16,30 @@ public class StepsLeftPanel extends Composite implements NavigationListener
 	protected static final String PANEL_STYLE = "stepsLeftPanel";
 	protected static final String SELECTED_STYLE = "selected";
     protected static final String DESELECTED_STYLE = "deselected";
-    protected static final String START_STEP_STYLE = "stepsLeftStart";    
-    protected static final String STUDY_STEP_STYLE = "stepsLeftStudy";    
-    protected static final String OPTIONS_STEP_STYLE = "stepsLeftOptions";    
-    protected static final String RESULTS_STEP_STYLE = "stepsLeftResults";    
     
     protected HTML startStep = new HTML(PowerCalculatorGUI.constants.stepStart());
-    protected Label startNumber = new Label();
     protected HTML studyStep = new HTML(PowerCalculatorGUI.constants.stepStudy());
-    protected Label studyNumber = new Label();
-    protected HTML optionsStep = 
-        new HTML(PowerCalculatorGUI.constants.stepOptions());
-    protected Label optionsNumber = new Label();
+    protected HTML optionsStep = new HTML(PowerCalculatorGUI.constants.stepOptions());
     protected HTML resultsStep = new HTML(PowerCalculatorGUI.constants.stepResults());
-    protected Label resultsNumber = new Label();
     
     private Widget currentStep = startStep;
     
     public StepsLeftPanel()
     {        
         HorizontalPanel panel = new HorizontalPanel();
-        panel.add(startNumber);
         panel.add(startStep);
-        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        panel.add(studyNumber);
         panel.add(studyStep);
-        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        panel.add(optionsNumber);
         panel.add(optionsStep);
-        panel.add(new HTML(PowerCalculatorGUI.constants.stepSpacer()));
-        panel.add(resultsNumber);
         panel.add(resultsStep);
-        panel.setStyleName(PANEL_STYLE);
         
-        startNumber.setStyleName(START_STEP_STYLE);
-        startNumber.addStyleDependentName(SELECTED_STYLE);
+        // add style
+        panel.setStyleName(PANEL_STYLE);
         startStep.setStyleName(STYLE);
         startStep.addStyleDependentName(SELECTED_STYLE);
-        studyNumber.setStyleName(STUDY_STEP_STYLE);
-        studyNumber.addStyleDependentName(DESELECTED_STYLE);
         studyStep.setStyleName(STYLE);
         studyStep.addStyleDependentName(DESELECTED_STYLE);
-        optionsNumber.setStyleName(OPTIONS_STEP_STYLE);
-        optionsNumber.addStyleDependentName(DESELECTED_STYLE);
         optionsStep.setStyleName(STYLE);
         optionsStep.addStyleDependentName(DESELECTED_STYLE);
-        resultsNumber.setStyleName(RESULTS_STEP_STYLE);
-        resultsNumber.addStyleDependentName(DESELECTED_STYLE);
         resultsStep.setStyleName(STYLE);
         resultsStep.addStyleDependentName(DESELECTED_STYLE);
         
@@ -77,11 +54,11 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     public void onNext()
     {
         if (currentStep == startStep)
-            setStep(startNumber, startStep, studyNumber, studyStep);
+            setStep(startStep, studyStep);
         else if (currentStep == studyStep)
-            setStep(studyNumber, studyStep, optionsNumber, optionsStep);
+            setStep(studyStep, optionsStep);
         else if (currentStep == optionsStep)
-            setStep(optionsNumber, optionsStep, resultsNumber, resultsStep);
+            setStep(optionsStep, resultsStep);
     }
     
     /**
@@ -91,11 +68,11 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     public void onPrevious()
     {
         if (currentStep == studyStep)
-            setStep(studyNumber, studyStep, startNumber, startStep);
+            setStep(studyStep, startStep);
         else if (currentStep == optionsStep)
-            setStep(optionsNumber, optionsStep, studyNumber, studyStep);
+            setStep(optionsStep, studyStep);
         else if (currentStep == resultsStep)
-            setStep(resultsNumber, resultsStep, optionsNumber, optionsStep);
+            setStep(resultsStep, optionsStep);
 
     }
     
@@ -105,11 +82,11 @@ public class StepsLeftPanel extends Composite implements NavigationListener
     public void onCancel()
     {
     	if (currentStep == studyStep)
-    	    setStep(studyNumber, studyStep, startNumber, startStep);
+    	    setStep(studyStep, startStep);
     	else if (currentStep == optionsStep)
-            setStep(optionsNumber, optionsStep, startNumber, startStep);
+            setStep(optionsStep, startStep);
     	else if (currentStep == resultsStep)
-            setStep(resultsNumber, resultsStep, startNumber, startStep);
+            setStep(resultsStep, startStep);
 
     }
     
@@ -122,20 +99,15 @@ public class StepsLeftPanel extends Composite implements NavigationListener
      * @param newIndex
      * @param prevIndex
      */
-    protected void setStep(Widget oldNumber, Widget oldStep,
-            Widget newNumber, Widget newStep)
+    protected void setStep(Widget oldStep,Widget newStep)
     {    	
         currentStep = newStep;
 
         // deselect the old widgets
-        oldNumber.removeStyleDependentName(SELECTED_STYLE);
-        oldNumber.addStyleDependentName(DESELECTED_STYLE);
         oldStep.removeStyleDependentName(SELECTED_STYLE);
         oldStep.addStyleDependentName(DESELECTED_STYLE);
         
         // select the new widgets
-        newNumber.removeStyleDependentName(DESELECTED_STYLE);
-        newNumber.addStyleDependentName(SELECTED_STYLE);
         newStep.removeStyleDependentName(DESELECTED_STYLE);
         newStep.addStyleDependentName(SELECTED_STYLE);
     }

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
@@ -52,13 +53,13 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
 	protected UploadPanel existingStudyPanel;
 	
     // options panel (always in deck after input panel)
-	protected OptionsPanel optionsPanel = new OptionsPanel();
+	protected OptionsPanel optionsPanel = new OptionsPanel(this, PANEL_STACK_OPTIONS);
     // results panel (always in deck after options panel)
 	protected ResultsPanel resultsPanel = new ResultsPanel();
 
     // potential input panels.  Added to the deck depending on the input type
     // selected on the start panel
-	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel(this);
+	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel(this, PANEL_STACK_STUDY_DESIGN);
 	
 	// wait dialog
 	protected DialogBox waitDialog;
@@ -69,6 +70,10 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
 	protected boolean showCurve = false;
 	protected CurveOptions curveOpts = null;
 	protected boolean solveForPower = true;
+	
+	// indicators if study design and options are currently valid
+	protected boolean studyDesignValid = false;
+	protected boolean optionsValid = true;
 	
 	// form used to submit an image request to fill a hidden Iframe on the 
 	// results panel.  IE versions 5-7 do not support inline images, so this needs
@@ -125,7 +130,7 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         navPanel.addNavigationListener(this);
 
         // intialize the wizard
-        initWizard();
+        updateStep(PANEL_STACK_START, false, true, true);
     	
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
@@ -149,26 +154,26 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         switch(visibleIndex)
         {
         case PANEL_STACK_STUDY_DESIGN:
-                panelStack.showWidget(PANEL_STACK_START);
-                initWizard();
+            updateStep(PANEL_STACK_START, false, true, true);
             break;
         case PANEL_STACK_OPTIONS:
-            panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
+            updateStep(PANEL_STACK_STUDY_DESIGN, true, studyDesignValid, true);
             break;
         case PANEL_STACK_RESULTS:
-            panelStack.showWidget(PANEL_STACK_OPTIONS);
+            updateStep(PANEL_STACK_OPTIONS, true, optionsValid, true);
             break;
         default:
             break;
         };
-
         stepsLeftPanel.onPrevious();
     }
     
-    private void initWizard()
+    private void updateStep(int index, boolean allowPrevious, boolean allowNext, boolean allowCancel)
     {
-        panelStack.showWidget(PANEL_STACK_START);
-        navPanel.setPrevious(false);
+        panelStack.showWidget(index);
+        navPanel.setPrevious(allowPrevious);
+        navPanel.setNext(allowNext);
+        navPanel.setCancel(allowCancel);
     }
     
     public void onNext()
@@ -178,15 +183,14 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         switch(visibleIndex)
         {
         case PANEL_STACK_START:
-            panelStack.showWidget(PANEL_STACK_STUDY_DESIGN);
-            navPanel.setNext(false);
+            updateStep(PANEL_STACK_STUDY_DESIGN, true, studyDesignValid, true);
             break;
         case PANEL_STACK_STUDY_DESIGN:
-            panelStack.showWidget(PANEL_STACK_OPTIONS);
+            updateStep(PANEL_STACK_OPTIONS, true, optionsValid, true);
             break;
         case PANEL_STACK_OPTIONS:
             retrieveResults();
-            panelStack.showWidget(PANEL_STACK_RESULTS);
+            updateStep(PANEL_STACK_RESULTS, true, false, true);
             break;
         default:
             break;
@@ -197,8 +201,8 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
     
     public void onCancel()
     {
-    	panelStack.showWidget(PANEL_STACK_START);
-    	stepsLeftPanel.onCancel();
+        updateStep(PANEL_STACK_START, false, true, true);
+        stepsLeftPanel.onCancel();
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -329,13 +333,21 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         this.modelName = modelName;
     }
     
-    public void onStepInProgress()
+    public void onStepInProgress(int stepIndex)
     {  
+        if (stepIndex == PANEL_STACK_STUDY_DESIGN)
+            studyDesignValid = false;
+        else if (stepIndex == PANEL_STACK_OPTIONS)
+            optionsValid = false;
         navPanel.setNext(false);
     }
     
-    public void onStepComplete()
+    public void onStepComplete(int stepIndex)
     {
+        if (stepIndex == PANEL_STACK_STUDY_DESIGN)
+            studyDesignValid = true;
+        else if (stepIndex == PANEL_STACK_OPTIONS)
+            optionsValid = true;
         navPanel.setNext(true);
     }
 }

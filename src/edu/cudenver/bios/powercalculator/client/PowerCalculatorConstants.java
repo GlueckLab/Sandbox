@@ -11,6 +11,13 @@ import com.google.gwt.i18n.client.Constants;
  */
 public interface PowerCalculatorConstants extends Constants
 {
+    // some shared style names
+    public static final String STYLE_WIZARD_STEP_PANEL = "wizardStepPanel";
+    public static final String STYLE_WIZARD_STEP_INPUT_CONTAINER = "wizardStepInputContainer";
+    public static final String STYLE_WIZARD_STEP_HEADER = "wizardStepHeader";
+    public static final String STYLE_WIZARD_STEP_DESCRIPTION = "wizardStepDescription";
+    public static final String STYLE_WIZARD_STEP_SUBPANEL = "subpanel";
+    
 	// wizard navigation button labels
 	public String buttonNext();
 	public String buttonPrevious();

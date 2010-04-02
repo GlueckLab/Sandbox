@@ -6,11 +6,13 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
@@ -22,8 +24,6 @@ public class StudyDesignPanel extends Composite
 implements StudyUploadListener, ModelSelectListener, ClickHandler
 {
 	private static final String SAVEAS_URL = "/restcall/file/saveas"; 
-
-	private static final String STYLE = "studyDesignPanel";
     private static final int BASIC_GLMM = 0;
     private static final int TWO_GROUP = 1;
     protected BasicPanel linearModelPanel = new BasicPanel();
@@ -36,12 +36,15 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     protected String modelName = PowerCalculatorGUI.constants.modelGLMM();
     TabPanel tabs = new TabPanel();
 
-    public StudyDesignPanel(InputWizardStepListener wizard)
+    public StudyDesignPanel(InputWizardStepListener wizard, int stepIndex)
     {
         // create the subpanels
-        twoGroupPanel = new TwoGroupDesignPanel(wizard);
+        twoGroupPanel = new TwoGroupDesignPanel(wizard, stepIndex);
         
     	VerticalPanel designContainer = new VerticalPanel();
+        // header, description
+        HTML header = new HTML("Design study");
+        HTML description = new HTML("Fill in the details of your study design using either the matrix view (for users familier with linear models) or the design view (beginning users)");
         
     	// note, order must match indices listed above
         designPanel.add(linearModelPanel);
@@ -50,6 +53,11 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
         tabs.add(designPanel, "Study Design View");
         tabs.add(matrixPanel, "Matrix View");
         tabs.selectTab(0);
+        
+        // changes on the matrix panel appear on the design view and
+        // vice versa
+        twoGroupPanel.addStudyDesignChangeListener(matrixPanel);
+        
         
 		// add the save study link and associated form
 		form.setAction(SAVEAS_URL);
@@ -60,12 +68,21 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
 		form.add(formContainer);
 		
 		// build the panel layout
-		designContainer.add(tabs);
-        designContainer.add(new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this));
-		designContainer.add(form);
+		designContainer.add(header);
+		designContainer.add(description);
+		
+		VerticalPanel inputContainer = new VerticalPanel();
+		inputContainer.add(tabs);
+		inputContainer.add(new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this));
+		inputContainer.add(form);
         
+		designContainer.add(inputContainer);
+		
         // TODO: add style
-        designContainer.setStyleName(STYLE);
+        designContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
+        inputContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
         initWidget(designContainer);
     }
     

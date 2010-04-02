@@ -18,6 +18,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
@@ -52,6 +53,7 @@ public class UploadPanel extends Composite
         HTML header = new HTML(PowerCalculatorGUI.constants.textExistingStudyPanelHeader());
         HTML description = new HTML(PowerCalculatorGUI.constants.textExistingStudyPanelDescription());
 
+        VerticalPanel inputContainer = new VerticalPanel();
         // create the upload form
         final FormPanel formPanel = new FormPanel();
         // for file upload, we need to use the POST method, and multipart MIME encoding.
@@ -115,12 +117,14 @@ public class UploadPanel extends Composite
         // layout the widgets
         panel.add(header);
         panel.add(description);
-        panel.add(formPanel);
+        inputContainer.add(formPanel);
+        panel.add(inputContainer);
 
         // add style
-        header.setStyleName(HEADER_STYLE);
-        description.setStyleName(DESCRIPTION_STYLE);
-        panel.setStyleName(CONTAINER_STYLE);
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        inputContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
 
         initWidget(panel);
     }

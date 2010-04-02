@@ -15,6 +15,7 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 import com.google.gwt.xml.client.NodeList;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 
 public class ResultsPanel extends Composite implements OptionsListener
@@ -42,15 +43,27 @@ public class ResultsPanel extends Composite implements OptionsListener
     {
         VerticalPanel panel = new VerticalPanel();
         
+        // header, description
+        HTML header = new HTML("Results: ");
+        
+        VerticalPanel resultsContainer = new VerticalPanel();
         deck.add(createPowerResultsPanel());
         deck.add(createSampleSizeResultsPanel());
         deck.showWidget(POWER_INDEX);
-        // add the power/sample panels to the main panel
-        panel.add(deck);
         
         powerCurvePanel = createPowerCurvePanel();
-        panel.add(powerCurvePanel);
+
         //powerCurvePanel.setVisible(false);
+        
+        // layout the panel
+        resultsContainer.add(deck);
+        resultsContainer.add(powerCurvePanel);
+        panel.add(header);
+        panel.add(resultsContainer);
+        
+        // add style
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        resultsContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
         
         // initialize the widget
         initWidget(panel);

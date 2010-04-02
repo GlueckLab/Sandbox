@@ -17,7 +17,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
@@ -28,10 +30,7 @@ public class OptionsPanel extends Composite
 implements MatrixResizeListener, MetaDataListener, ModelSelectListener,
 StudyUploadListener, ClickHandler, ChangeHandler
 {
-	private static final String STYLE = "optionsPanel";
-	private static final String HEADER_STYLE = "optionsPanelHeader";
 	private static final String SOLVE_FOR_GROUP = "solveFor";
-
 	private static final int INDEX_TWO_GROUP = 0;
 	private static final int INDEX_LINEAR_MODEL = 1;
 
@@ -53,17 +52,25 @@ StudyUploadListener, ClickHandler, ChangeHandler
 	protected LinearModelDetailsPanel glmmDetailsPanel;
     protected TwoGroupDetailsPanel twoGroupDetailsPanel;
     
+    protected InputWizardStepListener wizard;
+    protected int stepIndex = -1;
 	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();;
 	protected ArrayList<OptionsListener> listeners = new ArrayList<OptionsListener>();
 
-	public OptionsPanel()
+	    
+	public OptionsPanel(InputWizardStepListener wizard, int stepIndex)
 	{
 		VerticalPanel panel = new VerticalPanel();
 
-		// layout the overall panel
-		panel.add(createSolveForPanel());
-		panel.add(createDetailsPanel());
-		panel.add(createCurveOptionsPanel());
+		// header, description
+		HTML header = new HTML("Power &amp; Sample Size Options");
+		HTML description = new HTML("Select whether you would like a power or sample size estimate and fill in the requested details.  You may also include a power curve in your results.");
+		
+		// layout the input panel
+		VerticalPanel inputContainer = new VerticalPanel();
+		inputContainer.add(createSolveForPanel());
+		inputContainer.add(createDetailsPanel());
+		inputContainer.add(createCurveOptionsPanel());
 
 		// the details panels listen for options events
 		this.addListener(glmmDetailsPanel);
@@ -71,6 +78,17 @@ StudyUploadListener, ClickHandler, ChangeHandler
 		
 		// set up the panel display based on the model name
 		onModelSelect(modelName);
+		
+		// layout the overall panel
+		panel.add(header);
+		panel.add(description);
+		panel.add(inputContainer);
+		
+		// add style
+		header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+		description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
+		inputContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
+		panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
 		
 		// initialize widget
 		initWidget(panel);
@@ -102,8 +120,10 @@ StudyUploadListener, ClickHandler, ChangeHandler
 		panel.add(deckHeader);
 		panel.add(deck);
 
-		deckHeader.setStyleName(HEADER_STYLE);
-		panel.setStyleName(STYLE);
+		deckHeader.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+		deckHeader.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+		panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+		panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
 
 		return panel;
 	}
@@ -126,8 +146,10 @@ StudyUploadListener, ClickHandler, ChangeHandler
 		selectPanel.add(sampleSizeRb);
 
 		// set style
-		selectPanel.setStyleName(STYLE);
-		header.setStyleName(HEADER_STYLE);
+		header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+		header.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+		selectPanel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+		selectPanel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
 
 		// select power by default
 		powerRb.setValue(true);
@@ -170,8 +192,10 @@ StudyUploadListener, ClickHandler, ChangeHandler
 		panel.add(grid);
 
 		// set style
-		panel.setStyleName(STYLE);
-		header.setStyleName(HEADER_STYLE);
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        header.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
 
 		return panel;
 	}

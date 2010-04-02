@@ -1,5 +1,7 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -17,8 +19,10 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
+import edu.cudenver.bios.powercalculator.client.listener.StudyDesignChangeListener;
 
-public class MatrixPanel extends Composite implements ModelSelectListener
+public class MatrixPanel extends Composite
+implements ModelSelectListener, StudyDesignChangeListener
 {
     private static final String STYLE = "matrixPanel";
 	// these default names derived from linear model theory.
@@ -45,7 +49,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 	protected ResizableMatrix thetaNull = new ResizableMatrix("theta", PowerCalculatorGUI.constants.matrixThetaNull(), 
 	        PowerCalculatorGUI.constants.matrixThetaNullDetails(), DEFAULT_A, DEFAULT_B, false);
 	// variance/covariance matrix for fixed predictors
-	protected ResizableMatrix sigma = new ResizableMatrix("sigmaError", PowerCalculatorGUI.constants.matrixSigmaError(), 
+	protected ResizableMatrix sigmaError = new ResizableMatrix("sigmaError", PowerCalculatorGUI.constants.matrixSigmaError(), 
 	        PowerCalculatorGUI.constants.matrixSigmaErrorDetails(), DEFAULT_P, DEFAULT_P, false);
 	/* the following are needed for a baseline covariate */
 	// variance of the baseline covariate
@@ -67,6 +71,9 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 	
     // build the advanced options panel
     AdvancedLinearModelOptionsPanel advOpts = new AdvancedLinearModelOptionsPanel();
+    
+    // synchronization listener with deisgn view
+    ArrayList<StudyDesignChangeListener> listeners = new ArrayList<StudyDesignChangeListener>();
     
 	public MatrixPanel()
 	{
@@ -92,7 +99,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 	    covariateSigma.add(sigmaCovariateOutcome);
 	    covariateSigma.add(sigmaCovariate);
 	    covariateSigma.add(sigmaOutcomes);
-	    sigmaDeck.add(sigma);
+	    sigmaDeck.add(sigmaError);
 	    sigmaDeck.add(covariateSigma);
 	    sigmaDeck.showWidget(FIXED_INDEX);
 		panel.add(sigmaDeck);
@@ -100,7 +107,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 
 		
 		// set matrix size restrictions
-        sigma.setIsSquare(true);
+        sigmaError.setIsSquare(true);
         sigmaCovariate.setIsSquare(true);
         sigmaOutcomes.setIsSquare(true);
 		
@@ -143,7 +150,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 		withinContrast.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onMatrixResize(int rows, int cols)
 			{
-				sigma.setDimensions(rows, rows);
+				sigmaError.setDimensions(rows, rows);
 				beta.setDimensions(beta.getRowDimension(), rows);
 				thetaNull.setDimensions(thetaNull.getRowDimension(), cols);
 			}
@@ -157,7 +164,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 			}
 		});
 		// make sure sigma and within subject contrast (U) conform
-		sigma.addMatrixResizeListener(new MatrixResizeListener() {
+		sigmaError.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onMatrixResize(int rows, int cols)
 			{
 				withinContrast.setDimensions(rows, withinContrast.getColumnDimension());
@@ -211,7 +218,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 		buffer.append(betweenContrast.matrixDataToXML());
 		if (covariateColumn == -1)
 		{
-		    buffer.append(sigma.matrixDataToXML());
+		    buffer.append(sigmaError.matrixDataToXML());
 		}
 		else
 		{
@@ -241,7 +248,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 			betweenContrast.setDimensions(1, 2);
 			beta.setDimensions(2, 1);
 			thetaNull.setDimensions(1, 1);
-			sigma.setDimensions(1, 1);
+			sigmaError.setDimensions(1, 1);
 			
 			advOpts.setVisible(false);
 			setResizable(false);
@@ -260,7 +267,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 		betweenContrast.setResizable(allowResize);
 		beta.setResizable(allowResize);
 		thetaNull.setResizable(allowResize);
-		sigma.setResizable(allowResize);
+		sigmaError.setResizable(allowResize);
 		sigmaCovariate.setResizable(allowResize);
 		sigmaOutcomes.setResizable(allowResize);
 		sigmaCovariateOutcome.setResizable(allowResize);
@@ -302,7 +309,7 @@ public class MatrixPanel extends Composite implements ModelSelectListener
     				else if (name.equals("theta"))
     					loadMatrixFromNode(thetaNull, matrixNode);
     				else if (name.equals("sigmaError"))
-    					loadMatrixFromNode(sigma, matrixNode);
+    					loadMatrixFromNode(sigmaError, matrixNode);
     				else if (name.equals("sigmaGaussianRandom"))
     					loadMatrixFromNode(sigmaCovariate, matrixNode);
     				else if (name.equals("sigmaOutcome"))
@@ -360,4 +367,62 @@ public class MatrixPanel extends Composite implements ModelSelectListener
 		}
 	}
 
+    public void addStudyDesignChangeListener(StudyDesignChangeListener listener)
+    {
+        listeners.add(listener);
+    }
+    
+    public void onAlpha(String alpha) 
+    {
+        alphaTextBox.setText(alpha);
+    }
+    
+    public void onDesign(int row, int col, String value)
+    {
+        // TODO
+    }
+    
+    public void onDesignRowMetaData(int row, String name) {}
+        
+    public void onDesignColumnMetaData(int col, boolean isRandom, String mean, String variance) {}
+    
+    public void onBeta(int row, int col, String value)
+    {
+        beta.setData(row, col, value);
+    }
+    
+    public void onTheta(int row, int col, String value)
+    {
+        thetaNull.setData(row, col, value);
+    }
+    
+    public void onBetweenSubjectContrast(int row, int col, String value)
+    {
+        betweenContrast.setData(row, col, value);
+    }
+
+    public void onWithinSubjectContrast(int row, int col, String value) 
+    {
+        withinContrast.setData(row, col, value);
+    }
+
+    public void onSigmaError(int row, int col, String value) 
+    {
+        sigmaError.setData(row, col, value);
+    }   
+    
+    public void onSigmaOutcome(int row, int col, String value)
+    {
+        sigmaOutcomes.setData(row, col, value);
+    }
+    
+    public void onSigmaCovariateOutcome(int row, int col, String value)
+    {
+        sigmaCovariateOutcome.setData(row, col, value);
+    }
+    
+    public void onSigmaCovariate(int row, int col, String value)
+    {
+        sigmaCovariate.setData(row, col, value);
+    }
 }

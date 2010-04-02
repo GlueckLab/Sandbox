@@ -11,16 +11,12 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 
 public class CreateNewStudyPanel extends Composite implements ChangeHandler
 {
-    private static final String CONTAINER_STYLE = "newStudyPanel";
-    private static final String HEADER_STYLE = "newStudyHeader";
-    private static final String DESCRIPTION_STYLE = "newStudyDescription";
-    private static final String MODEL_CONTAINER_STYLE = "newStudyModelContainer";
-    
     protected ArrayList<ModelSelectListener> listeners = new ArrayList<ModelSelectListener>();
     protected ListBox modelList = new ListBox();
     
@@ -45,10 +41,10 @@ public class CreateNewStudyPanel extends Composite implements ChangeHandler
         panel.add(modelPanel);
         
         // add style
-        panel.setStyleName(CONTAINER_STYLE);
-        header.setStyleName(HEADER_STYLE);
-        description.setStyleName(DESCRIPTION_STYLE);
-        modelPanel.setStyleName(MODEL_CONTAINER_STYLE);
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
+        modelPanel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
         
         initWidget(panel);
     }
