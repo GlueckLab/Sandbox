@@ -26,6 +26,39 @@
 	margin: 0px 0px;	
 }
 
+/* Style for "steps left" banner above the input wizard. */
+
+.stepsLeftPanel {
+	margin: 0px 20px;
+}
+
+.stepsLeftLabel {
+	text-align: center;
+	padding: 10px 0px;
+	font-size: 14px;
+    line-height: 18px;
+    width: 120px;
+    height: 20px;
+    background-color: #fff;
+    background-image: url(../images/stepBgDeselected.png);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+}
+
+.stepsLeftLabel-selected {
+	color: black; /*#22A45E;*/
+	font-weight: bold;
+	background-image: url(../images/stepBgSelected.png);
+}
+
+.stepsLeftLabel-deselected {
+	color: gray;
+	font-weight: normal;
+	background-image: url(../images/stepBgDeselected.png);
+}
+
+/* container for user input (around forms, etc) */
+
 /* style for main wizard input panel (GWT class) */
 .inputPanel {
 	margin: 5px 5px;
@@ -35,157 +68,73 @@
 	border: 1px solid black;
 	padding: 5px;
 	background: #fff;
-	width: 99%;
 }
 	
 .inputPanelDeck {
 	margin: 10px 10px;
 }
 
-/* New study panel style */
-.newStudyPanel {
-	margin: 0px auto;	
+/* styles applied to steps in the input wizard */
+
+.wizardStepInputContainer {
+	padding: 10px;
+	margin: 0px 20px;	
 	spacing: 20px;
-	min-height: 200;
-}
-
-.newStudyModelContainer {
-	margin: 10 auto;	
-}
-
-.newStudyHeader {
-	font-weight: bold;
-	margin: 10 auto;
-	text-align: center;
 	width: 80%;
+	background: #F9FCFF;
+	border: 3px solid #ccc;
 }
 
-.newStudyDescription {
-	margin: 10 auto;
-	text-align: left;
-	width: 60%;
+.wizardStepHeader {
+	margin: 10px 20px;
+	font-weight: bold;
+	font-size: 16pt;
 }
-	
 
-/* Style for "steps left" banner above the input wizard. */
+.wizardStepDescription {
+	margin: 10px 20px;
+	width: 80%;
+	font-size: 12pt;
+}
 
-.stepsLeftPanel {
+/* style for subpanels in a wizard step */
+.wizardNavigationPanel {
+	margin: 5px 20px;
+	width: 80%
+}
+
+.wizardStepHeader-subpanel {
 	border-bottom: 1px solid #000;
-	margin-right: auto;
-	margin-left: auto;
-}
-
-.stepsLeftPanel .gwt-HTML {
-	padding: 5px;
-}
-
-.stepsLeftLabel {
-	font-size: 12pt;
-	margin-top: 5px;
-}
-
-.stepsLeftLabel-selected {
-	color: black; /*#22A45E;*/
 	font-weight: bold;
-}
-
-.stepsLeftLabel-deselected {
-	color: gray;
-	font-weight: normal;
-}
-
-.stepsLeftNumber {
 	font-size: 12pt;
-	min-height: 35px;
-	min-width: 35px;
-	color: white;
-	padding: 5px;
-	font-weight: bold;
-	text-align: center;
-	vertical-align: center;
+	margin: 10px 0px;
 }
 
-.stepsLeftStart {
-	width: 40px;
-	height: 40px;
-}
-
-.stepsLeftStart-selected {
-	background: url(../images/stepOneOn.png) no-repeat 0px -4px;
-}
-
-.stepsLeftStart-deselected {
-	background: url(../images/stepOneOff.png) no-repeat 0px 0px;
-}
-
-.stepsLeftStudy {
-	width: 40px;
-	height: 40px;
-}
-
-.stepsLeftStudy-selected {
-	background: url(../images/stepTwoOn.png) no-repeat 0px -4px;
-}
-
-.stepsLeftStudy-deselected {
-	background: url(../images/stepTwoOff.png) no-repeat 0px 0px;
-}
-
-.stepsLeftOptions {
-	width: 40px;
-	height: 40px;	
-}
-
-.stepsLeftOptions-selected {
-	background: url(../images/stepThreeOn.png) no-repeat 0px -4px;
-	width: 40px;
-	height: 40px;
-}
-
-.stepsLeftOptions-deselected {
-	background: url(../images/stepThreeOff.png) no-repeat 0px 0px;
-}
-
-.stepsLeftResults {
-	width: 40px;
-	height: 40px;	
-}
-
-.stepsLeftResults-selected {
-	background: url(../images/stepFourOn.png) no-repeat 0px -4px;
-	width: 40px;
-	height: 40px;
-}
-
-.stepsLeftResults-deselected {
-	background: url(../images/stepFourOff.png) no-repeat 3px 0px;
-}
-
-
+/* wizard navigation buttons */
 .wizardNavigationPanelButton {
-	border: none;
-	text-decoration: none;
-	background: url(../images/buttonNavBg.png) no-repeat 4px 2px;
-	color: #fff;
-	width: 114px;
-	height: 40px;
+	background: #005C84;
+	border: 2px solid #F9FCFF;
+	color: #F9FCFF;
+	width: 100px;
+	height: 30px;
 	margin: 5px 25px;
 }
 
 .wizardNavigationPanelButton:hover {
-	background: url(../images/buttonNavBgMouseOver.png) no-repeat 4px 2px;
+	background: #005C84;
+	color: #ccc;
 }
 
 .wizardNavigationPanelButton[disabled] {
-	background: url(../images/buttonNavBgDisabled.png) no-repeat 4px 2px;
+	background: #ccc;
+	color: #fff;	
+	
 }
 
-/* navigation bar style sheet */
-
-.wizardNavigationPanel {
-	border-top: 1px solid #000;
-	margin: 5px auto;
+.wizardNavigationPanelButton[disabled]:hover {	
 }
+
+
 
 .columnMetaData {
 	width: 75px;
@@ -255,17 +204,6 @@
 
 .matrixDimensions .gwt-TextBox {
 	width: 30px;
-}
-
-.optionsPanel .gwt-TextBox {
-	margin-left: 10px;
-}
-
-.optionsPanelHeader {
-	border-bottom: 1px solid #000;
-	font-weight: bold;
-	margin-bottom: 10px;
-	margin-top: 10px;
 }
 
 .waitDialog {

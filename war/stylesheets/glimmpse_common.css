@@ -37,7 +37,7 @@ div#header {
   font-family: Blippo, Arial, Helvetica, sans-serif;
   background: #fff;
   width: 100%;
-  height: 140px;
+  height: 130px;
   position: relative;
   border-bottom: 2px solid black;
 }
@@ -82,17 +82,17 @@ div#horizontal-navbar {
 	width: 100%;
 	/*background-color: #204d89;*/
 	background-color: #005C84;
-	text-align: right;
+	text-align: left;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	color: #d9e8ef;
-	padding: 5px;
 	border-bottom: 1px solid black;
+	padding: 5px 0px;
 }
 
 div#horizontal-navbar a {
 	text-decoration: none;
 	color: #d9e8ef;
-	padding-right: 30px; 
+	padding: 0px 20px;
 }
 
 div#horizontal-navbar a:hover {
