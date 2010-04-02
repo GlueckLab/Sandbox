@@ -27,7 +27,6 @@ public class ResultsPanel extends Composite implements OptionsListener
     private static final int SAMPLE_SIZE_INDEX = 1;
 
     protected Label calculatedPower = new Label("N/A");
-    protected Label simulatedPower = new Label("N/A");
 
     protected Label sampleSize = new Label("N/A");
     protected Label actualPower = new Label("N/A");
@@ -64,7 +63,7 @@ public class ResultsPanel extends Composite implements OptionsListener
         // add style
         header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
         resultsContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
-        
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
         // initialize the widget
         initWidget(panel);
     }
@@ -72,33 +71,58 @@ public class ResultsPanel extends Composite implements OptionsListener
     private VerticalPanel createPowerResultsPanel()
     {
         VerticalPanel powerPanel = new VerticalPanel();
-        // build power results panel
-        Grid powerGrid = new Grid(2,2);
-        powerGrid.setWidget(0, 0, new HTML("Power (calculated): "));
-        powerGrid.setWidget(0,1, calculatedPower);
-        powerGrid.setWidget(1, 0, new HTML("Power (simulated): "));
-        powerGrid.setWidget(1,1, simulatedPower);
-        powerPanel.add(powerGrid);
+        
+        HTML header = new HTML("Power Estimate:");
+        
+        powerPanel.add(header);
+        powerPanel.add(calculatedPower);
+       
+        // TODO: include simulated value as option?
+        
+        // add style
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        header.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+        powerPanel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        powerPanel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+
         return powerPanel;
     }
 
     private VerticalPanel createPowerCurvePanel()
     {
         VerticalPanel panel = new VerticalPanel();
-        panel.add(new HTML("Power Curve: "));
+        HTML header = new HTML("Power Curve: ");
+        
+        panel.add(header);
         panel.add(imageFrame);
+        
+        // style
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        header.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+
+        imageFrame.setStyleName("powerCurveFrame");
         return panel;
     }
     
     private VerticalPanel createSampleSizeResultsPanel()
     {
         VerticalPanel sampleSizePanel = new VerticalPanel();
-        // build the sample size results panel
-        Grid sampleSizeGrid = new Grid(1,2);
-        sampleSizeGrid.setWidget(0, 0, new HTML("Sample Size: "));
-        sampleSizeGrid.setWidget(0,1, sampleSize);
-        sampleSizePanel.add(new HTML("Sample Size Results: "));
-        sampleSizePanel.add(sampleSizeGrid);
+        
+        HTML header = new HTML("Sample Size Estimate (Total Subjects):");
+        
+        sampleSizePanel.add(header);
+        sampleSizePanel.add(sampleSize);
+       
+        // TODO: include simulated value as option?
+        
+        // add style
+        header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
+        header.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+        sampleSizePanel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        sampleSizePanel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
+
         return sampleSizePanel;
     }
     
@@ -158,7 +182,7 @@ public class ResultsPanel extends Composite implements OptionsListener
     
     public void onSolveFor(boolean power)
     {
-        Window.alert("hello?");
+        Window.alert("hello?" + power);
         if (power)
             deck.showWidget(SAMPLE_SIZE_INDEX);
         else
