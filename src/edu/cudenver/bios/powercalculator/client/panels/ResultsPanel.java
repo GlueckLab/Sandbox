@@ -1,9 +1,10 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -38,6 +39,9 @@ public class ResultsPanel extends Composite implements OptionsListener
     // hidden iframe to hold the power curve image data
     protected NamedFrame imageFrame = new NamedFrame(POWER_CURVE_FRAME);
 
+    // decimal formatter
+    private static final NumberFormat df = NumberFormat.getFormat("#.####");
+    
     public ResultsPanel()
     {
         VerticalPanel panel = new VerticalPanel();
@@ -162,7 +166,10 @@ public class ResultsPanel extends Composite implements OptionsListener
             if (attrs != null)
             {
                 Node calculated = attrs.getNamedItem("calculated");
-                if (calculated != null) calculatedPower.setText(calculated.getNodeValue());
+                if (calculated != null) 
+                {
+                	calculatedPower.setText(df.format(Double.parseDouble(calculated.getNodeValue())));
+                }
             }
         }	
         
