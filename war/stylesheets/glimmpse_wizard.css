@@ -38,7 +38,7 @@
 	font-size: 14px;
     line-height: 18px;
     width: 120px;
-    height: 20px;
+    height: 24px;
     background-color: #fff;
     background-image: url(../images/stepBgDeselected.png);
     background-repeat: no-repeat;
@@ -69,10 +69,6 @@
 	padding: 5px;
 	background: #fff;
 }
-	
-.inputPanelDeck {
-	margin: 10px 10px;
-}
 
 /* styles applied to steps in the input wizard */
 
@@ -88,13 +84,13 @@
 .wizardStepHeader {
 	margin: 10px 20px;
 	font-weight: bold;
-	font-size: 16pt;
+	font-size: 12pt;
 }
 
 .wizardStepDescription {
 	margin: 10px 20px;
 	width: 80%;
-	font-size: 12pt;
+	font-size: 10pt;
 }
 
 /* style for subpanels in a wizard step */

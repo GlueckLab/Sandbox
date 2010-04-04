@@ -47,11 +47,10 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
 	protected NavigationPanel navPanel = new NavigationPanel();
 	// stack of panels for the wizard
 	protected DeckPanel panelStack = new DeckPanel();
-	// create study panel
-	protected CreateNewStudyPanel newStudyPanel;
-	// upload existing study panel
-	protected UploadPanel existingStudyPanel;
-	
+	// start panel - allows user to create a new study or upload an existing one
+	protected StartPanel startPanel = new StartPanel(this, PANEL_STACK_START);	
+	// study design panel
+	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel(this, PANEL_STACK_STUDY_DESIGN);
     // options panel (always in deck after input panel)
 	protected OptionsPanel optionsPanel = new OptionsPanel(this, PANEL_STACK_OPTIONS);
     // results panel (always in deck after options panel)
@@ -59,7 +58,6 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
 
     // potential input panels.  Added to the deck depending on the input type
     // selected on the start panel
-	protected StudyDesignPanel studyDesignPanel = new StudyDesignPanel(this, PANEL_STACK_STUDY_DESIGN);
 	
 	// wait dialog
 	protected DialogBox waitDialog;
@@ -95,29 +93,31 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         // create a wait dialog
         waitDialog = createWaitDialog();
         
+        
         // add the widgets to the stack of wizard panels
         // NOTE: order matters here - must match stack index constants
-        String uploadStudy = Window.Location.getParameter(UPLOAD_PARAM);
-        if (uploadStudy != null && uploadStudy.equals("1"))
-        {
-        	existingStudyPanel = new UploadPanel();
-            panelStack.add(existingStudyPanel);
-            
-            // upload panel notifies study design panel when study is uploaded
-            existingStudyPanel.addStudyUploadListener(this);
-            existingStudyPanel.addStudyUploadListener(studyDesignPanel);
-            existingStudyPanel.addStudyUploadListener(optionsPanel);
-        }
-        else
-        {
-        	newStudyPanel = new CreateNewStudyPanel();
-            panelStack.add(newStudyPanel);
-            
-            // listen for model name changes from the create study panel
-            newStudyPanel.addModelSelectListener(this);
-            newStudyPanel.addModelSelectListener(studyDesignPanel);
-            newStudyPanel.addModelSelectListener(optionsPanel);
-        }
+//        String uploadStudy = Window.Location.getParameter(UPLOAD_PARAM);
+//        if (uploadStudy != null && uploadStudy.equals("1"))
+//        {
+//        	existingStudyPanel = new UploadPanel();
+//            panelStack.add(existingStudyPanel);
+//            
+//            // upload panel notifies study design panel when study is uploaded
+//            existingStudyPanel.addStudyUploadListener(this);
+//            existingStudyPanel.addStudyUploadListener(studyDesignPanel);
+//            existingStudyPanel.addStudyUploadListener(optionsPanel);
+//        }
+//        else
+//        {
+//        	newStudyPanel = new CreateNewStudyPanel();
+//            panelStack.add(newStudyPanel);
+//            
+//            // listen for model name changes from the create study panel
+//            newStudyPanel.addModelSelectListener(this);
+//            newStudyPanel.addModelSelectListener(studyDesignPanel);
+//            newStudyPanel.addModelSelectListener(optionsPanel);
+//        }
+        panelStack.add(startPanel);
         panelStack.add(studyDesignPanel);
         panelStack.add(optionsPanel);
         panelStack.add(resultsPanel);
@@ -132,6 +132,14 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         // intialize the wizard
         updateStep(PANEL_STACK_START, false, true, true);
     	
+        // listeners for study upload or model select events
+        startPanel.addModelSelectListener(this);
+        startPanel.addModelSelectListener(studyDesignPanel);
+        startPanel.addModelSelectListener(optionsPanel);
+        startPanel.addStudyUploadListener(this);
+        startPanel.addStudyUploadListener(studyDesignPanel);
+        startPanel.addStudyUploadListener(optionsPanel);
+        
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
     	studyDesignPanel.addEssenceMatrixResizeListener(optionsPanel);

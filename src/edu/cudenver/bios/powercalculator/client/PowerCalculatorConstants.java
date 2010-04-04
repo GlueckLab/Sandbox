@@ -36,9 +36,11 @@ public interface PowerCalculatorConstants extends Constants
 	// Start panel constants	
 	public String textStartPanelHeader();
 	public String textStartPanelDescription();
+	public String textStartPanelOr();
     public String buttonNewStudy();
     public String buttonExistingStudy();    
-    
+    // upload 
+    public String fileUpload();
     // create new study panel constants
     public String textCreateNewStudyPanelHeader();
     public String textCreateNewStudyPanelDescription();
