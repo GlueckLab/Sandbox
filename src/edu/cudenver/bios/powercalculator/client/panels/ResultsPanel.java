@@ -182,11 +182,10 @@ public class ResultsPanel extends Composite implements OptionsListener
     
     public void onSolveFor(boolean power)
     {
-        Window.alert("hello?" + power);
         if (power)
-            deck.showWidget(SAMPLE_SIZE_INDEX);
-        else
             deck.showWidget(POWER_INDEX);
+        else
+            deck.showWidget(SAMPLE_SIZE_INDEX);
     }
 
 }

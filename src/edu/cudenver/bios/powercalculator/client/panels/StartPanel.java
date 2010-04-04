@@ -131,8 +131,8 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         uploader.setName(FORM_TAG_FILE);
         formContents.add(new HTML(PowerCalculatorGUI.constants.fileUpload()));
         formContents.add(uploader);
-        formContents.add(new HTML("Discard"));
         formPanel.add(formContents);
+        formPanel.addSubmitCompleteHandler(this);
         inputContainer.add(formPanel);
         
         panel.add(inputContainer);
