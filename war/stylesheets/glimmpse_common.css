@@ -35,9 +35,9 @@ body {
 
 div#header {
   font-family: Blippo, Arial, Helvetica, sans-serif;
-  background: #fff;
+  background: #F9FCFF;
   width: 100%;
-  height: 130px;
+  height: 100px;
   position: relative;
   border-bottom: 2px solid black;
 }
@@ -48,21 +48,36 @@ div#header div {
 }
 
 /* logo image */
+div#glimmpse-logo {
+	left: 15; top: 10;
+}
+
 div#glimmpse-logo img {
-	left: 0; top: 0;
-	width: 350;
+	width: 70px;
+	height: 70px;
+	background: #F9FCFF;
+
+}
+
+div#glimmpse-name {
+	font-weight: bold;
+	font-size: 20pt;
+	left: 90; top: 30;
+	padding-right: 20px;
+	border-right: 1px solid #ccc;
+	color: #555;
 }
 
 /* Software name text */
-div#glimmpse-name {
-	left: 360; top: 25;
-	color: #005C84;
-	font-weight: bold;
-	font-size: larger;
+div#glimmpse-description {
+	left: 270; top: 30;
+	color: #333;
+	font-size: 12pt;
 }
 
 div#glimmpse-owner {
-	bottom: 0; left: 20;
+	bottom: 0; left: 24;
+	width: 80%;
 	border-top: 1px dotted black;
 }
 
@@ -92,7 +107,7 @@ div#horizontal-navbar {
 div#horizontal-navbar a {
 	text-decoration: none;
 	color: #d9e8ef;
-	padding: 0px 20px;
+	padding: 0px 24px;
 }
 
 div#horizontal-navbar a:hover {

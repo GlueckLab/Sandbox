@@ -30,25 +30,32 @@ div#start-container {
 }
 
 div#start-container h1 {
+	margin: 5px 20px;
 	background: #fff;	
 	font-weight: bold;
 	font-size: larger;
-	text-align: center;
+	text-align: left;
 }
 
 div#start-container p {
-	margin-left: 10px;
+	margin-left: 20px;
 	text-align: left;
 }
 
 div.start-button {
+	margin: 20px auto;
+	border: 2px solid #ccc;
+	background: #005C84;
 	padding: 4px;
+	width: 120px;
+	text-align: center;
+}
+
+div.start-button:hover {
+	background: #ccc;
 }
 
 div#start-container a {
+	color:#fff;
 	text-decoration: none;
-}
-
-div#start-container img {
-	border: 0;
 }
