@@ -221,9 +221,12 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
     private void retrieveResults()
     {
         retrievePowerSampleSizeResults();
-        curveForm.setAction(POWER_CURVE_URL);
-        curveRequestHidden.setValue(buildPowerCurveRequestXML());
-        curveForm.submit();
+        if (curveOpts != null)
+        {
+        	curveForm.setAction(POWER_CURVE_URL);
+        	curveRequestHidden.setValue(buildPowerCurveRequestXML());
+        	curveForm.submit();
+        }
     }
     
     private void retrievePowerSampleSizeResults()
