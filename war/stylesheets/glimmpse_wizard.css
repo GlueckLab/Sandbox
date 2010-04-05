@@ -23,9 +23,15 @@
 
 .body {
 	background: #ccc; /*#A1AB61;*/
-	margin: 0px 0px;	
 }
 
+/* style for main wizard input panel (GWT class) */
+.powerCalculatorPanel {
+	margin: 5px 5px;
+	border: 1px solid black;
+	padding: 5px;
+	background: #fff;
+}
 /* Style for "steps left" banner above the input wizard. */
 
 .stepsLeftPanel {
@@ -60,25 +66,21 @@
 /* container for user input (around forms, etc) */
 
 /* style for main wizard input panel (GWT class) */
-.inputPanel {
-	margin: 5px 5px;
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	color: black;
-	text-align: center;
-	border: 1px solid black;
-	padding: 5px;
-	background: #fff;
+.wizardPanel {
+	width: 100%;
 }
 
 /* styles applied to steps in the input wizard */
+.wizardStepPanel {
+}
 
 .wizardStepInputContainer {
 	padding: 10px;
 	margin: 0px 20px;	
 	spacing: 20px;
-	width: 80%;
 	background: #F9FCFF;
 	border: 3px solid #ccc;
+	width: 90%;
 }
 
 .wizardStepHeader {
@@ -89,14 +91,7 @@
 
 .wizardStepDescription {
 	margin: 10px 20px;
-	width: 80%;
 	font-size: 10pt;
-}
-
-/* style for subpanels in a wizard step */
-.wizardNavigationPanel {
-	margin: 5px 20px;
-	width: 80%
 }
 
 .wizardStepHeader-subpanel {
@@ -104,6 +99,31 @@
 	font-weight: bold;
 	font-size: 12pt;
 	margin: 10px 0px;
+}
+
+.wizardStepButton {
+	margin: 5px 5px;
+	height: 26px;
+	width: 134px;
+	border: none;
+	color: #000;
+	background: url(../images/save.png) no-repeat 0px 0px;
+}
+
+.wizardStepButton:hover {
+	border: none;
+	color: #005C84;
+	text-decoration: underline;
+}
+
+.wizardStepTabPanel {
+	width: 90%;	
+}
+
+/* style for subpanels in a wizard step */
+.wizardNavigationPanel {
+	margin: 5px 20px;
+	width: 80%;
 }
 
 /* wizard navigation buttons */
