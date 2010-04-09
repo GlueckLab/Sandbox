@@ -187,7 +187,11 @@ implements ChangeHandler, StudyDesignChangeListener
     	if (studyNode != null)
     	{
     		Node alpha = studyNode.getAttributes().getNamedItem("alpha");
-    		if (alpha != null) alphaTextBox.setValue(alpha.getNodeValue());
+    		if (alpha != null) 
+    		{
+    		    alphaTextBox.setValue(alpha.getNodeValue());
+    		    alphaTextBox.fireEvent(new ChangeEvent() {});
+    		}
 
     		// parse the remaining matrices
     		NodeList matrixNodes = doc.getElementsByTagName("matrix");
@@ -211,11 +215,19 @@ implements ChangeHandler, StudyDesignChangeListener
     							Node colItem = firstColNode.getFirstChild();
     							if (r == 0)
     							{
-    								if (colItem != null) mu0TextBox.setText(colItem.getNodeValue());
+    								if (colItem != null) 
+    								{
+    								    mu0TextBox.setText(colItem.getNodeValue());
+    								    mu0TextBox.fireEvent(new ChangeEvent() {});
+    								}
     							}
     							else if (r == 1)
     							{
-    								if (colItem != null) muATextBox.setText(colItem.getNodeValue());
+    								if (colItem != null) 
+    								{
+    								    muATextBox.setText(colItem.getNodeValue());
+    								    muATextBox.fireEvent(new ChangeEvent() {});
+    								}
     							}
     						}
     					}
@@ -230,7 +242,11 @@ implements ChangeHandler, StudyDesignChangeListener
     						if (firstColNode != null)
     						{
     							Node colItem = firstColNode.getFirstChild();
-    							if (colItem != null) sigmaTextBox.setText(colItem.getNodeValue());
+    							if (colItem != null) 
+    							{
+    							    sigmaTextBox.setText(colItem.getNodeValue());
+    							    sigmaTextBox.fireEvent(new ChangeEvent() {});
+    							}
     						}
     					}
     				}

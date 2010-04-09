@@ -23,6 +23,7 @@ public class PowerCalculatorGUI implements EntryPoint
     {        
         // add the gwt elements to the root panel
         RootPanel.get("powerCalculatorWizard").add(new InputWizardPanel());
+        RootPanel.get("powerCalculatorWizard").setStyleName("powerCalculatorPanel");
         // set root style so it recognizes standard css elements like "body"
         RootPanel.get().setStyleName("body");
     }

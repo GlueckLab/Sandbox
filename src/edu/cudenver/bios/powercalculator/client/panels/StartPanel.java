@@ -27,10 +27,14 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -46,6 +50,7 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
+import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 /**
@@ -65,6 +70,7 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
     
     protected ListBox modelList = new ListBox();
     
+    protected ArrayList<StartListener> startListeners = new ArrayList<StartListener>();
     protected ArrayList<ModelSelectListener> modelSelectListeners = new ArrayList<ModelSelectListener>();
     protected ArrayList<StudyUploadListener> studyUploadListeners = new ArrayList<StudyUploadListener>();
     
@@ -82,28 +88,40 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         // create user input container
         VerticalPanel inputContainer = new VerticalPanel();
 
-        // build model selection list
-        HorizontalPanel modelPanel = new HorizontalPanel();
-        modelPanel.add(new HTML(PowerCalculatorGUI.constants.listBoxModel()));
-        modelList.addItem(PowerCalculatorGUI.constants.labelOneSampleStudentsT(), 
-                PowerCalculatorGUI.constants.modelOneSampleStudentsT());
-        modelList.addItem(PowerCalculatorGUI.constants.labelGLMM(), PowerCalculatorGUI.constants.modelGLMM());
-        modelList.setItemSelected(1, true); // select glmm as default
-        modelList.addChangeHandler(new ChangeHandler() {
-        	public void onChange(ChangeEvent e)
-        	{
-                String value = modelList.getValue(modelList.getSelectedIndex());
-                if (value != null && !value.isEmpty())
-                {
-                    notifyOnModelSelect(value);
-                }
-        	}
+        // template design mode
+        Grid templateModeContainer = new Grid(1,2);
+        VerticalPanel templateTextContainer = new VerticalPanel();
+        templateTextContainer.add(new HTML("<b>Study Design Templates</b>"));
+        templateTextContainer.add(new HTML("Common study designs including ANOVA, ANCOVA, and MANOVA.  For users less familiar with the general linear model"));
+        templateModeContainer.setWidget(0, 0, templateTextContainer);
+        Button templateGo = new Button("Go", new ClickHandler() {
+            public void onClick(ClickEvent e)
+            {
+                for(StartListener listener: startListeners) listener.onTemplateMode();
+            }
         });
-        modelPanel.add(modelList);
-        inputContainer.add(modelPanel);
+        templateGo.setStyleName("startPanelGoButton");
+        templateModeContainer.setWidget(0, 1, templateGo);
         
-        inputContainer.add(new HTML(PowerCalculatorGUI.constants.textStartPanelOr()));
+        // matrix entry mode
+        Grid matrixModeContainer = new Grid(1,2);
+        VerticalPanel matrixTextContainer = new VerticalPanel();
+        matrixTextContainer.add(new HTML("<b>Matrix Mode</b>"));
+        matrixTextContainer.add(new HTML("Directly enter matrix representation for the general linear model.  For users who are more familiar with statistical methods."));
+        matrixModeContainer.setWidget(0, 0, matrixTextContainer);
+        Button matrixGo = new Button("Go", new ClickHandler() {
+            public void onClick(ClickEvent e)
+            {
+                for(StartListener listener: startListeners) listener.onMatrixMode();
+            }
+        });
+        matrixGo.setStyleName("startPanelGoButton");
+        matrixModeContainer.setWidget(0, 1, matrixGo);
         
+        // upload an existing study        
+        VerticalPanel uploadContainer = new VerticalPanel();
+        uploadContainer.add(new HTML("<b>Upload an Existing Study</b>"));
+        uploadContainer.add(new HTML("If you have previously saved a study design from Glimmpse, you may upload it here.  Click browse to select your study design file."));
         // build the upload form
         final FormPanel formPanel = new FormPanel();
         // for file upload, we need to use the POST method, and multipart MIME encoding.
@@ -115,8 +133,8 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         // create an upload widget
         final FileUpload uploader = new FileUpload();
         uploader.addChangeHandler(new ChangeHandler() {
-        	public void onChange(ChangeEvent e)
-        	{
+            public void onChange(ChangeEvent e)
+            {
                 String filename = uploader.getFilename();
                 if (filename == null || filename.isEmpty())
                 {
@@ -126,15 +144,21 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
                 {
                     formPanel.submit();
                 }
-        	}
+            }
         });
         uploader.setName(FORM_TAG_FILE);
-        formContents.add(new HTML(PowerCalculatorGUI.constants.fileUpload()));
         formContents.add(uploader);
         formPanel.add(formContents);
         formPanel.addSubmitCompleteHandler(this);
-        inputContainer.add(formPanel);
+        uploadContainer.add(formPanel);
         
+        templateModeContainer.setStyleName("startPanelContainer");
+        matrixModeContainer.setStyleName("startPanelContainer");
+        uploadContainer.setStyleName("startPanelContainer");
+        inputContainer.add(templateModeContainer);
+        inputContainer.add(matrixModeContainer);
+        inputContainer.add(uploadContainer);       
+
         panel.add(inputContainer);
         
         // add style
@@ -152,9 +176,9 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
      * 
      * @param listener 
      */
-    public void addModelSelectListener(ModelSelectListener listener)
+    public void addStartListener(StartListener listener)
     {
-    	modelSelectListeners.add(listener);
+    	startListeners.add(listener);
     }
     
     public void addStudyUploadListener(StudyUploadListener listener)
@@ -169,14 +193,7 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
     {
         for(StudyUploadListener listener: studyUploadListeners) listener.onStudyUpload(doc, modelName);
     }
-    
-    /**
-     * Notify listeners about existing study request
-     */
-    private void notifyOnModelSelect(String modelName)
-    {
-        for(ModelSelectListener listener: modelSelectListeners) listener.onModelSelect(modelName);
-    }
+
     
     
     public void onSubmitComplete(SubmitCompleteEvent event) 
@@ -193,7 +210,7 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
             	Node modelName = studyNode.getAttributes().getNamedItem("modelname");
             	if (modelName == null)  throw new DOMException(DOMException.SYNTAX_ERR, "no model name specified");
         		// notify listeners of the file upload
-            	notifyOnStudyUpload(doc, modelName.getNodeValue());
+            	for(StartListener listener: startListeners) listener.onStudyUpload(doc, modelName.getNodeValue());
         	}
         	catch (DOMException e)
         	{

@@ -20,11 +20,12 @@ import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
+import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class InputWizardPanel extends Composite 
 implements NavigationListener, OptionsListener, 
-StudyUploadListener, ModelSelectListener, InputWizardStepListener
+StartListener, InputWizardStepListener
 {
 	private static final String UPLOAD_PARAM = "u";
 	
@@ -39,8 +40,8 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
     private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize";
 	private static final String POWER_CURVE_URL = "/restcall/power/curve";
 	
-	protected static final String STYLE = "inputPanel";
-	protected static final String DECK_STYLE = "inputPanelDeck";
+	protected static final String STYLE = "wizardPanel";
+
 	// top steps left panel
 	protected StepsLeftPanel stepsLeftPanel = new StepsLeftPanel();
 	// bottom navigation buttons
@@ -128,17 +129,18 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         container.add(curveForm);
         // set up the navigation callbacks
         navPanel.addNavigationListener(this);
-
+        navPanel.setVisible(false);
         // intialize the wizard
         updateStep(PANEL_STACK_START, false, true, true);
     	
         // listeners for study upload or model select events
-        startPanel.addModelSelectListener(this);
-        startPanel.addModelSelectListener(studyDesignPanel);
-        startPanel.addModelSelectListener(optionsPanel);
-        startPanel.addStudyUploadListener(this);
-        startPanel.addStudyUploadListener(studyDesignPanel);
-        startPanel.addStudyUploadListener(optionsPanel);
+        startPanel.addStartListener(this);
+//        startPanel.addModelSelectListener(this);
+//        startPanel.addModelSelectListener(studyDesignPanel);
+//        startPanel.addModelSelectListener(optionsPanel);
+//        startPanel.addStudyUploadListener(this);
+//        startPanel.addStudyUploadListener(studyDesignPanel);
+//        startPanel.addStudyUploadListener(optionsPanel);
         
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
@@ -148,8 +150,7 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
     	// listener for options panel events to determine if we are solving for sample size or power
     	optionsPanel.addListener(this);
     	optionsPanel.addListener(resultsPanel);
-        // add style to container and panel stack
-        panelStack.setStyleName(DECK_STYLE);
+        // add style to container 
         container.setStyleName(STYLE);
         
         // initialize the composite widget
@@ -163,6 +164,7 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         {
         case PANEL_STACK_STUDY_DESIGN:
             updateStep(PANEL_STACK_START, false, true, true);
+            navPanel.setVisible(false);
             break;
         case PANEL_STACK_OPTIONS:
             updateStep(PANEL_STACK_STUDY_DESIGN, true, studyDesignValid, true);
@@ -192,6 +194,7 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         {
         case PANEL_STACK_START:
             updateStep(PANEL_STACK_STUDY_DESIGN, true, studyDesignValid, true);
+            navPanel.setVisible(true);
             break;
         case PANEL_STACK_STUDY_DESIGN:
             updateStep(PANEL_STACK_OPTIONS, true, optionsValid, true);
@@ -360,5 +363,20 @@ StudyUploadListener, ModelSelectListener, InputWizardStepListener
         else if (stepIndex == PANEL_STACK_OPTIONS)
             optionsValid = true;
         navPanel.setNext(true);
+    }
+    
+    public void onTemplateMode()
+    {
+        onNext();
+    }
+    
+    public void onMatrixMode()
+    {
+        onNext();
+    }
+    
+    public void onStudyUpload()
+    {
+        
     }
 }

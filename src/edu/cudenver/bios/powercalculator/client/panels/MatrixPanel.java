@@ -2,6 +2,8 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -15,7 +17,9 @@ import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
@@ -67,6 +71,7 @@ implements ModelSelectListener, StudyDesignChangeListener
 	protected Hidden matrixXML = new Hidden("data");
 	
 	protected TextBox alphaTextBox = new TextBox();
+	protected HTML alphaErrorHTML = new HTML();
 	protected int covariateColumn = -1;
 	
     // build the advanced options panel
@@ -75,15 +80,24 @@ implements ModelSelectListener, StudyDesignChangeListener
     // synchronization listener with deisgn view
     ArrayList<StudyDesignChangeListener> listeners = new ArrayList<StudyDesignChangeListener>();
     
-	public MatrixPanel()
+    // tell wizard this step is complete
+    InputWizardStepListener wizard;
+    int stepIndex;
+    
+	public MatrixPanel(InputWizardStepListener w, int idx)
 	{
+	    this.wizard = w;
+	    this.stepIndex = idx;
+	    
 		VerticalPanel panel = new VerticalPanel();
 		
 		// build alpha input
-		Grid alpha = new Grid(1, 2);
+		Grid alpha = new Grid(1, 3);
 		alpha.setWidget(0, 0, new HTML(PowerCalculatorGUI.constants.textLabelAlpha()));
 		alpha.setWidget(0, 1, alphaTextBox);
-		
+		alpha.setWidget(0, 2, alphaErrorHTML);
+		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE);
+		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
 		panel.add(alpha);
 		panel.add(advOpts);
 		// add each matrix to the panel
@@ -104,7 +118,26 @@ implements ModelSelectListener, StudyDesignChangeListener
 	    sigmaDeck.showWidget(FIXED_INDEX);
 		panel.add(sigmaDeck);
 		
-
+        alphaTextBox.addChangeHandler(new ChangeHandler() {
+            // 
+            public void onChange(ChangeEvent e)
+            {
+                String alpha = alphaTextBox.getText();
+                if (validAlpha(alphaTextBox.getText()))
+                {
+                    displayOkay(alphaErrorHTML, PowerCalculatorGUI.constants.okay());
+                    wizard.onStepComplete(stepIndex);
+                }
+                else
+                {
+                    alpha = "";
+                    displayError(alphaErrorHTML, PowerCalculatorGUI.constants.errorAlphaInvalid());
+                    alphaTextBox.setText(alpha);
+                    wizard.onStepInProgress(stepIndex);
+                }
+                for(StudyDesignChangeListener listener: listeners) listener.onAlpha(alpha);
+            }
+        });
 		
 		// set matrix size restrictions
         sigmaError.setIsSquare(true);
@@ -284,7 +317,10 @@ implements ModelSelectListener, StudyDesignChangeListener
     	if (studyNode != null)
     	{
     		Node alpha = studyNode.getAttributes().getNamedItem("alpha");
-    		if (alpha != null) 	alphaTextBox.setText(alpha.getNodeValue());
+    		if (alpha != null) 	
+    		{
+    		    alphaTextBox.setText(alpha.getNodeValue());
+    		}
 
     		// parse the essence matrix
     		Node essenceNode = doc.getElementsByTagName("essencematrix").item(0);
@@ -361,7 +397,10 @@ implements ModelSelectListener, StudyDesignChangeListener
 				for(int c = 0; c < colNodeList.getLength(); c++)
 				{
 					Node colItem = colNodeList.item(c).getFirstChild();
-					if (colItem != null) matrixUI.setData(r, c, colItem.getNodeValue());
+					if (colItem != null) 
+					{
+					    matrixUI.setData(r, c, colItem.getNodeValue());
+					}
 				}
 			}
 		}
@@ -424,5 +463,42 @@ implements ModelSelectListener, StudyDesignChangeListener
     public void onSigmaCovariate(int row, int col, String value)
     {
         sigmaCovariate.setData(row, col, value);
+    }
+    
+    private boolean validAlpha(String alpha)
+    {
+        if (alpha == null || alpha.isEmpty())
+            return false;
+        
+        try
+        {
+            double a = Double.parseDouble(alpha);
+            if (Double.isNaN(a) || (a <= 0) || a >= 1) 
+                return false;
+            else
+                return true;
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+    }
+    
+    private void displayError(HTML widget, String msg)
+    {
+        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
+        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
+
+        widget.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
+        widget.setHTML(msg);
+    }
+    
+    private void displayOkay(HTML widget, String msg)
+    {
+        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
+        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
+
+        widget.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
+        widget.setHTML(msg);
     }
 }

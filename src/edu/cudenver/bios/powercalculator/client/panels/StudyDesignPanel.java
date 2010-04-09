@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
@@ -28,7 +29,7 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     private static final int TWO_GROUP = 1;
     protected BasicPanel linearModelPanel = new BasicPanel();
     protected TwoGroupDesignPanel twoGroupPanel;
-    protected MatrixPanel matrixPanel = new MatrixPanel();
+    protected MatrixPanel matrixPanel;
     protected DeckPanel designPanel = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
 	protected Hidden matrixXML = new Hidden("data");
@@ -40,7 +41,7 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
     {
         // create the subpanels
         twoGroupPanel = new TwoGroupDesignPanel(wizard, stepIndex);
-        
+        matrixPanel = new MatrixPanel(wizard, stepIndex);
     	VerticalPanel designContainer = new VerticalPanel();
         // header, description
         HTML header = new HTML("Design study");
@@ -72,17 +73,20 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
 		designContainer.add(description);
 		
 		VerticalPanel inputContainer = new VerticalPanel();
+		Button saveButton = new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this);
 		inputContainer.add(tabs);
-		inputContainer.add(new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this));
+		inputContainer.add(saveButton);
 		inputContainer.add(form);
         
 		designContainer.add(inputContainer);
 		
         // TODO: add style
+		saveButton.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_BUTTON);
         designContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
         header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
         description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
         inputContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
+        tabs.setStyleName("wizardStepTabPanel");
         initWidget(designContainer);
     }
     
