@@ -101,6 +101,11 @@
 	margin: 10px 0px;
 }
 
+.wizardStepHelp-subpanel {
+	border-bottom: 1px dotted blue;
+	color: blue;	
+}
+
 .wizardStepButton {
 	margin: 5px 5px;
 	height: 26px;
