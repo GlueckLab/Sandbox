@@ -155,13 +155,9 @@
 	padding: 5px;
 	background-color: #E0ECF8;
 	
-	width: 340px;
+	width: 80%;
 	height: 100px;
-	margin: 10px 0px;
-}
-
-.startPanelContainer:hover {
-	background: pink;
+	margin: 10px 20px;
 }
 
 .startPanelGoButton {
