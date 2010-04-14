@@ -36,14 +36,6 @@ public class AdvancedLinearModelOptionsPanel extends Composite
         unirepCorrectionList.addItem("Uncorrected", "un");
         
         // build the moment method list
-//        PILLAI_ONE_MOMENT,
-//        PILLAI_ONE_MOMENT_OMEGA_MULT,
-//        MCKEON_TWO_MOMENT,
-//        MCKEON_TWO_MOMENT_OMEGA_MULT,
-//        MULLER_TWO_MOMENT,
-//        MULLER_TWO_MOMENT_OMEGA_MULT,
-//        RAO_TWO_MOMENT,
-//        RAO_TWO_MOMENT_OMEGA_MULT
         momentMethodList.addItem("Pillai 1 Moment", "pillai1");
         momentMethodList.addItem("Pillai 1 Moment with Non-centrality Scaling", "pillai1mult");
         momentMethodList.addItem("McKeon 2 Moment", "mckeon2");
@@ -60,19 +52,21 @@ public class AdvancedLinearModelOptionsPanel extends Composite
         unirepCdfList.addItem("Muller-Edwards-Taylor Exact (Davies')", "mete");
         unirepCdfList.addItem("Muller-Edwards-Taylor Exact + failover to Approximation", "metea");
         
-        // build the 
+        // layout the options
         Grid grid = new Grid(5,2);
         grid.setWidget(0, 0, new HTML("Test Statistic: "));
         grid.setWidget(0, 1, testStatisticList);
-        grid.setWidget(1, 0, new HTML("Power Approximation Method: "));
-        grid.setWidget(1, 1, powerMethodList);
-        grid.setWidget(2, 0, new HTML("Univariate Correction Method: "));
-        grid.setWidget(2, 1, unirepCorrectionList);
-        grid.setWidget(3, 0, new HTML("Moment Approximation Method: "));
-        grid.setWidget(3, 1, momentMethodList);
+        grid.setWidget(1, 0, new HTML("Moment Approximation Method: "));
+        grid.setWidget(1, 1, momentMethodList);
+        grid.setWidget(2, 0, new HTML("Power Approximation Method: "));
+        grid.setWidget(2, 1, powerMethodList);
+        grid.setWidget(3, 0, new HTML("Univariate Correction Method: "));
+        grid.setWidget(3, 1, unirepCorrectionList);
         grid.setWidget(4, 0, new HTML("Univariate CDF Calculation Method"));
         grid.setWidget(4, 1, unirepCdfList);
 
+        // synchronize the drop down lists
+        
         
         panel.add(grid);
         initWidget(panel);

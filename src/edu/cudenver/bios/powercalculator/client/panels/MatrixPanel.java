@@ -22,11 +22,9 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
-import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyDesignChangeListener;
 
 public class MatrixPanel extends Composite
-implements ModelSelectListener, StudyDesignChangeListener
 {
     private static final String STYLE = "matrixPanel";
 	// these default names derived from linear model theory.
@@ -41,30 +39,41 @@ implements ModelSelectListener, StudyDesignChangeListener
 	private static final int FIXED_INDEX = 0;
 	private static final int COVARIATE_INDEX = 1;
 
+	// matrix headers
+	protected SubpanelHeader essenceHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixDesignEssence(), 
+	        PowerCalculatorGUI.constants.matrixDesignEssenceDetails());
+	protected SubpanelHeader withinContrastHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixWithinSubjectContrast(),
+	        PowerCalculatorGUI.constants.matrixWithinSubjectContrastDetails());
+	protected SubpanelHeader betweenContrastHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixBetweenSubjectContrast(), 
+            PowerCalculatorGUI.constants.matrixBetweenSubjectContrastDetails());
+	protected SubpanelHeader betaHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixBeta(), 
+            PowerCalculatorGUI.constants.matrixBetaDetails());
+	protected SubpanelHeader thetaNullHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixThetaNull(), 
+            PowerCalculatorGUI.constants.matrixThetaNullDetails());
+	protected SubpanelHeader sigmaErrorHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixSigmaError(), 
+            PowerCalculatorGUI.constants.matrixSigmaErrorDetails());
+	protected SubpanelHeader sigmaCovariateHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixSigmaG(), 
+            PowerCalculatorGUI.constants.matrixSigmaGDetails());
+	protected SubpanelHeader sigmaOutcomesHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixSigmaY(), 
+            PowerCalculatorGUI.constants.matrixSigmaYDetails());
+	protected SubpanelHeader sigmaCovariateOutcomeHeader = new SubpanelHeader(PowerCalculatorGUI.constants.matrixSigmaYG(), 
+            PowerCalculatorGUI.constants.matrixSigmaYGDetails());
+	
 	// matrix inputs
-	protected ResizableMatrix essence = new ResizableMatrix("design", PowerCalculatorGUI.constants.matrixDesignEssence(), 
-			PowerCalculatorGUI.constants.matrixDesignEssenceDetails(), DEFAULT_N, DEFAULT_Q, true);
-	protected ResizableMatrix withinContrast = new ResizableMatrix("withinSubjectContrast", PowerCalculatorGUI.constants.matrixWithinSubjectContrast(), 
-			PowerCalculatorGUI.constants.matrixWithinSubjectContrastDetails(), DEFAULT_P, DEFAULT_B, false);
-	protected ResizableMatrix betweenContrast = new ResizableMatrix("betweenSubjectContrast", PowerCalculatorGUI.constants.matrixBetweenSubjectContrast(), 
-			PowerCalculatorGUI.constants.matrixBetweenSubjectContrastDetails(), DEFAULT_A, DEFAULT_Q, false);
-	protected ResizableMatrix beta = new ResizableMatrix("beta", PowerCalculatorGUI.constants.matrixBeta(), 
-	        PowerCalculatorGUI.constants.matrixBetaDetails(), DEFAULT_Q, DEFAULT_P, false);
-	protected ResizableMatrix thetaNull = new ResizableMatrix("theta", PowerCalculatorGUI.constants.matrixThetaNull(), 
-	        PowerCalculatorGUI.constants.matrixThetaNullDetails(), DEFAULT_A, DEFAULT_B, false);
+	protected EssenceMatrix essence = new EssenceMatrix("design", DEFAULT_N, DEFAULT_Q);
+	protected ResizableMatrix withinContrast = new ResizableMatrix("withinSubjectContrast", DEFAULT_P, DEFAULT_B);
+	protected ResizableMatrix betweenContrast = new ResizableMatrix("betweenSubjectContrast", DEFAULT_A, DEFAULT_Q);
+	protected ResizableMatrix beta = new ResizableMatrix("beta", DEFAULT_Q, DEFAULT_P);
+	protected ResizableMatrix thetaNull = new ResizableMatrix("theta", DEFAULT_A, DEFAULT_B);
 	// variance/covariance matrix for fixed predictors
-	protected ResizableMatrix sigmaError = new ResizableMatrix("sigmaError", PowerCalculatorGUI.constants.matrixSigmaError(), 
-	        PowerCalculatorGUI.constants.matrixSigmaErrorDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaError = new ResizableMatrix("sigmaError", DEFAULT_P, DEFAULT_P);
 	/* the following are needed for a baseline covariate */
 	// variance of the baseline covariate
-	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaGaussianRandom", PowerCalculatorGUI.constants.matrixSigmaG(), 
-	        PowerCalculatorGUI.constants.matrixSigmaGDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaGaussianRandom", DEFAULT_P, DEFAULT_P);
 	// variance/covariance of the outcomes
-	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaOutcome", PowerCalculatorGUI.constants.matrixSigmaY(), 
-	        PowerCalculatorGUI.constants.matrixSigmaYDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaOutcome", DEFAULT_P, DEFAULT_P);
 	// correlation of covariate and outcomes
-	protected ResizableMatrix sigmaCovariateOutcome = new ResizableMatrix("sigmaOutcomeGaussianRandom", PowerCalculatorGUI.constants.matrixSigmaYG(), 
-	        PowerCalculatorGUI.constants.matrixSigmaYGDetails(), DEFAULT_P, DEFAULT_P, false);
+	protected ResizableMatrix sigmaCovariateOutcome = new ResizableMatrix("sigmaOutcomeGaussianRandom", DEFAULT_P, DEFAULT_P);
 
 	protected DeckPanel sigmaDeck = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
@@ -98,22 +107,34 @@ implements ModelSelectListener, StudyDesignChangeListener
 		alpha.setWidget(0, 2, alphaErrorHTML);
 		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE);
 		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
+		
 		panel.add(alpha);
 		panel.add(advOpts);
-		// add each matrix to the panel
+		// add each header / matrix to the panel
+		panel.add(essenceHeader);
 		panel.add(essence);
+		panel.add(betaHeader);
 		panel.add(beta);
 		panel.add(sigmaDeck);
+		panel.add(thetaNullHeader);
 		panel.add(thetaNull);
+		panel.add(betweenContrastHeader);
 		panel.add(betweenContrast);
+		panel.add(withinContrastHeader);
 		panel.add(withinContrast);
 		// deck panel since we have different variance/covariance matrices
 		// for all fixed predictors vs. a baseline covariate 
 	    VerticalPanel covariateSigma = new VerticalPanel();
+	    covariateSigma.add(sigmaCovariateOutcomeHeader);
 	    covariateSigma.add(sigmaCovariateOutcome);
+	    covariateSigma.add(sigmaCovariateHeader);
 	    covariateSigma.add(sigmaCovariate);
+	    covariateSigma.add(sigmaOutcomesHeader);
 	    covariateSigma.add(sigmaOutcomes);
-	    sigmaDeck.add(sigmaError);
+	    VerticalPanel fixedOnlySigma = new VerticalPanel();
+	    fixedOnlySigma.add(sigmaErrorHeader);
+	    fixedOnlySigma.add(sigmaError);
+	    sigmaDeck.add(fixedOnlySigma);
 	    sigmaDeck.add(covariateSigma);
 	    sigmaDeck.showWidget(FIXED_INDEX);
 		panel.add(sigmaDeck);
@@ -237,14 +258,10 @@ implements ModelSelectListener, StudyDesignChangeListener
         return buffer.toString();
 	}
 	
-	public String getStudyXML(String rowMetaData)
+	public String getStudyXML(int totalN)
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("<essenceMatrix>");
-		buffer.append(essence.columnMetaDataToXML());
-		buffer.append(rowMetaData);
-		buffer.append(essence.matrixDataToXML());
-		buffer.append("</essenceMatrix>");
+		buffer.append(essence.toXML(totalN));
 		buffer.append(beta.matrixDataToXML());
 		buffer.append(thetaNull.matrixDataToXML());
 		buffer.append(withinContrast.matrixDataToXML());
@@ -272,45 +289,6 @@ implements ModelSelectListener, StudyDesignChangeListener
 		essence.addMetaDataListener(listener);
 	}
 	
-	public void onModelSelect(String modelName)
-	{
-		if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
-        {
-			essence.setDimensions(2, 2);
-			withinContrast.setDimensions(1, 1);
-			betweenContrast.setDimensions(1, 2);
-			beta.setDimensions(2, 1);
-			thetaNull.setDimensions(1, 1);
-			sigmaError.setDimensions(1, 1);
-			
-			advOpts.setVisible(false);
-			setResizable(false);
-        }   
-		else
-		{
-			advOpts.setVisible(true);
-			setResizable(true);
-		}
-	}
-	
-	private void setResizable(boolean allowResize)
-	{
-		essence.setResizable(allowResize);
-		withinContrast.setResizable(allowResize);
-		betweenContrast.setResizable(allowResize);
-		beta.setResizable(allowResize);
-		thetaNull.setResizable(allowResize);
-		sigmaError.setResizable(allowResize);
-		sigmaCovariate.setResizable(allowResize);
-		sigmaOutcomes.setResizable(allowResize);
-		sigmaCovariateOutcome.setResizable(allowResize);
-	}
-	
-	private void conformMatrices()
-	{
-		
-	}
-	
 	public void loadFromXMLDocument(Document doc)
 	{
     	Node studyNode = doc.getElementsByTagName("study").item(0);
@@ -324,7 +302,7 @@ implements ModelSelectListener, StudyDesignChangeListener
 
     		// parse the essence matrix
     		Node essenceNode = doc.getElementsByTagName("essencematrix").item(0);
-    		if (essenceNode != null) loadEssenceMatrixFromNode(essenceNode);
+    		if (essenceNode != null) essence.loadFromDomNode(essenceNode);
     		
     		// parse the remaining matrices
     		NodeList matrixNodes = doc.getElementsByTagName("matrix");
@@ -356,28 +334,7 @@ implements ModelSelectListener, StudyDesignChangeListener
     		}
     	}
 	}
-	
-	private void loadEssenceMatrixFromNode(Node matrixNode)
-	{
-		NodeList children = matrixNode.getChildNodes();
-		Node rowMD = null;
-		Node colMD = null;
-		// locate the row/column meta data
-		for(int i = 0; i < children.getLength(); i++)
-		{
-			Node child = children.item(i);
-			String name = child.getNodeName();
-			if (name.equals("matrix"))
-				loadMatrixFromNode(essence, child);
-			else if (name.equals("rowMetaData"))
-				rowMD = child;
-			else if (name.equals("columnMetaData"))
-				colMD = child;
-		}
 		
-		// if we found meta data, fill in the details
-	}
-	
 	private void loadMatrixFromNode(ResizableMatrix matrixUI, Node matrixNode)
 	{
 
@@ -405,65 +362,6 @@ implements ModelSelectListener, StudyDesignChangeListener
 			}
 		}
 	}
-
-    public void addStudyDesignChangeListener(StudyDesignChangeListener listener)
-    {
-        listeners.add(listener);
-    }
-    
-    public void onAlpha(String alpha) 
-    {
-        alphaTextBox.setText(alpha);
-    }
-    
-    public void onDesign(int row, int col, String value)
-    {
-        // TODO
-    }
-    
-    public void onDesignRowMetaData(int row, String name) {}
-        
-    public void onDesignColumnMetaData(int col, boolean isRandom, String mean, String variance) {}
-    
-    public void onBeta(int row, int col, String value)
-    {
-        beta.setData(row, col, value);
-    }
-    
-    public void onTheta(int row, int col, String value)
-    {
-        thetaNull.setData(row, col, value);
-    }
-    
-    public void onBetweenSubjectContrast(int row, int col, String value)
-    {
-        betweenContrast.setData(row, col, value);
-    }
-
-    public void onWithinSubjectContrast(int row, int col, String value) 
-    {
-        withinContrast.setData(row, col, value);
-    }
-
-    public void onSigmaError(int row, int col, String value) 
-    {
-        sigmaError.setData(row, col, value);
-    }   
-    
-    public void onSigmaOutcome(int row, int col, String value)
-    {
-        sigmaOutcomes.setData(row, col, value);
-    }
-    
-    public void onSigmaCovariateOutcome(int row, int col, String value)
-    {
-        sigmaCovariateOutcome.setData(row, col, value);
-    }
-    
-    public void onSigmaCovariate(int row, int col, String value)
-    {
-        sigmaCovariate.setData(row, col, value);
-    }
     
     private boolean validAlpha(String alpha)
     {

@@ -19,46 +19,44 @@ import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
+import edu.cudenver.bios.powercalculator.client.listener.StartListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class StudyDesignPanel extends Composite
-implements StudyUploadListener, ModelSelectListener, ClickHandler
+implements StartListener, ClickHandler
 {
 	private static final String SAVEAS_URL = "/restcall/file/saveas"; 
-    private static final int BASIC_GLMM = 0;
-    private static final int TWO_GROUP = 1;
-    protected BasicPanel linearModelPanel = new BasicPanel();
-    protected TwoGroupDesignPanel twoGroupPanel;
+	private static final int MATRIX_MODE = 0;
+	private static final int TEMPLATE_MODE = 1;
+	
+	// matrix and template mode panels
     protected MatrixPanel matrixPanel;
-    protected DeckPanel designPanel = new DeckPanel();
+    protected TemplateDesignPanel templatePanel;
+    // deck panel to hold the two mode panels
+    protected DeckPanel modeDeck = new DeckPanel();
+    // form for saving the study design
 	protected FormPanel form = new FormPanel("_blank");
 	protected Hidden matrixXML = new Hidden("data");
 	
-    protected String modelName = PowerCalculatorGUI.constants.modelGLMM();
-    TabPanel tabs = new TabPanel();
+	// current input mode
+    protected boolean isTemplateMode = true;
 
     public StudyDesignPanel(InputWizardStepListener wizard, int stepIndex)
     {
-        // create the subpanels
-        twoGroupPanel = new TwoGroupDesignPanel(wizard, stepIndex);
+        VerticalPanel designContainer = new VerticalPanel();
+
+        // create the subpanels for matrix mode and template mode
         matrixPanel = new MatrixPanel(wizard, stepIndex);
-    	VerticalPanel designContainer = new VerticalPanel();
+        templatePanel = new TemplateDesignPanel(wizard, stepIndex);
+        
         // header, description
         HTML header = new HTML("Design study");
         HTML description = new HTML("Fill in the details of your study design using either the matrix view (for users familier with linear models) or the design view (beginning users)");
         
     	// note, order must match indices listed above
-        designPanel.add(linearModelPanel);
-        designPanel.add(twoGroupPanel);
-        designPanel.showWidget(BASIC_GLMM);
-        tabs.add(designPanel, "Study Design View");
-        tabs.add(matrixPanel, "Matrix View");
-        tabs.selectTab(0);
-        
-        // changes on the matrix panel appear on the design view and
-        // vice versa
-        twoGroupPanel.addStudyDesignChangeListener(matrixPanel);
-        
+        modeDeck.add(matrixPanel);
+        modeDeck.add(templatePanel);
+        modeDeck.showWidget(TEMPLATE_MODE);
         
 		// add the save study link and associated form
 		form.setAction(SAVEAS_URL);
@@ -67,17 +65,18 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
 		formContainer.add(matrixXML);
 		formContainer.add(new Hidden("filename", "study.xml"));
 		form.add(formContainer);
-		
+		// save button
+		Button saveButton = new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this);
+  
+        // build the user input section
+        VerticalPanel inputContainer = new VerticalPanel();
+        inputContainer.add(modeDeck);
+        inputContainer.add(saveButton);
+        inputContainer.add(form);
+        
 		// build the panel layout
 		designContainer.add(header);
-		designContainer.add(description);
-		
-		VerticalPanel inputContainer = new VerticalPanel();
-		Button saveButton = new Button(PowerCalculatorGUI.constants.buttonSaveStudy(), this);
-		inputContainer.add(tabs);
-		inputContainer.add(saveButton);
-		inputContainer.add(form);
-        
+		designContainer.add(description);        
 		designContainer.add(inputContainer);
 		
         // TODO: add style
@@ -86,7 +85,7 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
         header.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_HEADER);
         description.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_DESCRIPTION);
         inputContainer.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_INPUT_CONTAINER);
-        tabs.setStyleName("wizardStepTabPanel");
+
         initWidget(designContainer);
     }
     
@@ -100,64 +99,46 @@ implements StudyUploadListener, ModelSelectListener, ClickHandler
         matrixPanel.addEssenceMatrixMetaDataListener(listener);
     }
     
-    public void onStudyUpload(Document studyDoc, String modelName)
+    public void onTemplateMode()
     {
-        matrixPanel.loadFromXMLDocument(studyDoc);
-        if (PowerCalculatorGUI.constants.modelOneSampleStudentsT().equals(modelName))
-            twoGroupPanel.loadFromXMLDocument(studyDoc);
-        else
-            linearModelPanel.loadFromXMLDocument(studyDoc);
-        onModelSelect(modelName);
-        tabs.selectTab(0);
+        isTemplateMode = true;
+        modeDeck.showWidget(TEMPLATE_MODE);
     }
     
-    public void onModelSelect(String modelName)
+    public void onMatrixMode()
     {
-        this.modelName = modelName;
-        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-        {
-            designPanel.showWidget(BASIC_GLMM);
-        }   
+        isTemplateMode = false;
+        modeDeck.showWidget(MATRIX_MODE);
+    }
+    
+    public void onStudyUpload(Document studyDoc, String modelName)
+    {
+        if (isTemplateMode)
+            templatePanel.loadFromXMLDocument(studyDoc);
         else
-        {
-            designPanel.showWidget(TWO_GROUP);
-        }
-        matrixPanel.onModelSelect(modelName);
+            matrixPanel.loadFromXMLDocument(studyDoc);
     }
     
     public String getStudyAttributes()
     {
-        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-        {
-            return matrixPanel.getStudyAttributes();
-        }
+        if (isTemplateMode)
+            return templatePanel.getStudyAttributes();
         else
-        {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("alpha='" + twoGroupPanel.getAlpha() + "' ");
-            buffer.append("mu0='" + twoGroupPanel.getNullMean() + "' ");
-            buffer.append("muA='" + twoGroupPanel.getAlternativeMean() + "' ");
-            buffer.append("sigmaError='" + twoGroupPanel.getSigma() + "'");
-            return buffer.toString();
-        }
+            return matrixPanel.getStudyAttributes();
     }
     
-    public String getStudyXML(String rowMetaDataXML)
+    public String getStudyXML(int totalN)
     {
-        if (PowerCalculatorGUI.constants.modelGLMM().equals(modelName))
-        {
-            return matrixPanel.getStudyXML(rowMetaDataXML);
-        }
+        if (isTemplateMode)
+            return templatePanel.getStudyXML(totalN);
         else
-        {
-            return "";
-        }
+            return matrixPanel.getStudyXML(totalN);
     }
     
     public void onClick(ClickEvent e)
     {
-    	matrixXML.setValue("<study alpha='" + matrixPanel.getAlpha() + "' modelName='" + modelName + "'>" + 
-    			matrixPanel.getStudyXML("") + "</study>");
+    	matrixXML.setValue("<study mode='" + (isTemplateMode ? "template" : "matrix") + "'>" + 
+    			matrixPanel.getStudyXML(0) + "</study>");
     	form.submit();    	
     }
     

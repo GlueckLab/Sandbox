@@ -4,74 +4,47 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.xml.client.NamedNodeMap;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
 public class ResizableMatrix extends Composite 
-implements ChangeHandler, MetaDataListener
+implements ChangeHandler
 {
     protected static final String RANDOM = "random";
     protected static final String MATRIX_STYLE = "matrix";
 	protected static final String DIMENSION_STYLE = "matrixDimensions";
 	protected static final String MATRIX_DATA_STYLE = "matrixData";
 	protected static final String MATRIX_CELL_STYLE = "matrixCell";
-	protected static final String HEADER_STYLE = "matrixHeader";
-	protected static final String COLUMN_META_DATA_STYLE = "columnMetaData";
-	protected static final String ROW_META_DATA_STYLE = "rowMetaData";
 	protected static final String DEFAULT_VALUE = "0";
 	protected static final int MAX_ROWS = 50;
 	protected static final int MAX_COLS = 50;
 	protected Grid matrixData;
 	protected TextBox rowTextBox;
 	protected TextBox columnTextBox;
-	protected HTML headerHTML;
 	protected boolean isSquare;
 	protected boolean isSymmetric;
 	protected String name;
 	protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
 	protected ArrayList<MetaDataListener> metaDataListeners = new ArrayList<MetaDataListener>();
-	protected boolean hasMetaData = false;
 	
-	public ResizableMatrix(String name, String label, String details, 
-	        int rows, int cols, boolean hasMetaData) 
+	public ResizableMatrix(String name, int rows, int cols) 
 	{
 	    this.name = name;
-	    this.hasMetaData = hasMetaData;
 		// overall layout panel    
 	    VerticalPanel matrixPanel = new VerticalPanel();
 
-		// pop-up with matrix description
-		final PopupPanel detailsPanel = new PopupPanel();
-		detailsPanel.add(new HTML(details));
-		
-		// matrix name
-		headerHTML = new HTML(label);
-		headerHTML.addMouseOverHandler(new MouseOverHandler() {
-			public void onMouseOver(MouseOverEvent e)
-			{
-				detailsPanel.showRelativeTo(headerHTML);
-			}
-		});
-		headerHTML.addMouseOutHandler(new MouseOutHandler() {
-			public void onMouseOut(MouseOutEvent e)
-			{
-				detailsPanel.hide();
-			}
-		});
 		// matrix dimensions
 		rowTextBox = new TextBox();
 		rowTextBox.addChangeHandler(this);
@@ -87,22 +60,17 @@ implements ChangeHandler, MetaDataListener
 		matrixDimensions.add(columnTextBox);
 	    
 		// build matrix itself
-	    if (hasMetaData)
-	    	matrixData = new Grid(rows+1, cols+1); // +1 for row and column meta data
-	    else
-	    	matrixData = new Grid(rows, cols);
+		matrixData = new Grid(rows, cols);
 	    
 		// initialize cells to 0
 		initMatrixData();
 		
 		// add the widgets to the vertical panel
-		matrixPanel.add(headerHTML);
 		matrixPanel.add(matrixDimensions);
 		matrixPanel.add(matrixData);
 		
 		// set up styles
 		matrixPanel.setStyleName(MATRIX_STYLE);
-		headerHTML.setStyleName(HEADER_STYLE);
 		matrixDimensions.setStyleName(DIMENSION_STYLE);
 		matrixData.setStyleName(MATRIX_DATA_STYLE);
 		
@@ -133,8 +101,8 @@ implements ChangeHandler, MetaDataListener
 	
 	public void onChange(ChangeEvent event)
 	{
-		int oldRows = (hasMetaData ? matrixData.getRowCount()-1 : matrixData.getRowCount());
-		int oldCols = (hasMetaData ? matrixData.getColumnCount()-1 : matrixData.getColumnCount());
+		int oldRows = matrixData.getRowCount();
+		int oldCols = matrixData.getColumnCount();
 		int newRows = 0;
 		int newCols = 0;
 		try
@@ -163,15 +131,10 @@ implements ChangeHandler, MetaDataListener
 	{		
 		int newRows = rows;
 		int newCols = cols;
-		int maxRows = (hasMetaData ? MAX_ROWS+1 : MAX_ROWS);
-		int maxCols = (hasMetaData ? MAX_COLS+1 : MAX_COLS);
+		int maxRows = MAX_ROWS;
+		int maxCols = MAX_COLS;
 		if (newRows > 0 && newRows <= maxRows && newCols > 0 && newCols <= maxCols)
 		{	
-			if (hasMetaData)
-			{
-				newRows++;
-				newCols++;
-			}
 			if (isSquare && newRows != newCols) return false;
 			
 			int oldRows = matrixData.getRowCount();
@@ -218,76 +181,24 @@ implements ChangeHandler, MetaDataListener
 	
 	private void initRow(int row)
 	{
-		if (hasMetaData && row == 0)
-		{
-			matrixData.setWidget(0, 0, new HTML("Row Label"));
-			for(int c = 1; c < matrixData.getColumnCount(); c++)
-			{
-				matrixData.setWidget(0, c, new ColumnMetaDataEntry(c, this));
-			}
-		}
-		else
-		{
-			if (hasMetaData) matrixData.setWidget(row, 0, new RowMetaDataEntry(row, this));
-			for(int c = (hasMetaData ? 1 : 0); c < matrixData.getColumnCount(); c++)
-			{
-				TextBox textBox = new TextBox();
-				textBox.setValue(DEFAULT_VALUE);
-				textBox.setStyleName(MATRIX_CELL_STYLE);
-				matrixData.setWidget(row, c, textBox);
-			}
-		}
+	    for(int c = 0; c < matrixData.getColumnCount(); c++)
+	    {
+	        TextBox textBox = new TextBox();
+	        textBox.setValue(DEFAULT_VALUE);
+	        textBox.setStyleName(MATRIX_CELL_STYLE);
+	        matrixData.setWidget(row, c, textBox);
+	    }
 	}
 	
 	private void initColumn(int col)
 	{
-		if (hasMetaData && col == 0)
-		{
-			for(int r = 1; r < matrixData.getRowCount(); r++)
-			{
-				matrixData.setWidget(r, col, new RowMetaDataEntry(r, this));
-			}
-		}
-		else 
-		{
-			if (hasMetaData) matrixData.setWidget(0, col, new ColumnMetaDataEntry(col, this));
-			for(int r = (hasMetaData ? 1 : 0); r < matrixData.getRowCount(); r++)
-			{
-				TextBox textBox = new TextBox();
-				textBox.setValue(DEFAULT_VALUE);
-				textBox.setStyleName(MATRIX_CELL_STYLE);
-				matrixData.setWidget(r, col, textBox);
-			}
-		}
-	}
-	
-	public String columnMetaDataToXML()
-	{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("<columnMetaData>");
-		for(int c = 1; c < matrixData.getColumnCount(); c++)
-		{
-			ColumnMetaDataEntry colMD = (ColumnMetaDataEntry) matrixData.getWidget(0, c);
-			buffer.append(colMD.toXML());
-		}
-		buffer.append("</columnMetaData>");
-		return buffer.toString();
-	}
-	
-	public String rowNamesToXML()
-	{
-        StringBuffer buffer = new StringBuffer();
-	    if (hasMetaData)
+	    for(int r = 0; r < matrixData.getRowCount(); r++)
 	    {
-	        buffer.append("<groupNames>");
-	        for(int r = 1; r < matrixData.getRowCount(); r++)
-	        {
-	            RowMetaDataEntry rowMD = (RowMetaDataEntry) matrixData.getWidget(r, 0);
-	            buffer.append("<r label='" + rowMD.getRowName() + "' />");
-	        }
-	        buffer.append("</groupNames>");
+	        TextBox textBox = new TextBox();
+	        textBox.setValue(DEFAULT_VALUE);
+	        textBox.setStyleName(MATRIX_CELL_STYLE);
+	        matrixData.setWidget(r, col, textBox);
 	    }
-        return buffer.toString();
 	}
 	
 	public String matrixDataToXML()
@@ -297,12 +208,7 @@ implements ChangeHandler, MetaDataListener
 		int start = 0;
 		int rows = matrixData.getRowCount();
 		int cols = matrixData.getColumnCount();
-		if (hasMetaData)
-		{
-			start = 1;
-			rows--;
-			cols--;
-		}
+
 		buffer.append("<matrix name='" + name + "' rows='" +  rows + "' columns='" + 
 		        cols + "'>");
 
@@ -336,57 +242,40 @@ implements ChangeHandler, MetaDataListener
 	{
 		resizeListeners.add(listener);
 	}
-	
-	public void addMetaDataListener(MetaDataListener listener)
-	{
-		if (hasMetaData)
-		{
-			metaDataListeners.add(listener);
-		}
-	}
-	
-    public void onFixed(int col)
-    {
-    	// kick the callback up the chain
-    	for(MetaDataListener listener: metaDataListeners) listener.onFixed(col);
-    }
-    
-    public void onRandom(int col, double mean, double variance)
-    {
-    	if (hasMetaData)
-    	{
-    		// reset the other 
-    		for(int c = 1; c < matrixData.getColumnCount(); c++)
-    		{
-    			if (c != col)
-    			{
-    				ColumnMetaDataEntry colMD = (ColumnMetaDataEntry) matrixData.getWidget(0, c);
-    				colMD.setFixed();
-    			}
-    		}     
-    	}
-    	// kick the callback up the chain
-    	for(MetaDataListener listener: metaDataListeners) listener.onRandom(col, mean, variance);
-    	
-    }
-    
-    public void onRowName(int row, String name)
-    {
-    	// kick the callback up the chain
-    	for(MetaDataListener listener: metaDataListeners) listener.onRowName(row, name);
-    }
     
     public void setData(int row, int col, String value)
     {
-    	if (hasMetaData)
-    	{
-    		TextBox tb = (TextBox) matrixData.getWidget(row+1, col+1);
-    		tb.setText(value);
-    	}
-    	else
-    	{
-    		TextBox tb = (TextBox) matrixData.getWidget(row, col);
-    		tb.setText(value);
-    	}
+        if (row < matrixData.getRowCount() && col < matrixData.getColumnCount())
+        {
+            TextBox tb = (TextBox) matrixData.getWidget(row, col);
+            tb.setText(value);
+        }
+    }
+    
+    public void loadFromDomNode(Node matrixNode)
+    {
+        NamedNodeMap attrs = matrixNode.getAttributes();
+        Node rowNode = attrs.getNamedItem("rows");
+        Node colNode = attrs.getNamedItem("columns");
+        if (rowNode != null && colNode != null)
+        {
+            int rows = Integer.parseInt(rowNode.getNodeValue());
+            int cols = Integer.parseInt(colNode.getNodeValue());
+            setDimensions(rows, cols);
+            
+            NodeList rowNodeList = matrixNode.getChildNodes();
+            for(int r = 0; r < rowNodeList.getLength(); r++)
+            {
+                NodeList colNodeList = rowNodeList.item(r).getChildNodes();
+                for(int c = 0; c < colNodeList.getLength(); c++)
+                {
+                    Node colItem = colNodeList.item(c).getFirstChild();
+                    if (colItem != null) 
+                    {
+                        setData(r, c, colItem.getNodeValue());
+                    }
+                }
+            }
+        }
     }
 }

@@ -22,12 +22,13 @@ public class RowMetaDataEntry extends Composite
 		row = rowIndex;
 		listeners.add(listener);
 
-		rowMD.setValue(Integer.toString(row));
+		rowMD.setValue("1");
 		rowMD.setStyleName(STYLE);
 		rowMD.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent e)
 			{
-				for(MetaDataListener listener: listeners) listener.onRowName(row, rowMD.getValue());
+			     
+				//for(MetaDataListener listener: listeners) listener.onRowName(row, rowMD.getValue());
 			}
 		});
 		

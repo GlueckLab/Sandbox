@@ -4,7 +4,6 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -12,23 +11,18 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
-import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.NavigationListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 import edu.cudenver.bios.powercalculator.client.listener.StartListener;
-import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class InputWizardPanel extends Composite 
 implements NavigationListener, OptionsListener, 
 StartListener, InputWizardStepListener
 {
-	private static final String UPLOAD_PARAM = "u";
-	
     private static final int PANEL_STACK_START = 0;
     private static final int PANEL_STACK_STUDY_DESIGN = 1;
     private static final int PANEL_STACK_OPTIONS = 2;
@@ -135,6 +129,7 @@ StartListener, InputWizardStepListener
     	
         // listeners for study upload or model select events
         startPanel.addStartListener(this);
+        startPanel.addStartListener(studyDesignPanel);
 //        startPanel.addModelSelectListener(this);
 //        startPanel.addModelSelectListener(studyDesignPanel);
 //        startPanel.addModelSelectListener(optionsPanel);
@@ -214,6 +209,7 @@ StartListener, InputWizardStepListener
     {
         updateStep(PANEL_STACK_START, false, true, true);
         stepsLeftPanel.onCancel();
+        navPanel.setVisible(false);
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -286,7 +282,7 @@ StartListener, InputWizardStepListener
         buffer.append(optionsPanel.getGraphicsOptions());
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
                 optionsPanel.getPowerAttributes() + ">");
-        buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+        buffer.append(studyDesignPanel.getStudyXML(5)); //optionsPanel.getRowMetaDataXML()));
         buffer.append("</params></power>");
         return buffer.toString();
     }
@@ -297,7 +293,7 @@ StartListener, InputWizardStepListener
     	buffer.append("<power modelName='" + modelName + "' >");
 		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
 		        optionsPanel.getPowerAttributes() + ">");
-		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+		buffer.append(studyDesignPanel.getStudyXML(5)); // TODO FIX ME
 		buffer.append("</params></power>");
     	return buffer.toString();
     }
@@ -308,7 +304,7 @@ StartListener, InputWizardStepListener
         buffer.append("<sampleSize modelName='" + modelName + "' >");
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
                 optionsPanel.getSampleSizeAttributes() + ">");
-        buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getRowMetaDataXML()));
+        buffer.append(studyDesignPanel.getStudyXML(5)); // TODO FIX ME
         buffer.append("</params></sampleSize>");
         return buffer.toString();
     }
