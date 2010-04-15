@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
@@ -33,13 +34,22 @@ public class EssenceMatrix extends Composite
         
         VerticalPanel panel = new VerticalPanel();
         
+        
         // build grid
         Grid grid = new Grid(1,2);
         grid.setWidget(0, 1, essence);
+        
+        // build the row meta data panel
+        VerticalPanel rowMDPanel = new VerticalPanel();
+        
         // build covariate panel
         HorizontalPanel covariatePanel = new HorizontalPanel();
         covariatePanel.add(new HTML("Include a baseline covariate?"));
         covariatePanel.add(covariateCheckBox);
+        covariatePanel.add(new HTML("Mean: "));
+        covariatePanel.add(meanTextBox);
+        covariatePanel.add(new HTML("Variance: "));
+        covariatePanel.add(varianceTextBox);
         covariateCheckBox.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent e)
             {
@@ -47,7 +57,12 @@ public class EssenceMatrix extends Composite
                 varianceTextBox.setEnabled(covariateCheckBox.getValue());                    
             }
         });
+
+        // layout the overall panel
         panel.add(grid);
+        panel.add(covariatePanel);
+        // add style
+        
         
         initWidget(panel);
     }
