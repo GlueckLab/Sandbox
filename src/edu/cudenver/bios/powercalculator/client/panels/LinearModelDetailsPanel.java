@@ -13,7 +13,7 @@ import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 
 public class LinearModelDetailsPanel extends Composite 
-implements OptionsListener, MatrixResizeListener, MetaDataListener
+implements OptionsListener, MatrixResizeListener
 {
     private static final String STYLE = "optionsPanel";
     
@@ -116,4 +116,7 @@ implements OptionsListener, MatrixResizeListener, MetaDataListener
     public void onFixed(int col) {}
     
     public void onRandom(int col, double mean, double variance) {}
+    
+    public void onRows(int r) {}
+    public void onColumns(int cols) {}
 }

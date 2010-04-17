@@ -35,70 +35,70 @@ public class ColumnMetaDataEntry extends Composite
 
 	public ColumnMetaDataEntry(int columnIndex, MetaDataListener listener)
 	{
-		this.column = columnIndex;
-		listeners.add(listener);
-		// build the popup panel for selecting fixed/random
-		VerticalPanel container = new VerticalPanel();
-		container.add(fixedRb);
-		fixedRb.setValue(true);
-		setMeanVarianceEnabled(false);
-		container.add(randomRb);
-		Grid meanVarPanel = new Grid(2,2);
-
-		meanVarPanel.setWidget(0,0,meanLabel);
-		meanVarPanel.setWidget(0,1,meanTextBox);
-		meanVarPanel.setWidget(1,0,varianceLabel);
-		meanVarPanel.setWidget(1,1,varianceTextBox);
-		container.add(meanVarPanel);
-		container.add(errorMsg);
-		container.add(new Button("Done", new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				// validate
-				if (fixedRb.getValue())
-				{
-					label.setText("Fixed");
-					for(MetaDataListener listener: listeners) listener.onFixed(column);
-					entryPanel.hide();
-				}
-				else
-				{
-					try
-					{
-						double mean = Double.parseDouble(meanTextBox.getValue());
-						double variance = Double.parseDouble(varianceTextBox.getValue());
-						label.setText("Random");
-						for(MetaDataListener listener: listeners) listener.onRandom(column, mean, variance);
-						entryPanel.hide();
-					}
-					catch (Exception exp)
-					{
-						errorMsg.setText("Please specify a numeric mean and variance");
-					}
-				}
-			}
-		}));
-		entryPanel.add(container);
-		label.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				entryPanel.showRelativeTo(label);
-			}
-		});
-		fixedRb.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				setMeanVarianceEnabled(false);
-			}
-		});
-		randomRb.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent e)
-			{
-				setMeanVarianceEnabled(true);
-			}
-		});
-		label.setStyleName(STYLE);
-		entryPanel.setStyleName(POPUP_STYLE);
+//		this.column = columnIndex;
+//		listeners.add(listener);
+//		// build the popup panel for selecting fixed/random
+//		VerticalPanel container = new VerticalPanel();
+//		container.add(fixedRb);
+//		fixedRb.setValue(true);
+//		setMeanVarianceEnabled(false);
+//		container.add(randomRb);
+//		Grid meanVarPanel = new Grid(2,2);
+//
+//		meanVarPanel.setWidget(0,0,meanLabel);
+//		meanVarPanel.setWidget(0,1,meanTextBox);
+//		meanVarPanel.setWidget(1,0,varianceLabel);
+//		meanVarPanel.setWidget(1,1,varianceTextBox);
+//		container.add(meanVarPanel);
+//		container.add(errorMsg);
+//		container.add(new Button("Done", new ClickHandler() {
+//			public void onClick(ClickEvent e)
+//			{
+//				// validate
+//				if (fixedRb.getValue())
+//				{
+//					label.setText("Fixed");
+//					for(MetaDataListener listener: listeners) listener.onFixed(column);
+//					entryPanel.hide();
+//				}
+//				else
+//				{
+//					try
+//					{
+//						double mean = Double.parseDouble(meanTextBox.getValue());
+//						double variance = Double.parseDouble(varianceTextBox.getValue());
+//						label.setText("Random");
+//						for(MetaDataListener listener: listeners) listener.onRandom(column, mean, variance);
+//						entryPanel.hide();
+//					}
+//					catch (Exception exp)
+//					{
+//						errorMsg.setText("Please specify a numeric mean and variance");
+//					}
+//				}
+//			}
+//		}));
+//		entryPanel.add(container);
+//		label.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent e)
+//			{
+//				entryPanel.showRelativeTo(label);
+//			}
+//		});
+//		fixedRb.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent e)
+//			{
+//				setMeanVarianceEnabled(false);
+//			}
+//		});
+//		randomRb.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent e)
+//			{
+//				setMeanVarianceEnabled(true);
+//			}
+//		});
+//		label.setStyleName(STYLE);
+//		entryPanel.setStyleName(POPUP_STYLE);
 		initWidget(label);
 	}
 

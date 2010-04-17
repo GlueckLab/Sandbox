@@ -139,7 +139,7 @@ StartListener, InputWizardStepListener
         
     	// listener for resize events on the essence matrix to allow 
     	// updating power/sample size options 
-    	studyDesignPanel.addEssenceMatrixResizeListener(optionsPanel);
+    	//studyDesignPanel.addEssenceMatrixResizeListener(optionsPanel);
     	studyDesignPanel.addEssenceMatrixMetaDataListener(optionsPanel);
     	
     	// listener for options panel events to determine if we are solving for sample size or power

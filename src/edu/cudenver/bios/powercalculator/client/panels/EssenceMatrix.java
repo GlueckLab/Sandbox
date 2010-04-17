@@ -2,13 +2,17 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Node;
@@ -18,53 +22,103 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
-public class EssenceMatrix extends Composite
+public class EssenceMatrix extends Composite implements MatrixResizeListener
 {
+	private static final int MAX_RATIO = 10;
     protected CheckBox covariateCheckBox = new CheckBox();
+    protected Grid meanVarPanel = new Grid(2,2);
     protected TextBox meanTextBox = new TextBox();
     protected TextBox varianceTextBox = new TextBox();
     protected ResizableMatrix essence;
-    
+   	protected Grid rowMDGrid;
     protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
     protected ArrayList<MetaDataListener> metaDataListeners = new ArrayList<MetaDataListener>();
 
+    protected int minimumN;
+    
     public EssenceMatrix(String name, int rows, int cols) 
     {
         essence = new ResizableMatrix(name, rows, cols);
+        essence.addMatrixResizeListener(this);
+
+        // start with 1:1 ration amongst groups, require at least 2 per group
+        minimumN = 2*rows;
         
         VerticalPanel panel = new VerticalPanel();
-        
-        
-        // build grid
-        Grid grid = new Grid(1,2);
-        grid.setWidget(0, 1, essence);
-        
+                
         // build the row meta data panel
         VerticalPanel rowMDPanel = new VerticalPanel();
+        rowMDPanel.add(new HTML("Ratio of group sizes"));
+        rowMDGrid = new Grid(rows, 1);
+        for(int r = 0; r < rows; r++)
+        {
+        	rowMDGrid.setWidget(r, 0, createRowMDTextBox());
+        }
+        rowMDPanel.add(rowMDGrid);
+        // layout the essence matrix and row meta data
+        Grid essenceGrid = new Grid(1,2);
+        essenceGrid.setWidget(0, 0, essence);
+        essenceGrid.setWidget(0, 1, rowMDPanel);
+
         
         // build covariate panel
-        HorizontalPanel covariatePanel = new HorizontalPanel();
-        covariatePanel.add(new HTML("Include a baseline covariate?"));
-        covariatePanel.add(covariateCheckBox);
-        covariatePanel.add(new HTML("Mean: "));
-        covariatePanel.add(meanTextBox);
-        covariatePanel.add(new HTML("Variance: "));
-        covariatePanel.add(varianceTextBox);
+        VerticalPanel covariatePanel = new VerticalPanel();
+        HorizontalPanel includeCovariatePanel = new HorizontalPanel();
+        includeCovariatePanel.add(covariateCheckBox);
+        includeCovariatePanel.add(new HTML("Include a baseline covariate"));
         covariateCheckBox.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent e)
             {
-                meanTextBox.setEnabled(covariateCheckBox.getValue());
-                varianceTextBox.setEnabled(covariateCheckBox.getValue());                    
+            	meanVarPanel.setVisible(covariateCheckBox.getValue());
+            	meanTextBox.setText("");
+            	varianceTextBox.setText("");
+            	
+            	essence.setCovariateColumn(covariateCheckBox.getValue());
+            	
+            	for(MetaDataListener listener: metaDataListeners) listener.onCovariate(covariateCheckBox.getValue());
             }
         });
+        covariatePanel.add(includeCovariatePanel);
+        
+        // subpanel for mean / variance
+        meanVarPanel.setWidget(0, 0, new HTML("Mean: "));
+        meanVarPanel.setWidget(0, 1, meanTextBox);
+        meanVarPanel.setWidget(1, 0, new HTML("Variance: "));
+        meanVarPanel.setWidget(1, 1, varianceTextBox);
+        meanVarPanel.setVisible(false);
+        covariatePanel.add(meanVarPanel);
 
         // layout the overall panel
-        panel.add(grid);
+        panel.add(essenceGrid);
         panel.add(covariatePanel);
+        
+        
         // add style
         
         
         initWidget(panel);
+    }
+    
+    private ListBox createRowMDTextBox()
+    {
+    	ListBox list = new ListBox();
+    	for(int i = 1; i <= MAX_RATIO; i++)
+    	{
+    		list.addItem(Integer.toString(i));
+    		list.addChangeHandler(new ChangeHandler() {
+    			public void onChange(ChangeEvent e)
+    			{
+    				minimumN = 0;
+    				for(int r = 0; r < rowMDGrid.getRowCount(); r++)
+    				{
+    					ListBox ratioList = (ListBox) rowMDGrid.getWidget(r, 0);
+    					int ratio = Integer.parseInt(ratioList.getItemText(ratioList.getSelectedIndex()));
+    					minimumN += 2 * ratio;
+    				}
+    			}
+    		});
+    	}
+    	return list;
     }
     
     public void addMatrixResizeListener(MatrixResizeListener listener)
@@ -96,12 +150,28 @@ public class EssenceMatrix extends Composite
                 colMD = child;
         }
         
-        // if we found meta data, fill in the details        
+        // parse the column meta data if there is any
+        if (colMD != null)
+        {
+        	
+        }
+        
+        // parse the row meta data if there is any
+        if (rowMD != null)
+        {
+        	
+        }
+        
     }
     
-    public void setDimensions(int newRows, int newCols)
+    public void setRowDimension(int newRows)
     {
-        essence.setDimensions(newRows, newCols);
+        essence.setRowDimension(newRows);
+    }
+    
+    public void setColumnDimension(int newCols)
+    {
+        essence.setColumnDimension(newCols);
     }
 
     public int getRowDimension()
@@ -118,24 +188,75 @@ public class EssenceMatrix extends Composite
     {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<essenceMatrix>");
-        //        buffer.append(essence.columnMetaDataToXML());
-        //        buffer.append(rowMetaData);
-        //        buffer.append(essence.matrixDataToXML());
+        buffer.append(columnMetaDataToXML());
+        buffer.append(rowMetaDataToXML(totalN));
+        buffer.append(essence.toXML());
         buffer.append("</essenceMatrix>");
+        Window.alert(buffer.toString());
+        return buffer.toString();
+    }
+        
+    private String rowMetaDataToXML(int totalN)
+    {    	
+    	// totalN must be multiple of the minimum sample size
+    	int nMultiplier = totalN / minimumN;
+    	
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<rowMetaData>");
+        for(int r = 0; r < rowMDGrid.getRowCount(); r++)
+        {
+            ListBox ratioList = (ListBox) rowMDGrid.getWidget(r, 0);
+            int ratio = Integer.parseInt(ratioList.getItemText(ratioList.getSelectedIndex()));
+            buffer.append("<r ratio='" + ratio + "' ");
+            if (nMultiplier > 0) buffer.append(" reps='" + ratio*nMultiplier + "' ");
+            buffer.append("></r>");
+        }
+        buffer.append("</rowMetaData>");
         return buffer.toString();
     }
     
-    public String columnMetaDataToXML()
+    private String columnMetaDataToXML()
+    {        
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<columnMetaData>");
+        for(int c = 0; c < essence.getColumnDimension(); c++) 
+        {
+            buffer.append("<c type='fixed'></c>");            
+        }
+        if (covariateCheckBox.getValue())
+        {
+        	buffer.append("<c type='random' mean='" + meanTextBox.getText() + "' variance='" + 
+        			varianceTextBox.getText()+ "' ></c>");
+        }
+        buffer.append("</columnMetaData>");
+        return buffer.toString();
+    }
+    
+    public void onRows(int newRows)
     {
-//        StringBuffer buffer = new StringBuffer();
-//        buffer.append("<columnMetaData>");
-//        for(int c = 1; c < matrixData.getColumnCount(); c++)
-//        {
-//            ColumnMetaDataEntry colMD = (ColumnMetaDataEntry) matrixData.getWidget(0, c);
-//            buffer.append(colMD.toXML());
-//        }
-//        buffer.append("</columnMetaData>");
-//        return buffer.toString();
-        return "";
+    	int currentRows = rowMDGrid.getRowCount();
+    	if (newRows != currentRows)
+    	{
+        	rowMDGrid.resizeRows(newRows);
+        	for(int r = currentRows; r < newRows; r++)
+        	{
+        		rowMDGrid.setWidget(r, 0, createRowMDTextBox());
+        	}
+    	}
+    }
+    
+    public void onColumns(int newCols) {};
+    
+    public void onMatrixResize(int newRows, int newCols)
+    {
+    	int currentRows = rowMDGrid.getRowCount();
+    	if (newRows != currentRows)
+    	{
+        	rowMDGrid.resizeRows(newRows);
+        	for(int r = currentRows; r < newRows; r++)
+        	{
+        		rowMDGrid.setWidget(r, 0, createRowMDTextBox());
+        	}
+    	}
     }
 }

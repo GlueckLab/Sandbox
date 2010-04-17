@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
-public class ColumnMetaDataPanel extends Composite implements MetaDataListener
+public class ColumnMetaDataPanel extends Composite
 {
     private static final String STYLE = "columnMetaData";
     private static final String CELL_STYLE = "columnMetaDataCell";   
@@ -28,7 +28,7 @@ public class ColumnMetaDataPanel extends Composite implements MetaDataListener
         metaData = new Grid(1, cols);
         for(int c = 0; c < cols; c++)
         {
-            metaData.setWidget(0, c, new ColumnMetaDataEntry(c, this));
+            //metaData.setWidget(0, c, new ColumnMetaDataEntry(c, this));
         }
         
         //  set style
@@ -43,7 +43,7 @@ public class ColumnMetaDataPanel extends Composite implements MetaDataListener
         metaData.resize(1, newCols);
         for(int c = oldCols; c < newCols; c++)
         {
-            metaData.setWidget(0, c, new ColumnMetaDataEntry(c, this));
+            //metaData.setWidget(0, c, new ColumnMetaDataEntry(c, this));
         }        
     }
     

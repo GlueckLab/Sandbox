@@ -89,7 +89,7 @@ public interface PowerCalculatorConstants extends Constants
 	public String matrixBetweenSubjectContrastDetails();
 	public String matrixWithinSubjectContrast();
 	public String matrixWithinSubjectContrastDetails();
-
+	
 	// power / sample size options
 	public String radioButtonPower();
 	public String radioButtonSampleSize();

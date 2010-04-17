@@ -26,8 +26,7 @@ import edu.cudenver.bios.powercalculator.client.listener.OptionsListener;
 import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class OptionsPanel extends Composite 
-implements MatrixResizeListener, MetaDataListener, ModelSelectListener,
-StudyUploadListener, ClickHandler, ChangeHandler
+implements MetaDataListener, ClickHandler, ChangeHandler
 {
 	private static final String SOLVE_FOR_GROUP = "solveFor";
 	private static final int INDEX_TWO_GROUP = 0;
@@ -56,6 +55,7 @@ StudyUploadListener, ClickHandler, ChangeHandler
 	protected String modelName = PowerCalculatorGUI.constants.modelGLMM();;
 	protected ArrayList<OptionsListener> listeners = new ArrayList<OptionsListener>();
 
+	protected int minimumN = -1;
 	    
 	public OptionsPanel(InputWizardStepListener wizard, int stepIndex)
 	{
@@ -279,35 +279,18 @@ StudyUploadListener, ClickHandler, ChangeHandler
         panel.onMatrixResize(rows, cols);
     }
     
-    public void onRowName(int row, String name)
-    {
-        LinearModelDetailsPanel panel = 
-            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
-        panel.onRowName(row, name);
-    }
+
+    // meta data listener callbacks
+    public void onCovariate(boolean hasCovariate) {}
     
-    public void onFixed(int col) 
+    public void onMinimumSampleSize(int minimumN)
     {
-        LinearModelDetailsPanel panel = 
-            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
-        panel.onFixed(col);
-    }
-    
-    public void onRandom(int col, double mean, double variance) 
-    {
-        LinearModelDetailsPanel panel = 
-            (LinearModelDetailsPanel) deck.getWidget(INDEX_LINEAR_MODEL);
-        panel.onRandom(col, mean, variance);
+    	this.minimumN = minimumN;
     }
     
     public void onClick(ClickEvent e)
     {
         notifyOnSolvingFor(powerRb.getValue());
-    }
-    
-    public void onStudyUpload(Document doc, String modelName)
-    {
-        onModelSelect(modelName);
     }
     
     public void onChange(ChangeEvent e)

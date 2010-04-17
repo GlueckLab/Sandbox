@@ -161,75 +161,83 @@ public class MatrixPanel extends Composite
         });
 		
 		// set matrix size restrictions
-        sigmaError.setIsSquare(true);
-        sigmaCovariate.setIsSquare(true);
-        sigmaOutcomes.setIsSquare(true);
+        sigmaError.setIsSquare(true, true);
+        sigmaCovariate.setIsSquare(true, true);
+        sigmaOutcomes.setIsSquare(true, true);
 		
 		// add listeners to ensure matrix conformance when each 
 		// matrix changes
 		essence.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows) {}
+			public void onColumns(int cols)
 			{
-				beta.setDimensions(cols, beta.getColumnDimension());
-				betweenContrast.setDimensions(betweenContrast.getRowDimension(), cols);
+				beta.setRowDimension(cols);
+				betweenContrast.setColumnDimension(cols);
 			}
 		});
 		essence.addMetaDataListener(new MetaDataListener() {
-		    public void onRandom(int col, double mean, double variance)
-		    {
-		        sigmaDeck.showWidget(COVARIATE_INDEX);
-		        covariateColumn = col;
-		    }
-		    
-		    public void onFixed(int col)
-		    {
-		        if (col == covariateColumn)
-		        {
-		            covariateColumn = -1;
-		            sigmaDeck.showWidget(FIXED_INDEX);
-		        }
-		    }
-		    
-		    public void onRowName(int row, String name)
-		    {
-		    }
+			public void onCovariate(boolean hasCovariate)
+			{
+				if (hasCovariate)
+					sigmaDeck.showWidget(COVARIATE_INDEX);
+				else
+					sigmaDeck.showWidget(FIXED_INDEX);
+				// update the B, C matrices with covariate entries
+				beta.setCovariateRow(hasCovariate);
+				betweenContrast.setColumnDimension(beta.getRowDimension());
+			}
+			
+			public void onMinimumSampleSize(int minN) {}
 		});
 		betweenContrast.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows)
 			{
-				thetaNull.setDimensions(rows, thetaNull.getColumnDimension());
-				beta.setDimensions(cols, beta.getColumnDimension());
+				thetaNull.setRowDimension(rows);
+			}
+			public void onColumns(int cols)
+			{
+				beta.setRowDimension(cols);
 			}
 		});
 		withinContrast.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows)
 			{
-				sigmaError.setDimensions(rows, rows);
-				beta.setDimensions(beta.getRowDimension(), rows);
-				thetaNull.setDimensions(thetaNull.getRowDimension(), cols);
+				sigmaError.setRowDimension(rows);
+				beta.setColumnDimension(rows);
+			}
+			public void onColumns(int cols)
+			{
+				thetaNull.setColumnDimension(cols);
 			}
 		});
 		beta.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows)
 			{
-				essence.setDimensions(essence.getRowDimension(), rows);
-				betweenContrast.setDimensions(betweenContrast.getRowDimension(), rows);
-				withinContrast.setDimensions(cols, withinContrast.getColumnDimension());
+				essence.setColumnDimension(rows);
+				betweenContrast.setColumnDimension(rows);
+			}
+			public void onColumns(int cols)
+			{
+				withinContrast.setRowDimension(cols);
 			}
 		});
 		// make sure sigma and within subject contrast (U) conform
 		sigmaError.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows)
 			{
-				withinContrast.setDimensions(rows, withinContrast.getColumnDimension());
-				beta.setDimensions(beta.getRowDimension(), rows);
+				withinContrast.setRowDimension(rows);
+				beta.setColumnDimension(rows);
 			}
+			public void onColumns(int cols) {}
 		});
 		thetaNull.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onMatrixResize(int rows, int cols)
+			public void onRows(int rows)
 			{
-				withinContrast.setDimensions(withinContrast.getRowDimension(), cols);
-				betweenContrast.setDimensions(rows, betweenContrast.getColumnDimension());
+				betweenContrast.setRowDimension(rows);
+			}
+			public void onColumns(int cols)
+			{
+				withinContrast.setColumnDimension(cols);
 			}
 		});
 
@@ -262,19 +270,19 @@ public class MatrixPanel extends Composite
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(essence.toXML(totalN));
-		buffer.append(beta.matrixDataToXML());
-		buffer.append(thetaNull.matrixDataToXML());
-		buffer.append(withinContrast.matrixDataToXML());
-		buffer.append(betweenContrast.matrixDataToXML());
+		buffer.append(beta.toXML());
+		buffer.append(thetaNull.toXML());
+		buffer.append(withinContrast.toXML());
+		buffer.append(betweenContrast.toXML());
 		if (covariateColumn == -1)
 		{
-		    buffer.append(sigmaError.matrixDataToXML());
+		    buffer.append(sigmaError.toXML());
 		}
 		else
 		{
-		    buffer.append(sigmaCovariate.matrixDataToXML());
-            buffer.append(sigmaOutcomes.matrixDataToXML());
-            buffer.append(sigmaCovariateOutcome.matrixDataToXML());
+		    buffer.append(sigmaCovariate.toXML());
+            buffer.append(sigmaOutcomes.toXML());
+            buffer.append(sigmaCovariateOutcome.toXML());
 		}
 		return buffer.toString();
 	}
@@ -315,54 +323,26 @@ public class MatrixPanel extends Composite
     			{
     				String name = nameNode.getNodeValue();
     				if (name.equals("beta"))
-    					loadMatrixFromNode(beta, matrixNode);
+    					beta.loadFromDomNode(matrixNode);
     				else if (name.equals("withinSubjectContrast"))
-    					loadMatrixFromNode(betweenContrast, matrixNode);
+    					betweenContrast.loadFromDomNode(matrixNode);
     				else if (name.equals("betweenSubjectContrast"))
-    					loadMatrixFromNode(withinContrast, matrixNode);
+    					withinContrast.loadFromDomNode(matrixNode);
     				else if (name.equals("theta"))
-    					loadMatrixFromNode(thetaNull, matrixNode);
+    					thetaNull.loadFromDomNode(matrixNode);
     				else if (name.equals("sigmaError"))
-    					loadMatrixFromNode(sigmaError, matrixNode);
+    					sigmaError.loadFromDomNode(matrixNode);
     				else if (name.equals("sigmaGaussianRandom"))
-    					loadMatrixFromNode(sigmaCovariate, matrixNode);
+    					sigmaCovariate.loadFromDomNode(matrixNode);
     				else if (name.equals("sigmaOutcome"))
-    					loadMatrixFromNode(sigmaOutcomes, matrixNode);
+    					sigmaOutcomes.loadFromDomNode(matrixNode);
     				else if (name.equals("sigmaOutcomeGaussianRandom"))
-    					loadMatrixFromNode(sigmaCovariateOutcome, matrixNode);
+    					sigmaCovariateOutcome.loadFromDomNode(matrixNode);
     			}
     		}
     	}
 	}
-		
-	private void loadMatrixFromNode(ResizableMatrix matrixUI, Node matrixNode)
-	{
-
-		NamedNodeMap attrs = matrixNode.getAttributes();
-		Node rowNode = attrs.getNamedItem("rows");
-		Node colNode = attrs.getNamedItem("columns");
-		if (rowNode != null && colNode != null)
-		{
-			int rows = Integer.parseInt(rowNode.getNodeValue());
-			int cols = Integer.parseInt(colNode.getNodeValue());
-			matrixUI.setDimensions(rows, cols);
-			
-			NodeList rowNodeList = matrixNode.getChildNodes();
-			for(int r = 0; r < rowNodeList.getLength(); r++)
-			{
-				NodeList colNodeList = rowNodeList.item(r).getChildNodes();
-				for(int c = 0; c < colNodeList.getLength(); c++)
-				{
-					Node colItem = colNodeList.item(c).getFirstChild();
-					if (colItem != null) 
-					{
-					    matrixUI.setData(r, c, colItem.getNodeValue());
-					}
-				}
-			}
-		}
-	}
-    
+		    
     private boolean validAlpha(String alpha)
     {
         if (alpha == null || alpha.isEmpty())
