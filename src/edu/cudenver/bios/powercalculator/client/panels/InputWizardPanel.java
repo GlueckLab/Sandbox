@@ -4,6 +4,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -66,7 +67,7 @@ StartListener, InputWizardStepListener
 	
 	// indicators if study design and options are currently valid
 	protected boolean studyDesignValid = false;
-	protected boolean optionsValid = true;
+	protected boolean optionsValid = false;
 	
 	// form used to submit an image request to fill a hidden Iframe on the 
 	// results panel.  IE versions 5-7 do not support inline images, so this needs
@@ -280,9 +281,8 @@ StartListener, InputWizardStepListener
         StringBuffer buffer = new StringBuffer();
         buffer.append("<power modelName='" + modelName + "' >");
         buffer.append(optionsPanel.getGraphicsOptions());
-        buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
-                optionsPanel.getPowerAttributes() + ">");
-        buffer.append(studyDesignPanel.getStudyXML(5)); //optionsPanel.getRowMetaDataXML()));
+        buffer.append("<params " + studyDesignPanel.getStudyAttributes() + ">");
+        buffer.append(studyDesignPanel.getStudyXML(-1)); 
         buffer.append("</params></power>");
         return buffer.toString();
     }
@@ -291,10 +291,10 @@ StartListener, InputWizardStepListener
     {      
     	StringBuffer buffer = new StringBuffer();
     	buffer.append("<power modelName='" + modelName + "' >");
-		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
-		        optionsPanel.getPowerAttributes() + ">");
-		buffer.append(studyDesignPanel.getStudyXML(5)); // TODO FIX ME
+		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + ">");
+		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getSampleSize())); // TODO FIX ME
 		buffer.append("</params></power>");
+        Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
@@ -304,8 +304,9 @@ StartListener, InputWizardStepListener
         buffer.append("<sampleSize modelName='" + modelName + "' >");
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + " " +
                 optionsPanel.getSampleSizeAttributes() + ">");
-        buffer.append(studyDesignPanel.getStudyXML(5)); // TODO FIX ME
+        buffer.append(studyDesignPanel.getStudyXML(-1)); 
         buffer.append("</params></sampleSize>");
+        Window.alert(buffer.toString());
         return buffer.toString();
     }
     

@@ -16,10 +16,9 @@ import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
-import edu.cudenver.bios.powercalculator.client.listener.StudyDesignChangeListener;
 
 public class TwoGroupDesignPanel extends Composite 
-implements ChangeHandler, StudyDesignChangeListener
+implements ChangeHandler
 {
 	private static final String STYLE = "twoGroupDesignPanel";
 	private static final String MESSAGE_STYLE = "message";
@@ -35,9 +34,7 @@ implements ChangeHandler, StudyDesignChangeListener
     protected HTML sigmaErrorHTML = new HTML("");
     protected InputWizardStepListener wizard;
     protected int stepIndex = -1;
-    
-    ArrayList<StudyDesignChangeListener> listeners = new ArrayList<StudyDesignChangeListener>();
-    
+
     public TwoGroupDesignPanel(InputWizardStepListener wizard, int stepIndex)
     {
         this.wizard = wizard;
@@ -77,7 +74,6 @@ implements ChangeHandler, StudyDesignChangeListener
                         displayError(alphaErrorHTML, PowerCalculatorGUI.constants.errorAlphaInvalid());
                         alphaTextBox.setText(alpha);
                     }
-                    for(StudyDesignChangeListener listener: listeners) listener.onAlpha(alpha);
                 }
         });
         
@@ -97,7 +93,6 @@ implements ChangeHandler, StudyDesignChangeListener
                         displayError(mu0ErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
                         mu0TextBox.setText(mu0);
                     }      
-                    for(StudyDesignChangeListener listener: listeners) listener.onBeta(0,0,mu0);
                 }
         });
         
@@ -117,7 +112,6 @@ implements ChangeHandler, StudyDesignChangeListener
                         displayError(muAErrorHTML, PowerCalculatorGUI.constants.errorMeanInvalid());
                         muATextBox.setText(muA);
                     }    
-                    for(StudyDesignChangeListener listener: listeners) listener.onBeta(1,0,muA);
                 }
         });
         
@@ -137,7 +131,6 @@ implements ChangeHandler, StudyDesignChangeListener
                         displayError(sigmaErrorHTML,PowerCalculatorGUI.constants.errorVarianceInvalid());
                         sigmaTextBox.setText("");
                     }      
-                    for(StudyDesignChangeListener listener: listeners) listener.onSigmaError(0,0,sigma);
 
                 }
         });
@@ -342,11 +335,6 @@ implements ChangeHandler, StudyDesignChangeListener
         widget.setHTML(msg);
     }
     
-    /*** functions to coordinate between matrix and design view panels ***/
-    public void addStudyDesignChangeListener(StudyDesignChangeListener listener)
-    {
-        listeners.add(listener);
-    }
     
     public void onAlpha(String alpha)
     {

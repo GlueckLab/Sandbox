@@ -1,7 +1,5 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
-import java.util.ArrayList;
-
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
@@ -22,7 +20,6 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
-import edu.cudenver.bios.powercalculator.client.listener.StudyDesignChangeListener;
 
 public class MatrixPanel extends Composite
 {
@@ -85,10 +82,7 @@ public class MatrixPanel extends Composite
 	
     // build the advanced options panel
     AdvancedLinearModelOptionsPanel advOpts = new AdvancedLinearModelOptionsPanel();
-    
-    // synchronization listener with deisgn view
-    ArrayList<StudyDesignChangeListener> listeners = new ArrayList<StudyDesignChangeListener>();
-    
+
     // tell wizard this step is complete
     InputWizardStepListener wizard;
     int stepIndex;
@@ -156,7 +150,6 @@ public class MatrixPanel extends Composite
                     alphaTextBox.setText(alpha);
                     wizard.onStepInProgress(stepIndex);
                 }
-                for(StudyDesignChangeListener listener: listeners) listener.onAlpha(alpha);
             }
         });
 		

@@ -41,8 +41,8 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         essence = new ResizableMatrix(name, rows, cols);
         essence.addMatrixResizeListener(this);
 
-        // start with 1:1 ration amongst groups, require at least 2 per group
-        minimumN = 2*rows;
+        // start with 1:1 ratio amongst groups
+        minimumN = rows;
         
         VerticalPanel panel = new VerticalPanel();
                 
@@ -108,13 +108,8 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
     		list.addChangeHandler(new ChangeHandler() {
     			public void onChange(ChangeEvent e)
     			{
-    				minimumN = 0;
-    				for(int r = 0; r < rowMDGrid.getRowCount(); r++)
-    				{
-    					ListBox ratioList = (ListBox) rowMDGrid.getWidget(r, 0);
-    					int ratio = Integer.parseInt(ratioList.getItemText(ratioList.getSelectedIndex()));
-    					minimumN += 2 * ratio;
-    				}
+    				minimumN = calculateMinimumN();
+    				for(MetaDataListener listener: metaDataListeners) listener.onMinimumSampleSize(minimumN);
     			}
     		});
     	}
@@ -130,6 +125,8 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
     public void addMetaDataListener(MetaDataListener listener)
     {
         metaDataListeners.add(listener);
+        // notify of current sample size in case user does not change anything.
+        listener.onMinimumSampleSize(minimumN);
     }
     
     public void loadFromDomNode(Node node)
@@ -242,6 +239,15 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         	{
         		rowMDGrid.setWidget(r, 0, createRowMDTextBox());
         	}
+        	
+        	// calculate the minimum sample size based on ratio of group sizes
+        	minimumN = 0;
+        	for(int r = 0; r < rowMDGrid.getRowCount(); r++) 
+        	{
+        	    ListBox tb = (ListBox) rowMDGrid.getWidget(r, 0);
+        	    minimumN += Integer.parseInt(tb.getItemText(tb.getSelectedIndex()));
+        	}
+        	for(MetaDataListener listener: metaDataListeners) listener.onMinimumSampleSize(minimumN);
     	}
     }
     
@@ -258,5 +264,17 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         		rowMDGrid.setWidget(r, 0, createRowMDTextBox());
         	}
     	}
+    }
+    
+    private int calculateMinimumN()
+    {
+        int minN = 0;
+        for(int r = 0; r < rowMDGrid.getRowCount(); r++)
+        {
+            ListBox ratioList = (ListBox) rowMDGrid.getWidget(r, 0);
+            int ratio = Integer.parseInt(ratioList.getItemText(ratioList.getSelectedIndex()));
+            minN += ratio;
+        }
+        return minN;
     }
 }

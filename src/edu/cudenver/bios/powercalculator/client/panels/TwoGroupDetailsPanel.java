@@ -16,7 +16,7 @@ implements OptionsListener
 {
     private static final String STYLE = "optionsPanel";
 
-    // simple power / sample size options (for basic models such as T-test)
+    // power / sample size options 
     protected HorizontalPanel sampleSizeContainer;
     protected TextBox sampleSizeTextBox = new TextBox();
     protected HorizontalPanel powerContainer;

@@ -2,14 +2,13 @@ package edu.cudenver.bios.powercalculator.client.panels;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
@@ -139,7 +138,8 @@ implements StartListener, ClickHandler
     {
     	matrixXML.setValue("<study mode='" + (isTemplateMode ? "template" : "matrix") + "'>" + 
     			matrixPanel.getStudyXML(0) + "</study>");
+    	Window.alert(matrixXML.getValue());
     	form.submit();    	
     }
-    
+
 }

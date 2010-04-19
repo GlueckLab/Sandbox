@@ -22,6 +22,10 @@ public interface PowerCalculatorConstants extends Constants
     public static final String STYLE_MESSAGE = "message";
     public static final String STYLE_MESSAGE_ERROR = "error";
     public static final String STYLE_MESSAGE_OKAY = "okay";
+    // error / okay message style
+    public static final String MESSAGE_STYLE = "message";
+    public static final String ERROR_STYLE = "error";
+    public static final String OKAY_STYLE = "okay";
     
 	// wizard navigation button labels
 	public String buttonNext();
@@ -106,6 +110,8 @@ public interface PowerCalculatorConstants extends Constants
 	public String errorAlphaInvalid();
 	public String errorMeanInvalid();
 	public String errorVarianceInvalid();
+	public String errorPowerInvalid();
+	public String errorSampleSizeInvalid();
 	
 	// ok messages
 	public String okay();
