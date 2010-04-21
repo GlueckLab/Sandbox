@@ -161,7 +161,10 @@ public class MatrixPanel extends Composite
 		// add listeners to ensure matrix conformance when each 
 		// matrix changes
 		essence.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onRows(int rows) {}
+			public void onRows(int rows) 
+			{
+			    betweenContrast.setRowDimension(rows-1);
+			}
 			public void onColumns(int cols)
 			{
 				beta.setRowDimension(cols);

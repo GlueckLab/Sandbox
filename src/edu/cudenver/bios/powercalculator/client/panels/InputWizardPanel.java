@@ -284,6 +284,7 @@ StartListener, InputWizardStepListener
         buffer.append("<params " + studyDesignPanel.getStudyAttributes() + ">");
         buffer.append(studyDesignPanel.getStudyXML(-1)); 
         buffer.append("</params></power>");
+        Window.alert(buffer.toString());
         return buffer.toString();
     }
     
@@ -294,7 +295,6 @@ StartListener, InputWizardStepListener
 		buffer.append("<params " + studyDesignPanel.getStudyAttributes() + ">");
 		buffer.append(studyDesignPanel.getStudyXML(optionsPanel.getSampleSize())); // TODO FIX ME
 		buffer.append("</params></power>");
-        Window.alert(buffer.toString());
     	return buffer.toString();
     }
     
@@ -306,7 +306,6 @@ StartListener, InputWizardStepListener
                 optionsPanel.getSampleSizeAttributes() + ">");
         buffer.append(studyDesignPanel.getStudyXML(-1)); 
         buffer.append("</params></sampleSize>");
-        Window.alert(buffer.toString());
         return buffer.toString();
     }
     

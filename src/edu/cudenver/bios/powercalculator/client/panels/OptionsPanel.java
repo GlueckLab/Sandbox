@@ -280,7 +280,7 @@ implements MetaDataListener, ClickHandler
 //                buffer.append("width='" + curveWidth.getText() + "' ");
 //            if (!curveHeight.getText().isEmpty())
 //                buffer.append("height='" + curveHeight.getText() + "' ");
-//            buffer.append("/>");  
+            buffer.append("/>");  
             return buffer.toString();
         }
         else

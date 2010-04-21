@@ -138,7 +138,6 @@ implements StartListener, ClickHandler
     {
     	matrixXML.setValue("<study mode='" + (isTemplateMode ? "template" : "matrix") + "'>" + 
     			matrixPanel.getStudyXML(0) + "</study>");
-    	Window.alert(matrixXML.getValue());
     	form.submit();    	
     }
 

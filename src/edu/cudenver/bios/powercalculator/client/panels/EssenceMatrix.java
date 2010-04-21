@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
-import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
@@ -189,7 +188,6 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         buffer.append(rowMetaDataToXML(totalN));
         buffer.append(essence.toXML());
         buffer.append("</essenceMatrix>");
-        Window.alert(buffer.toString());
         return buffer.toString();
     }
         
@@ -205,7 +203,8 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
             ListBox ratioList = (ListBox) rowMDGrid.getWidget(r, 0);
             int ratio = Integer.parseInt(ratioList.getItemText(ratioList.getSelectedIndex()));
             buffer.append("<r ratio='" + ratio + "' ");
-            if (nMultiplier > 0) buffer.append(" reps='" + ratio*nMultiplier + "' ");
+            int reps = (nMultiplier > 0 ? ratio*nMultiplier : ratio);
+            buffer.append(" reps='" + reps + "' ");
             buffer.append("></r>");
         }
         buffer.append("</rowMetaData>");

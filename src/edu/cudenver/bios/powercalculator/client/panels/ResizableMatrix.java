@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -63,6 +64,7 @@ public class ResizableMatrix extends Composite
 				}
 				catch (NumberFormatException nfe)
 				{
+				    Window.alert("invalid value: " + rowTextBox.getText() + ", " + nfe.getMessage());
 					rowTextBox.setText(Integer.toString(matrixData.getRowCount()));
 				}
 			}
@@ -130,12 +132,16 @@ public class ResizableMatrix extends Composite
 	
 	public void setRowDimension(int newRows)
 	{
-		if (newRows > MIN_ROW_COL && newRows <= MAX_ROWS)
+		if (newRows >= MIN_ROW_COL && newRows <= MAX_ROWS)
 		{
 			int oldRows = matrixData.getRowCount();
 			if (oldRows != newRows)
 			{
-				matrixData.resizeRows(newRows);
+			    
+	             if (isSquare)
+	                    matrixData.resize(newRows, newRows);
+	                else
+	                    matrixData.resizeRows(newRows);
 				if (newRows > oldRows)
 				{
 					for(int r = oldRows; r < newRows; r++) fillRow(r, DEFAULT_VALUE, true);
@@ -149,17 +155,22 @@ public class ResizableMatrix extends Composite
 		}
 		
 		rowTextBox.setText(Integer.toString(matrixData.getRowCount()));
-		if (isSquare) setColumnDimension(newRows);
+        if (isSquare) columnTextBox.setText(Integer.toString(matrixData.getColumnCount()));
+
 	}
 	
 	public void setColumnDimension(int newCols)
 	{
-		if (newCols > MIN_ROW_COL && newCols <= MAX_COLS)
+		if (newCols >= MIN_ROW_COL && newCols <= MAX_COLS)
 		{
 			int oldCols = matrixData.getColumnCount();
 			if (oldCols != newCols)
 			{
-				matrixData.resizeColumns(newCols);
+			    if (isSquare)
+			        matrixData.resize(newCols, newCols);
+			    else
+			        matrixData.resizeColumns(newCols);
+			    
 				if (newCols > oldCols)
 				{
 					for(int c = oldCols; c < newCols; c++) fillColumn(c, DEFAULT_VALUE, true);
@@ -172,7 +183,7 @@ public class ResizableMatrix extends Composite
 			}
 			
 			columnTextBox.setText(Integer.toString(matrixData.getColumnCount()));
-			if (isSquare) setRowDimension(newCols);
+			if (isSquare) rowTextBox.setText(Integer.toString(matrixData.getRowCount()));
 		}
 
 	}
