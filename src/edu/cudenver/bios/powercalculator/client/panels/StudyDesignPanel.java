@@ -24,7 +24,7 @@ import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 public class StudyDesignPanel extends Composite
 implements StartListener, ClickHandler
 {
-	private static final String SAVEAS_URL = "/restcall/file/saveas"; 
+	private static final String SAVEAS_URL = "/webapps/file/saveas"; 
 	private static final int MATRIX_MODE = 0;
 	private static final int TEMPLATE_MODE = 1;
 	

@@ -31,9 +31,9 @@ StartListener, InputWizardStepListener
 
 	private static final int STATUS_CODE_OK = 200;
 	private static final int STATUS_CODE_CREATED = 201;
-	private static final String POWER_URL = "/restcall/power/power";
-    private static final String SAMPLE_SIZE_URL = "/restcall/power/samplesize";
-	private static final String POWER_CURVE_URL = "/restcall/power/curve";
+	private static final String POWER_URL = "/webapps/power/power";
+    private static final String SAMPLE_SIZE_URL = "/webapps/power/samplesize";
+	private static final String POWER_CURVE_URL = "/webapps/power/curve";
 	
 	protected static final String STYLE = "wizardPanel";
 
