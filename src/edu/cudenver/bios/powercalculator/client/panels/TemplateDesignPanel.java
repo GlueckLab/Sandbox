@@ -1,5 +1,7 @@
 package edu.cudenver.bios.powercalculator.client.panels;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -20,8 +22,15 @@ import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener
 
 public class TemplateDesignPanel extends Composite
 {
-    private static final int MAX_OUTCOMES = 50;
-    private static final String OUTCOME_RADIO_GROUP = "outcomeRb";
+	// styles for the variable entry tables
+	private static final String STYLE_TABLE_PANEL = "variableTablePanel";
+	private static final String STYLE_TABLE_COLUMN_HEADER = "variableTableColumnHeader";
+	private static final String STYLE_TABLE_ADDBAR = "variableTableAddBar";
+	private static final String STYLE_ROW = "variableTableRow";
+	private static final String STYLE_ROW_ODD = "variableTableRow-odd";
+	private static final String STYLE_ROW_EVEN = "variableTableRow-even";
+
+	private static final int MAX_CATEGORIES = 10;
     // sub panel headers
     protected SubpanelHeader outcomesHeader = new SubpanelHeader("Dependent Variables / Outcomes", 
             "stuff you measued");
@@ -30,93 +39,163 @@ public class TemplateDesignPanel extends Composite
     protected SubpanelHeader hypothesesHeader = new SubpanelHeader("Comparisons / Hypotheses", 
     "stuff you want to know");
     
+    protected ListBox numCategories = new ListBox();
     protected ListBox numOutcomesListbox = new ListBox();
     protected ListBox numRepeatedListBox = new ListBox();
     protected ListBox numPredictorsListbox = new ListBox();
     protected CheckBox covariateCheckBox = new CheckBox();
     
     protected TextBox predictorInputTextBox = new TextBox();
-    
+    protected TextBox outcomesInputTextBox = new TextBox();
     protected FlexTable predictorTable = new FlexTable();
+    protected FlexTable outcomesTable = new FlexTable();
+    
+    protected Button predictorAddButton = new Button("Add");
+    protected Button outcomesAddButton = new Button("Add");
     
     public TemplateDesignPanel(InputWizardStepListener w, int idx)
     {
         VerticalPanel panel = new VerticalPanel();
-        
-        // 
+
         panel.add(createOutcomesPanel());
         panel.add(createPredictorsPanel());
         panel.add(createHypothesisPanel());
-        
-        
-        // hypothesis panel
-        
-        
-        
-        panel.add(createHypothesisPanel());
-        
+
         initWidget(panel);
     }
     
     public VerticalPanel createOutcomesPanel()
     {
         VerticalPanel panel = new VerticalPanel();
-        panel.add(outcomesHeader);
-
-        Grid grid = new Grid(2,2);
-        grid.setWidget(0,0,new HTML("How many outcomes did you measure?"));
-        grid.setWidget(0,1,numOutcomesListbox);
-        for(int i = 1; i <= MAX_OUTCOMES; i++)
-        {
-            numOutcomesListbox.addItem(Integer.toString(i));
-        }
-        grid.setWidget(1, 0, new HTML("How many times was this set of measurements repeated for each subject?"));
-        grid.setWidget(1, 1, numRepeatedListBox);
-        for(int i = 1; i <= MAX_OUTCOMES; i++)
-        {
-            numRepeatedListBox.addItem(Integer.toString(i));
-        }
+                
+        // create the dynamic table for entering predictors
+        VerticalPanel outcomesTablePanel = new VerticalPanel();
         
-        panel.add(grid);
+        // create the input bar
+        HorizontalPanel addBar = new HorizontalPanel();
+        
+        // layout the input bar       
+        addBar.add(new HTML("Outcome: "));
+        addBar.add(outcomesInputTextBox);
+        // button to add outcome information to the display table
+        addBar.add(new Button("Add", new ClickHandler() {
+            public void onClick(ClickEvent e)
+            {
+                int rows = outcomesTable.getRowCount();
+                outcomesTable.setWidget(rows, 0, new HTML(outcomesInputTextBox.getText()));
+                outcomesTable.setWidget(rows, 1, new Button("x", new ClickHandler() {
+                    public void onClick(ClickEvent ce)
+                    {
+                        for(int i = 2; i < outcomesTable.getRowCount(); i++)
+                        {
+                            if (ce.getSource() == outcomesTable.getWidget(i, 1))
+                            {
+                            	outcomesTable.removeRow(i);
+                            	break;
+                            }
+                        }
+                   }
+                }));
+                // style the newly added row
+                outcomesTable.getRowFormatter().setStylePrimaryName(rows, (rows % 2 == 0 ? STYLE_ROW_EVEN : STYLE_ROW_ODD));
+            }
+        }));
+        // layout the table panel
+        outcomesTable.setWidget(0, 0, addBar);
+        outcomesTable.getFlexCellFormatter().setColSpan(0, 0, 2);   
+        // add column headers
+        outcomesTable.setWidget(1,0,new HTML("Name"));
+        outcomesTable.setWidget(1,1,new HTML(""));
+        // add to the table panel
+        outcomesTablePanel.add(outcomesTable);
+
+        // set style
+        outcomesTablePanel.setStyleName(STYLE_TABLE_PANEL);
+        addBar.setStyleName(STYLE_TABLE_ADDBAR);
+        outcomesTable.getRowFormatter().setStylePrimaryName(1, STYLE_TABLE_COLUMN_HEADER);
+
+        // layout the overall subpanel
+        panel.add(outcomesHeader);
+        panel.add(new HTML("Please enter the outcomes (dependent variables) you measured."));
+        panel.add(outcomesTablePanel);
+
         return panel;
     }
     
     public VerticalPanel createPredictorsPanel()
     {
         VerticalPanel panel = new VerticalPanel();
-
-        final ListBox numCategories = new ListBox();
-        for(int i = 1; i <= 10; i++) numCategories.addItem(Integer.toString(i));
         
+        // create the dynamic table for entering predictors
+        VerticalPanel predictorTablePanel = new VerticalPanel();
+
+        // create the input bar
         HorizontalPanel addBar = new HorizontalPanel();
-        addBar.add(new HTML("Predictor Name: "));
+        
+        // create the categories drop down, and only allow adding of variables when 
+        // an appropriate number of categories is selected
+        numCategories.addItem("# Categories");
+        for(int i = 1; i <= MAX_CATEGORIES; i++) numCategories.addItem(Integer.toString(i));
+        numCategories.addChangeHandler(new ChangeHandler() {
+        	public void onChange(ChangeEvent e)
+        	{
+        		predictorAddButton.setEnabled(numCategories.getSelectedIndex() != 0);
+        	}
+        });
+        
+        // layout the input bar
+        addBar.add(new HTML("Predictor: "));
         addBar.add(predictorInputTextBox);
-        addBar.add(new HTML("Number of categories: "));
         addBar.add(numCategories);
-        addBar.add(new Button("Add", new ClickHandler() {
+        addBar.add(predictorAddButton);
+
+        // disable the add button to start
+        predictorAddButton.setEnabled(false);
+        // add predictor information to the display table when add button is clicked
+        predictorAddButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent e)
             {
                 int rows = predictorTable.getRowCount();
                 predictorTable.setWidget(rows, 0, new HTML(predictorInputTextBox.getText()));
                 predictorTable.setWidget(rows, 1, new HTML(numCategories.getItemText(numCategories.getSelectedIndex())));
-                predictorTable.setWidget(rows, 2, new Button("remove", new ClickHandler() {
+                predictorTable.setWidget(rows, 2, new Button("x", new ClickHandler() {
                     public void onClick(ClickEvent ce)
                     {
-                        for(int i = 1; i < predictorTable.getRowCount(); i++)
+                        for(int i = 2; i < predictorTable.getRowCount(); i++)
                         {
                             if (ce.getSource() == predictorTable.getWidget(i, 2))
                             {
                                 predictorTable.removeRow(i);
+                                break;
+                                // TODO: reset the coloring?
                             }
                         }
                     }
                 }));
+                // style the newly added row
+                predictorTable.getRowFormatter().setStylePrimaryName(rows, (rows % 2 == 0 ? STYLE_ROW_EVEN : STYLE_ROW_ODD));
             }
-        }));
+        });
+        
+        // layout the predictor input table 
         predictorTable.setWidget(0, 0, addBar);
-        predictorTable.getFlexCellFormatter().setColSpan(0, 0, 3);    
+        predictorTable.getFlexCellFormatter().setColSpan(0, 0, 3);   
+        // add column headers
+        predictorTable.setWidget(1,0,new HTML("Name"));
+        predictorTable.setWidget(1,1,new HTML("# Categories"));
+        predictorTable.setWidget(1,2,new HTML(""));
+        // add table to its container
+        predictorTablePanel.add(predictorTable);
+        
+        // set style
+        predictorTablePanel.setStyleName(STYLE_TABLE_PANEL);
+        addBar.setStyleName(STYLE_TABLE_ADDBAR);
+        predictorTable.getRowFormatter().setStylePrimaryName(1, STYLE_TABLE_COLUMN_HEADER);
+
+        // layout the predictor subpanel
         panel.add(predictorsHeader);
-        panel.add(predictorTable);
+        panel.add(new HTML("Please enter any fixed predictors and the number of possible values for each predictor."));
+        panel.add(predictorTablePanel);
         
         return panel;
     }
