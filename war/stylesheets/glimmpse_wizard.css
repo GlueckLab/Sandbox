@@ -74,6 +74,10 @@
 .wizardStepPanel {
 }
 
+.wizardStepPanel-subpanel {
+	width: 100%;
+}
+
 .wizardStepInputContainer {
 	padding: 10px;
 	margin: 0px 20px;	
@@ -102,8 +106,9 @@
 }
 
 .wizardStepHelp-subpanel {
-	border-bottom: 1px dotted blue;
-	color: blue;	
+	background: url(../images/info.png) no-repeat 6px 10px;
+	width: 32px;
+	height: 32px;
 }
 
 .wizardStepButton {
@@ -277,4 +282,50 @@
 	height: 320px;
 	width: 320px;
 	overflow: hidden;
+}
+
+.variableTablePanel {
+	border: 1px outset #14f;
+	background: #E0ECF8;
+	padding: 5px;
+}
+
+.variableTableColumnHeader {
+	color: black;
+	font-weight: bold;
+}
+
+.variableTableAddBar {
+	color: black;
+	font-weight: bold;
+	border-bottom: 1px dotted #000;
+	padding: 5px 5px;
+}
+
+.variableTableAddBar .gwt-TextBox {
+	margin-left: 5px;
+	width: 100px;
+	height: 24px;
+}
+
+.variableTableAddBar .gwt-ListBox {
+	margin-left: 5px;
+	height: 24px;
+}
+
+.variableTableAddBar .gwt-Button {
+	margin-left: 5px;
+	height: 24px;
+}
+
+
+.variableTableRow {
+}
+
+.variableTableRow-odd {
+	background: #fff;
+}
+
+.variableTableRow-even {
+	background: #fff;
 }
