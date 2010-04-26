@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 
+import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 
 public class TemplateDesignPanel extends Composite
@@ -31,6 +32,7 @@ public class TemplateDesignPanel extends Composite
 	private static final String STYLE_ROW_EVEN = "variableTableRow-even";
 
 	private static final int MAX_CATEGORIES = 10;
+	private static final int MAX_REPEATED_MEASURES = 30;
     // sub panel headers
     protected SubpanelHeader outcomesHeader = new SubpanelHeader("Dependent Variables / Outcomes", 
             "stuff you measued");
@@ -109,16 +111,25 @@ public class TemplateDesignPanel extends Composite
         // add to the table panel
         outcomesTablePanel.add(outcomesTable);
 
+        // create the repeated measures panel
+        HorizontalPanel repeatPanel = new HorizontalPanel();
+        repeatPanel.add(new HTML("How many times was the above set of outcomes repeated for each subject?"));
+        repeatPanel.add(numRepeatedListBox);
+        // fill the repeated list box
+        for(int i = 0; i < MAX_REPEATED_MEASURES; i++) 
+            numRepeatedListBox.addItem(Integer.toString(i));
+        
         // set style
         outcomesTablePanel.setStyleName(STYLE_TABLE_PANEL);
         addBar.setStyleName(STYLE_TABLE_ADDBAR);
         outcomesTable.getRowFormatter().setStylePrimaryName(1, STYLE_TABLE_COLUMN_HEADER);
-
+        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
         // layout the overall subpanel
         panel.add(outcomesHeader);
         panel.add(new HTML("Please enter the outcomes (dependent variables) you measured."));
         panel.add(outcomesTablePanel);
-
+        panel.add(repeatPanel);
         return panel;
     }
     

@@ -16,7 +16,7 @@ public class SubpanelHeader extends Composite
     protected PopupPanel detailsPanel = null;
     protected HTML detailsHTML;
     protected HTML headerHTML;
-    protected HTML helpHTML = new HTML("?");
+    protected HTML helpHTML = new HTML();
     
     public SubpanelHeader(String title, String details)
     {
@@ -51,8 +51,8 @@ public class SubpanelHeader extends Composite
         headerHTML.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
         helpHTML.setStyleName("wizardStepHelp");
         helpHTML.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);
-        panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
-        panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);        
+        //panel.setStyleName(PowerCalculatorConstants.STYLE_WIZARD_STEP_PANEL);
+        //panel.addStyleDependentName(PowerCalculatorConstants.STYLE_WIZARD_STEP_SUBPANEL);        
 
         initWidget(panel);
     }
