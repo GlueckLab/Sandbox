@@ -66,7 +66,7 @@ public class MatrixPanel extends Composite
 	protected ResizableMatrix sigmaError = new ResizableMatrix("sigmaError", DEFAULT_P, DEFAULT_P);
 	/* the following are needed for a baseline covariate */
 	// variance of the baseline covariate
-	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaGaussianRandom", DEFAULT_P, DEFAULT_P);
+	protected ResizableMatrix sigmaCovariate = new ResizableMatrix("sigmaGaussianRandom", 1, 1);
 	// variance/covariance of the outcomes
 	protected ResizableMatrix sigmaOutcomes = new ResizableMatrix("sigmaOutcome", DEFAULT_P, DEFAULT_P);
 	// correlation of covariate and outcomes
@@ -163,7 +163,8 @@ public class MatrixPanel extends Composite
 		essence.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onRows(int rows) 
 			{
-			    betweenContrast.setRowDimension(rows-1);
+			    if (betweenContrast.getRowDimension() >= rows)
+			        betweenContrast.setRowDimension(rows-1);
 			}
 			public void onColumns(int cols)
 			{
@@ -185,58 +186,113 @@ public class MatrixPanel extends Composite
 			
 			public void onMinimumSampleSize(int minN) {}
 		});
+		beta.addMatrixResizeListener(new MatrixResizeListener() {
+		    public void onRows(int rows)
+		    {
+		        essence.setColumnDimension(rows);
+		        betweenContrast.setColumnDimension(rows);
+		    }
+		    public void onColumns(int cols)
+		    {
+		        withinContrast.setRowDimension(cols);
+		    }
+		});
 		betweenContrast.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onRows(int rows)
 			{
+			    if (rows >= essence.getRowDimension())
+			    {
+			        essence.setRowDimension(rows+1);
+			    }
 				thetaNull.setRowDimension(rows);
 			}
 			public void onColumns(int cols)
 			{
 				beta.setRowDimension(cols);
+				essence.setColumnDimension(cols);
 			}
 		});
 		withinContrast.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onRows(int rows)
 			{
-				sigmaError.setRowDimension(rows);
 				beta.setColumnDimension(rows);
 			}
 			public void onColumns(int cols)
 			{
+			    sigmaError.setRowDimension(cols);
+			    sigmaOutcomes.setRowDimension(cols);
+			    sigmaCovariateOutcome.setRowDimension(cols);
 				thetaNull.setColumnDimension(cols);
 			}
 		});
-		beta.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onRows(int rows)
-			{
-				essence.setColumnDimension(rows);
-				betweenContrast.setColumnDimension(rows);
-			}
-			public void onColumns(int cols)
-			{
-				withinContrast.setRowDimension(cols);
-			}
-		});
+        thetaNull.addMatrixResizeListener(new MatrixResizeListener() {
+            public void onRows(int rows)
+            {
+                betweenContrast.setRowDimension(rows);
+                if (rows >= essence.getRowDimension())
+                {
+                    essence.setRowDimension(rows+1);
+                }
+            }
+            public void onColumns(int cols)
+            {
+                withinContrast.setColumnDimension(cols);
+                sigmaError.setRowDimension(cols);
+                sigmaOutcomes.setRowDimension(cols);
+                sigmaCovariateOutcome.setRowDimension(cols);
+            }
+        });
 		// make sure sigma and within subject contrast (U) conform
 		sigmaError.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onRows(int rows)
 			{
-				withinContrast.setRowDimension(rows);
-				beta.setColumnDimension(rows);
+				withinContrast.setColumnDimension(rows);
+                sigmaOutcomes.setRowDimension(rows);
+                sigmaCovariateOutcome.setRowDimension(rows);
+                thetaNull.setColumnDimension(rows);
 			}
-			public void onColumns(int cols) {}
-		});
-		thetaNull.addMatrixResizeListener(new MatrixResizeListener() {
-			public void onRows(int rows)
+			public void onColumns(int cols) 
 			{
-				betweenContrast.setRowDimension(rows);
-			}
-			public void onColumns(int cols)
-			{
-				withinContrast.setColumnDimension(cols);
+			    withinContrast.setColumnDimension(cols);
+			    sigmaOutcomes.setRowDimension(cols);
+			    sigmaCovariateOutcome.setRowDimension(cols);
+			    thetaNull.setColumnDimension(cols);
 			}
 		});
-
+		sigmaCovariateOutcome.addMatrixResizeListener(new MatrixResizeListener() {
+            public void onRows(int rows)
+            {
+                withinContrast.setColumnDimension(rows);
+                sigmaOutcomes.setRowDimension(rows);
+                sigmaError.setRowDimension(rows);
+                thetaNull.setColumnDimension(rows);
+            }
+            public void onColumns(int cols) 
+            {
+                withinContrast.setColumnDimension(cols);
+                sigmaOutcomes.setRowDimension(cols);
+                sigmaError.setRowDimension(cols);
+                thetaNull.setColumnDimension(cols);
+            }
+        });
+		sigmaOutcomes.addMatrixResizeListener(new MatrixResizeListener() {
+            public void onRows(int rows)
+            {
+                withinContrast.setColumnDimension(rows);
+                sigmaError.setRowDimension(rows);
+                sigmaCovariateOutcome.setRowDimension(rows);
+                thetaNull.setColumnDimension(rows);
+            }
+            public void onColumns(int cols) 
+            {
+                withinContrast.setColumnDimension(cols);
+                sigmaError.setRowDimension(cols);
+                sigmaCovariateOutcome.setRowDimension(cols);
+                thetaNull.setColumnDimension(cols);
+            }
+        });
+		
+		
 		// set style
 		panel.setStyleName(STYLE);
 		
