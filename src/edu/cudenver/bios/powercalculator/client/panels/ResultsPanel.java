@@ -195,4 +195,8 @@ public class ResultsPanel extends Composite implements OptionsListener
             deck.showWidget(SAMPLE_SIZE_INDEX);
     }
 
+    public void reset()
+    {
+        
+    }
 }

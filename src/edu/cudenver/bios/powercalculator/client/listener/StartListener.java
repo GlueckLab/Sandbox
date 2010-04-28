@@ -8,5 +8,5 @@ public interface StartListener
 	
 	public void onMatrixMode();
 	
-    public void onStudyUpload(Document doc, String modelName);
+    public void onStudyUpload(Document doc, String mode);
 }

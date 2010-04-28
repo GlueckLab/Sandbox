@@ -144,8 +144,11 @@ public class ResizableMatrix extends Composite
 	                    matrixData.resizeRows(newRows);
 				if (newRows > oldRows)
 				{
+				    if (isSquare) 
+				        for(int c = oldRows; c < newRows; c++) fillColumn(c, DEFAULT_VALUE, true);
 					for(int r = oldRows; r < newRows; r++) fillRow(r, DEFAULT_VALUE, true);
 					if (hasCovariateRow)  fillRow(oldRows-1, DEFAULT_VALUE, true);
+
 				} 
 				if (hasCovariateRow) 
 				{
@@ -173,6 +176,8 @@ public class ResizableMatrix extends Composite
 			    
 				if (newCols > oldCols)
 				{
+                    if (isSquare) 
+                        for(int r = oldCols; r < oldCols; r++) fillRow(r, DEFAULT_VALUE, true);
 					for(int c = oldCols; c < newCols; c++) fillColumn(c, DEFAULT_VALUE, true);
 					if (hasCovariateColumn) fillColumn(oldCols-1, DEFAULT_VALUE, true);
 				} 
@@ -284,6 +289,8 @@ public class ResizableMatrix extends Composite
         	int rows = Integer.parseInt(rowNode.getNodeValue());
         	int cols = Integer.parseInt(colNode.getNodeValue());
         	matrixData.resize(rows, cols);
+        	rowTextBox.setText(rowNode.getNodeValue());
+        	columnTextBox.setText(colNode.getNodeValue());
         	
             NodeList rowNodeList = matrixNode.getChildNodes();
             for(int r = 0; r < rowNodeList.getLength(); r++)
@@ -343,5 +350,16 @@ public class ResizableMatrix extends Composite
     	}
     	this.hasCovariateRow = hasCovariateRow;
 		rowTextBox.setText(Integer.toString(matrixData.getRowCount()));
+    }
+    
+    public void reset(int newRows, int newColumns)
+    {
+        matrixData.resize(newRows, newColumns);
+        rowTextBox.setText(Integer.toString(newRows));
+        columnTextBox.setText(Integer.toString(newColumns));
+        for(int r = 0; r < matrixData.getRowCount(); r++)
+        {
+            fillRow(r, DEFAULT_VALUE, true);
+        }
     }
 }

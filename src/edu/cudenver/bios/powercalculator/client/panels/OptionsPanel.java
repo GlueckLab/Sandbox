@@ -319,4 +319,24 @@ implements MetaDataListener, ClickHandler
     {
         return Integer.parseInt(sampleSizeTextBox.getText());
     }
+    
+    public void reset()
+    {
+        // select solve for power by default
+        powerRb.setValue(true);
+        notifyOnSolvingFor(true);
+
+        // clear power/sample size options
+        sampleSizeTextBox.setText("");
+        powerTextBox.setText("");
+        
+        // reset curve options
+        showCurveCheckBox.setValue(false);
+        curveTitleTextBox.setText("");
+        curveXAxisLabel.setText("");
+        curveYAxisLabel.setText("");
+        curveWidth.setText("");
+        curveHeight.setText("");
+        notifyOnShowCurve(false);
+    }
 }

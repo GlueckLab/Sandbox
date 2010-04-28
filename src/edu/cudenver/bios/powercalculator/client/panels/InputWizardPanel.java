@@ -89,30 +89,7 @@ StartListener, InputWizardStepListener
         // create a wait dialog
         waitDialog = createWaitDialog();
         
-        
         // add the widgets to the stack of wizard panels
-        // NOTE: order matters here - must match stack index constants
-//        String uploadStudy = Window.Location.getParameter(UPLOAD_PARAM);
-//        if (uploadStudy != null && uploadStudy.equals("1"))
-//        {
-//        	existingStudyPanel = new UploadPanel();
-//            panelStack.add(existingStudyPanel);
-//            
-//            // upload panel notifies study design panel when study is uploaded
-//            existingStudyPanel.addStudyUploadListener(this);
-//            existingStudyPanel.addStudyUploadListener(studyDesignPanel);
-//            existingStudyPanel.addStudyUploadListener(optionsPanel);
-//        }
-//        else
-//        {
-//        	newStudyPanel = new CreateNewStudyPanel();
-//            panelStack.add(newStudyPanel);
-//            
-//            // listen for model name changes from the create study panel
-//            newStudyPanel.addModelSelectListener(this);
-//            newStudyPanel.addModelSelectListener(studyDesignPanel);
-//            newStudyPanel.addModelSelectListener(optionsPanel);
-//        }
         panelStack.add(startPanel);
         panelStack.add(studyDesignPanel);
         panelStack.add(optionsPanel);
@@ -202,7 +179,6 @@ StartListener, InputWizardStepListener
         default:
             break;
         };
-        
         stepsLeftPanel.onNext();
     }
     
@@ -211,6 +187,12 @@ StartListener, InputWizardStepListener
         updateStep(PANEL_STACK_START, false, true, true);
         stepsLeftPanel.onCancel();
         navPanel.setVisible(false);
+        
+        // reset all of the subpanels
+        startPanel.reset();
+        studyDesignPanel.reset();
+        optionsPanel.reset();
+        resultsPanel.reset();
     }
     
     public void addNavigationListener(NavigationListener listener)
@@ -329,14 +311,6 @@ StartListener, InputWizardStepListener
     {
         solveForPower = power;
     }
-   
-
-    
-    public void onStudyUpload(Document doc, String modelName)
-    {
-        onModelSelect(modelName);
-        this.onNext();
-    }
     
     public void onModelSelect(String modelName)
     {
@@ -371,8 +345,8 @@ StartListener, InputWizardStepListener
         onNext();
     }
     
-    public void onStudyUpload()
+    public void onStudyUpload(Document doc, String mode)
     {
-        
+        onNext();
     }
 }

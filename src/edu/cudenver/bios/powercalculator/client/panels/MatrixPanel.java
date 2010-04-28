@@ -164,7 +164,10 @@ public class MatrixPanel extends Composite
 			public void onRows(int rows) 
 			{
 			    if (betweenContrast.getRowDimension() >= rows)
+			    {
 			        betweenContrast.setRowDimension(rows-1);
+			        thetaNull.setRowDimension(rows-1);
+			    }
 			}
 			public void onColumns(int cols)
 			{
@@ -195,6 +198,9 @@ public class MatrixPanel extends Composite
 		    public void onColumns(int cols)
 		    {
 		        withinContrast.setRowDimension(cols);
+		        sigmaError.setRowDimension(cols);
+		        sigmaOutcomes.setRowDimension(cols);
+		        sigmaCovariateOutcome.setRowDimension(cols);
 		    }
 		});
 		betweenContrast.addMatrixResizeListener(new MatrixResizeListener() {
@@ -216,13 +222,13 @@ public class MatrixPanel extends Composite
 			public void onRows(int rows)
 			{
 				beta.setColumnDimension(rows);
+                sigmaError.setRowDimension(rows);
+                sigmaOutcomes.setRowDimension(rows);
+                sigmaCovariateOutcome.setRowDimension(rows);
 			}
 			public void onColumns(int cols)
 			{
-			    sigmaError.setRowDimension(cols);
-			    sigmaOutcomes.setRowDimension(cols);
-			    sigmaCovariateOutcome.setRowDimension(cols);
-				thetaNull.setColumnDimension(cols);
+                thetaNull.setColumnDimension(cols);
 			}
 		});
         thetaNull.addMatrixResizeListener(new MatrixResizeListener() {
@@ -237,9 +243,6 @@ public class MatrixPanel extends Composite
             public void onColumns(int cols)
             {
                 withinContrast.setColumnDimension(cols);
-                sigmaError.setRowDimension(cols);
-                sigmaOutcomes.setRowDimension(cols);
-                sigmaCovariateOutcome.setRowDimension(cols);
             }
         });
 		// make sure sigma and within subject contrast (U) conform
@@ -249,14 +252,14 @@ public class MatrixPanel extends Composite
 				withinContrast.setColumnDimension(rows);
                 sigmaOutcomes.setRowDimension(rows);
                 sigmaCovariateOutcome.setRowDimension(rows);
-                thetaNull.setColumnDimension(rows);
+                beta.setColumnDimension(rows);
 			}
 			public void onColumns(int cols) 
 			{
 			    withinContrast.setColumnDimension(cols);
 			    sigmaOutcomes.setRowDimension(cols);
 			    sigmaCovariateOutcome.setRowDimension(cols);
-			    thetaNull.setColumnDimension(cols);
+			    beta.setColumnDimension(cols);
 			}
 		});
 		sigmaCovariateOutcome.addMatrixResizeListener(new MatrixResizeListener() {
@@ -265,14 +268,14 @@ public class MatrixPanel extends Composite
                 withinContrast.setColumnDimension(rows);
                 sigmaOutcomes.setRowDimension(rows);
                 sigmaError.setRowDimension(rows);
-                thetaNull.setColumnDimension(rows);
+                beta.setColumnDimension(rows);
             }
             public void onColumns(int cols) 
             {
                 withinContrast.setColumnDimension(cols);
                 sigmaOutcomes.setRowDimension(cols);
                 sigmaError.setRowDimension(cols);
-                thetaNull.setColumnDimension(cols);
+                beta.setColumnDimension(cols);
             }
         });
 		sigmaOutcomes.addMatrixResizeListener(new MatrixResizeListener() {
@@ -281,14 +284,14 @@ public class MatrixPanel extends Composite
                 withinContrast.setColumnDimension(rows);
                 sigmaError.setRowDimension(rows);
                 sigmaCovariateOutcome.setRowDimension(rows);
-                thetaNull.setColumnDimension(rows);
+                beta.setColumnDimension(rows);
             }
             public void onColumns(int cols) 
             {
                 withinContrast.setColumnDimension(cols);
                 sigmaError.setRowDimension(cols);
                 sigmaCovariateOutcome.setRowDimension(cols);
-                thetaNull.setColumnDimension(cols);
+                beta.setColumnDimension(cols);
             }
         });
 		
@@ -430,5 +433,21 @@ public class MatrixPanel extends Composite
 
         widget.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
         widget.setHTML(msg);
+    }
+    
+    public void reset()
+    {
+        // clear the alpha level
+        alphaTextBox.setText("");
+        // clear the matrices
+        essence.reset(DEFAULT_N, DEFAULT_Q);
+        withinContrast.reset(DEFAULT_P, DEFAULT_B);
+        betweenContrast.reset(DEFAULT_A, DEFAULT_Q);
+        beta.reset(DEFAULT_Q, DEFAULT_P);
+        thetaNull.reset(DEFAULT_A, DEFAULT_B);
+        sigmaError.reset(DEFAULT_P, DEFAULT_P);
+        sigmaCovariate.reset(1, 1);
+        sigmaOutcomes.reset(DEFAULT_P, DEFAULT_P);
+        sigmaCovariateOutcome.reset(DEFAULT_P, DEFAULT_P);
     }
 }

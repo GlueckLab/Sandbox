@@ -17,9 +17,7 @@ import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
-import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.StartListener;
-import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 public class StudyDesignPanel extends Composite
 implements StartListener, ClickHandler
@@ -110,8 +108,11 @@ implements StartListener, ClickHandler
         modeDeck.showWidget(MATRIX_MODE);
     }
     
-    public void onStudyUpload(Document studyDoc, String modelName)
+    public void onStudyUpload(Document studyDoc, String mode)
     {
+        isTemplateMode = mode.equals("template");
+        modeDeck.showWidget(isTemplateMode ? TEMPLATE_MODE : MATRIX_MODE);
+        
         if (isTemplateMode)
             templatePanel.loadFromXMLDocument(studyDoc);
         else
@@ -136,9 +137,16 @@ implements StartListener, ClickHandler
     
     public void onClick(ClickEvent e)
     {
-    	matrixXML.setValue("<study mode='" + (isTemplateMode ? "template" : "matrix") + "'>" + 
+    	matrixXML.setValue("<study alpha='" + 
+    	        (isTemplateMode ? templatePanel.getAlpha() : matrixPanel.getAlpha()) + 
+    	        "' mode='" + (isTemplateMode ? "template" : "matrix") + "'>" + 
     			matrixPanel.getStudyXML(0) + "</study>");
     	form.submit();    	
     }
 
+    public void reset()
+    {
+        templatePanel.reset();
+        matrixPanel.reset();
+    }
 }

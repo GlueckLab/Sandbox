@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
@@ -139,7 +140,10 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
             Node child = children.item(i);
             String name = child.getNodeName();
             if (name.equals("matrix"))
+            {
                 essence.loadFromDomNode(child);
+                onMatrixResize(essence.getRowDimension(), essence.getColumnDimension());
+            }
             else if (name.equals("rowMetaData"))
                 rowMD = child;
             else if (name.equals("columnMetaData"))
@@ -149,13 +153,31 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         // parse the column meta data if there is any
         if (colMD != null)
         {
-        	
+            
         }
         
         // parse the row meta data if there is any
         if (rowMD != null)
         {
-        	
+            NodeList rowNodeList = rowMD.getChildNodes();
+            for(int r = 0; r < rowNodeList.getLength(); r++)
+            {
+                NamedNodeMap attrs = rowNodeList.item(r).getAttributes();
+                Node ratioNode = attrs.getNamedItem("ratio");
+                if (ratioNode != null)
+                {
+                    try 
+                    {
+                        int ratio = Integer.parseInt(ratioNode.getNodeValue());
+                        if (ratio >= 1 && ratio < MAX_RATIO)
+                        {
+                            ListBox lb = (ListBox) rowMDGrid.getWidget(r, 0);
+                            lb.setSelectedIndex(ratio-1);
+                        }
+                    }
+                    catch (NumberFormatException e) { /* ignore */ }
+                }
+            }
         }
         
     }
@@ -275,5 +297,11 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
             minN += ratio;
         }
         return minN;
+    }
+    
+    public void reset(int newRows, int newColumns)
+    {
+        essence.reset(newRows, newColumns);
+        onMatrixResize(newRows, newColumns);
     }
 }

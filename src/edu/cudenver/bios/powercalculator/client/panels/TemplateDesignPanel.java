@@ -55,6 +55,9 @@ public class TemplateDesignPanel extends Composite
     protected Button predictorAddButton = new Button("Add");
     protected Button outcomesAddButton = new Button("Add");
     
+    protected TextBox alphaTextBox = new TextBox();
+    protected HTML alphaErrorHTML = new HTML();
+    
     public TemplateDesignPanel(InputWizardStepListener w, int idx)
     {
         VerticalPanel panel = new VerticalPanel();
@@ -232,6 +235,20 @@ public class TemplateDesignPanel extends Composite
     
     public String getStudyAttributes()
     {
-        return "";
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("alpha='" + alphaTextBox.getText() + "' ");
+        return buffer.toString();
+    }
+    
+    public String getAlpha()
+    {
+        return alphaTextBox.getText();
+    }
+    
+    public void reset()
+    {
+        alphaTextBox.setText("");
+        
+        // clear variable tables
     }
 }

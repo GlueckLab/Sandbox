@@ -49,9 +49,7 @@ import com.google.gwt.xml.client.XMLParser;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
-import edu.cudenver.bios.powercalculator.client.listener.ModelSelectListener;
 import edu.cudenver.bios.powercalculator.client.listener.StartListener;
-import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 
 /**
  * Welcome / start panel in the input wizard for the power calculator 
@@ -64,15 +62,14 @@ import edu.cudenver.bios.powercalculator.client.listener.StudyUploadListener;
 public class StartPanel extends Composite implements SubmitCompleteHandler
 {
     // uri of file upload service
-    private static final String UPLOAD_URI = "/restcall/file/upload";
+    private static final String UPLOAD_URI = "/webapps/file/upload";
     // form tag for file
     private static final String FORM_TAG_FILE = "file";
-    
-    protected ListBox modelList = new ListBox();
+        
+    protected FormPanel formPanel = new FormPanel();
+    protected FileUpload uploader = new FileUpload();
     
     protected ArrayList<StartListener> startListeners = new ArrayList<StartListener>();
-    protected ArrayList<ModelSelectListener> modelSelectListeners = new ArrayList<ModelSelectListener>();
-    protected ArrayList<StudyUploadListener> studyUploadListeners = new ArrayList<StudyUploadListener>();
     
     public StartPanel(InputWizardStepListener wizard, int stepIndex)
     {
@@ -123,7 +120,6 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         uploadContainer.add(new HTML("<b>Upload an Existing Study</b>"));
         uploadContainer.add(new HTML("If you have previously saved a study design from Glimmpse, you may upload it here.  Click browse to select your study design file."));
         // build the upload form
-        final FormPanel formPanel = new FormPanel();
         // for file upload, we need to use the POST method, and multipart MIME encoding.
         formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
         formPanel.setMethod(FormPanel.METHOD_POST);
@@ -131,7 +127,6 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         // panel to contain the contents of the submission form
         HorizontalPanel formContents = new HorizontalPanel();
         // create an upload widget
-        final FileUpload uploader = new FileUpload();
         uploader.addChangeHandler(new ChangeHandler() {
             public void onChange(ChangeEvent e)
             {
@@ -179,22 +174,7 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
     public void addStartListener(StartListener listener)
     {
     	startListeners.add(listener);
-    }
-    
-    public void addStudyUploadListener(StudyUploadListener listener)
-    {
-    	studyUploadListeners.add(listener);
-    }
-    
-    /**
-     * Notify listeners about new study creation request
-     */
-    private void notifyOnStudyUpload(Document doc, String modelName)
-    {
-        for(StudyUploadListener listener: studyUploadListeners) listener.onStudyUpload(doc, modelName);
-    }
-
-    
+    }  
     
     public void onSubmitComplete(SubmitCompleteEvent event) 
     {
@@ -207,10 +187,10 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
         		Document doc = XMLParser.parse(results);
             	Node studyNode = doc.getElementsByTagName("study").item(0);
             	if (studyNode == null) throw new DOMException(DOMException.SYNTAX_ERR, "no study tag specified");
-            	Node modelName = studyNode.getAttributes().getNamedItem("modelname");
-            	if (modelName == null)  throw new DOMException(DOMException.SYNTAX_ERR, "no model name specified");
+            	Node mode = studyNode.getAttributes().getNamedItem("mode");
+            	if (mode == null)  throw new DOMException(DOMException.SYNTAX_ERR, "no model name specified");
         		// notify listeners of the file upload
-            	for(StartListener listener: startListeners) listener.onStudyUpload(doc, modelName.getNodeValue());
+            	for(StartListener listener: startListeners) listener.onStudyUpload(doc, mode.getNodeValue());
         	}
         	catch (DOMException e)
         	{
@@ -224,4 +204,8 @@ public class StartPanel extends Composite implements SubmitCompleteHandler
 
     }
     
+    public void reset()
+    {
+        formPanel.reset();
+    }
 }
