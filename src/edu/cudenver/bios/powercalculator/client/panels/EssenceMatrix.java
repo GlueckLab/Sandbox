@@ -4,31 +4,24 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
+import edu.cudenver.bios.powercalculator.client.listener.CovariateListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
-public class EssenceMatrix extends Composite implements MatrixResizeListener
+public class EssenceMatrix extends Composite 
+implements MatrixResizeListener, CovariateListener
 {
 	private static final int MAX_RATIO = 10;
-    protected CheckBox covariateCheckBox = new CheckBox();
-    protected Grid meanVarPanel = new Grid(2,2);
-    protected TextBox meanTextBox = new TextBox();
-    protected TextBox varianceTextBox = new TextBox();
+	protected CovariatePanel covariatePanel = new CovariatePanel();
     protected ResizableMatrix essence;
    	protected Grid rowMDGrid;
     protected ArrayList<MatrixResizeListener> resizeListeners = new ArrayList<MatrixResizeListener>();
@@ -62,40 +55,22 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
 
         
         // build covariate panel
-        VerticalPanel covariatePanel = new VerticalPanel();
-        HorizontalPanel includeCovariatePanel = new HorizontalPanel();
-        includeCovariatePanel.add(covariateCheckBox);
-        includeCovariatePanel.add(new HTML("Include a baseline covariate"));
-        covariateCheckBox.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent e)
-            {
-            	meanVarPanel.setVisible(covariateCheckBox.getValue());
-            	meanTextBox.setText("");
-            	varianceTextBox.setText("");
-            	
-            	essence.setCovariateColumn(covariateCheckBox.getValue());
-            	
-            	for(MetaDataListener listener: metaDataListeners) listener.onCovariate(covariateCheckBox.getValue());
-            }
-        });
-        covariatePanel.add(includeCovariatePanel);
-        
-        // subpanel for mean / variance
-        meanVarPanel.setWidget(0, 0, new HTML("Mean: "));
-        meanVarPanel.setWidget(0, 1, meanTextBox);
-        meanVarPanel.setWidget(1, 0, new HTML("Variance: "));
-        meanVarPanel.setWidget(1, 1, varianceTextBox);
-        meanVarPanel.setVisible(false);
-        covariatePanel.add(meanVarPanel);
 
+            	
+            	//essence.setCovariateColumn(covariateCheckBox.getValue());
+            	
+            	//for(MetaDataListener listener: metaDataListeners) listener.onCovariate(covariateCheckBox.getValue());
+
+
+
+        // add listener to the covariate panel
+        covariatePanel.addCovariateListener(this);
+        
         // layout the overall panel
         panel.add(essenceGrid);
         panel.add(covariatePanel);
         
-        
         // add style
-        
-        
         initWidget(panel);
     }
     
@@ -241,10 +216,10 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         {
             buffer.append("<c type='fixed'></c>");            
         }
-        if (covariateCheckBox.getValue())
+        if (covariatePanel.hasCovariate())
         {
-        	buffer.append("<c type='random' mean='" + meanTextBox.getText() + "' variance='" + 
-        			varianceTextBox.getText()+ "' ></c>");
+        	buffer.append("<c type='random' mean='" + covariatePanel.getMean() + "' variance='" + 
+        	        covariatePanel.getVariance() + "' ></c>");
         }
         buffer.append("</columnMetaData>");
         return buffer.toString();
@@ -304,4 +279,14 @@ public class EssenceMatrix extends Composite implements MatrixResizeListener
         essence.reset(newRows, newColumns);
         onMatrixResize(newRows, newColumns);
     }
+    
+    public void onHasCovariate(boolean hasCovariate)
+    {
+        essence.setCovariateColumn(hasCovariate);
+        for(MetaDataListener listener: metaDataListeners) listener.onCovariate(hasCovariate);
+    }
+    
+    public void onMean(double mean) {}
+    
+    public void onVariance(double variance) {}
 }

@@ -16,6 +16,18 @@ public class TextValidation
         return n;
 	}
 	
+	public static int parseInteger(String str, double bound, boolean lower)
+	throws NumberFormatException
+	{
+	    if (str == null || str.isEmpty()) throw new NumberFormatException();
+
+	    int n = Integer.parseInt(str);
+	    if ((lower && n <= bound) || (!lower && n >= bound))
+	        throw new NumberFormatException();
+
+	    return n;
+	}
+	
 	public static double parseDouble(String str, double lowerBound, double upperBound)
 	throws NumberFormatException
 	{
@@ -26,6 +38,20 @@ public class TextValidation
 
 	    return n;
 	}
+	
+	public static double parseDouble(String str, double bound, boolean lower)
+	throws NumberFormatException
+	{
+	    if (str == null || str.isEmpty()) throw new NumberFormatException();
+
+	    double n = Double.parseDouble(str);
+	    if ((lower && n < bound) || (!lower && n > bound))
+	        throw new NumberFormatException();
+
+	    return n;
+	}
+	
+	
 	
     public static void displayError(HTML widget, String msg)
     {

@@ -17,11 +17,13 @@ import com.google.gwt.xml.client.NodeList;
 
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorConstants;
 import edu.cudenver.bios.powercalculator.client.PowerCalculatorGUI;
+import edu.cudenver.bios.powercalculator.client.listener.AlphaListener;
 import edu.cudenver.bios.powercalculator.client.listener.InputWizardStepListener;
 import edu.cudenver.bios.powercalculator.client.listener.MatrixResizeListener;
 import edu.cudenver.bios.powercalculator.client.listener.MetaDataListener;
 
 public class MatrixPanel extends Composite
+implements AlphaListener
 {
     private static final String STYLE = "matrixPanel";
 	// these default names derived from linear model theory.
@@ -75,9 +77,8 @@ public class MatrixPanel extends Composite
 	protected DeckPanel sigmaDeck = new DeckPanel();
 	protected FormPanel form = new FormPanel("_blank");
 	protected Hidden matrixXML = new Hidden("data");
-	
-	protected TextBox alphaTextBox = new TextBox();
-	protected HTML alphaErrorHTML = new HTML();
+
+	protected AlphaPanel alphaPanel = new AlphaPanel();
 	protected int covariateColumn = -1;
 	
     // build the advanced options panel
@@ -93,16 +94,8 @@ public class MatrixPanel extends Composite
 	    this.stepIndex = idx;
 	    
 		VerticalPanel panel = new VerticalPanel();
-		
-		// build alpha input
-		Grid alpha = new Grid(1, 3);
-		alpha.setWidget(0, 0, new HTML(PowerCalculatorGUI.constants.textLabelAlpha()));
-		alpha.setWidget(0, 1, alphaTextBox);
-		alpha.setWidget(0, 2, alphaErrorHTML);
-		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE);
-		alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
-		
-		panel.add(alpha);
+
+		panel.add(alphaPanel);
 		panel.add(advOpts);
 		// add each header / matrix to the panel
 		panel.add(essenceHeader);
@@ -132,26 +125,6 @@ public class MatrixPanel extends Composite
 	    sigmaDeck.add(covariateSigma);
 	    sigmaDeck.showWidget(FIXED_INDEX);
 		panel.add(sigmaDeck);
-		
-        alphaTextBox.addChangeHandler(new ChangeHandler() {
-            // 
-            public void onChange(ChangeEvent e)
-            {
-                String alpha = alphaTextBox.getText();
-                if (validAlpha(alphaTextBox.getText()))
-                {
-                    displayOkay(alphaErrorHTML, PowerCalculatorGUI.constants.okay());
-                    wizard.onStepComplete(stepIndex);
-                }
-                else
-                {
-                    alpha = "";
-                    displayError(alphaErrorHTML, PowerCalculatorGUI.constants.errorAlphaInvalid());
-                    alphaTextBox.setText(alpha);
-                    wizard.onStepInProgress(stepIndex);
-                }
-            }
-        });
 		
 		// set matrix size restrictions
         sigmaError.setIsSquare(true, true);
@@ -305,7 +278,7 @@ public class MatrixPanel extends Composite
 	
 	public String getAlpha()
 	{
-	    return alphaTextBox.getText();
+	    return alphaPanel.getAlpha();
 	}
 	
 	public boolean validate()
@@ -316,7 +289,7 @@ public class MatrixPanel extends Composite
 	public String getStudyAttributes()
 	{
         StringBuffer buffer = new StringBuffer();
-        buffer.append("alpha='" + alphaTextBox.getText() + "' ");
+        buffer.append("alpha='" + alphaPanel.getAlpha() + "' ");
         buffer.append(advOpts.getStudyAttributes());
         return buffer.toString();
 	}
@@ -360,7 +333,7 @@ public class MatrixPanel extends Composite
     		Node alpha = studyNode.getAttributes().getNamedItem("alpha");
     		if (alpha != null) 	
     		{
-    		    alphaTextBox.setText(alpha.getNodeValue());
+    		    alphaPanel.setAlpha(alpha.getNodeValue());
     		}
 
     		// parse the essence matrix
@@ -397,48 +370,11 @@ public class MatrixPanel extends Composite
     		}
     	}
 	}
-		    
-    private boolean validAlpha(String alpha)
-    {
-        if (alpha == null || alpha.isEmpty())
-            return false;
-        
-        try
-        {
-            double a = Double.parseDouble(alpha);
-            if (Double.isNaN(a) || (a <= 0) || a >= 1) 
-                return false;
-            else
-                return true;
-        }
-        catch (NumberFormatException nfe)
-        {
-            return false;
-        }
-    }
-    
-    private void displayError(HTML widget, String msg)
-    {
-        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
-        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
-
-        widget.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
-        widget.setHTML(msg);
-    }
-    
-    private void displayOkay(HTML widget, String msg)
-    {
-        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
-        widget.removeStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
-
-        widget.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_OKAY);
-        widget.setHTML(msg);
-    }
     
     public void reset()
     {
         // clear the alpha level
-        alphaTextBox.setText("");
+        alphaPanel.reset();
         // clear the matrices
         essence.reset(DEFAULT_N, DEFAULT_Q);
         withinContrast.reset(DEFAULT_P, DEFAULT_B);
@@ -449,5 +385,16 @@ public class MatrixPanel extends Composite
         sigmaCovariate.reset(1, 1);
         sigmaOutcomes.reset(DEFAULT_P, DEFAULT_P);
         sigmaCovariateOutcome.reset(DEFAULT_P, DEFAULT_P);
+    }
+    
+    public void onAlpha(double alpha)
+    {
+        wizard.onStepComplete(stepIndex);
+    }
+    
+    public void onAlphaInvalid()
+    {
+        wizard.onStepInProgress(stepIndex);
+
     }
 }

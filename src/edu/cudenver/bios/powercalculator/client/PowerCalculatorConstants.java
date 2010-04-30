@@ -105,6 +105,22 @@ public interface PowerCalculatorConstants extends Constants
 	public String panelLabelOptionsGraphics();
 	public String panelLabelOptionsSolveFor();
 	
+	// template screen header/details
+	public String templateOutcomesHeader();
+	public String templateOutcomesDetails();
+	public String templatePredictorsHeader();
+	public String templatePredictorsDetails();
+	public String templateHypothesesHeader();
+	public String templateHypothesesDetails();
+	public String templateMeanHeader();
+	public String templateMeanDetails();
+	public String templateVarianceHeader();
+	public String templateVarianceDetails();
+	public String templateLabelEditCategories();
+	public String templateColumnHeaderCategories();
+	public String templateColumnHeaderOutcome();
+	public String templateColumnHeaderPredictor();
+	
 	// error messages
 	public String errorMatrixDimensionInvalid();
 	public String errorAlphaInvalid();
