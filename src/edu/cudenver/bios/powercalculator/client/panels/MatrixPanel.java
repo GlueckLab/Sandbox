@@ -96,6 +96,7 @@ implements AlphaListener
 		VerticalPanel panel = new VerticalPanel();
 
 		panel.add(alphaPanel);
+		alphaPanel.addAlphaListener(this);
 		panel.add(advOpts);
 		// add each header / matrix to the panel
 		panel.add(essenceHeader);
@@ -353,9 +354,9 @@ implements AlphaListener
     				if (name.equals("beta"))
     					beta.loadFromDomNode(matrixNode);
     				else if (name.equals("withinSubjectContrast"))
-    					betweenContrast.loadFromDomNode(matrixNode);
-    				else if (name.equals("betweenSubjectContrast"))
     					withinContrast.loadFromDomNode(matrixNode);
+    				else if (name.equals("betweenSubjectContrast"))
+    					betweenContrast.loadFromDomNode(matrixNode);
     				else if (name.equals("theta"))
     					thetaNull.loadFromDomNode(matrixNode);
     				else if (name.equals("sigmaError"))

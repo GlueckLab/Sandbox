@@ -28,7 +28,7 @@ public class AlphaPanel extends Composite
         grid.setWidget(0, 1, alphaTextBox);
         grid.setWidget(0, 2, alphaErrorHTML);
         alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE);
-        alphaErrorHTML.setStyleName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
+        alphaErrorHTML.addStyleDependentName(PowerCalculatorConstants.STYLE_MESSAGE_ERROR);
 
         alphaTextBox.addChangeHandler(new ChangeHandler() {
             public void onChange(ChangeEvent e)
@@ -68,6 +68,7 @@ public class AlphaPanel extends Composite
         try
         {
             double alpha = TextValidation.parseDouble(alphaStr, 0, 1);
+            alphaTextBox.setText(alphaStr);
             for(AlphaListener listener : listeners) listener.onAlpha(alpha);
             TextValidation.displayOkay(alphaErrorHTML, PowerCalculatorGUI.constants.okay());
         }
@@ -76,5 +77,10 @@ public class AlphaPanel extends Composite
             alphaTextBox.setText("");
             for(AlphaListener listener : listeners) listener.onAlphaInvalid();
         }
+    }
+    
+    public void addAlphaListener(AlphaListener listener)
+    {
+        listeners.add(listener);
     }
 }
