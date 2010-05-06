@@ -104,6 +104,11 @@ implements MatrixResizeListener, CovariateListener
         listener.onMinimumSampleSize(minimumN);
     }
     
+    public void addCovariateListener(CovariateListener listener)
+    {
+        covariatePanel.addCovariateListener(listener);
+    }
+    
     public void loadFromDomNode(Node node)
     {
         NodeList children = node.getChildNodes();

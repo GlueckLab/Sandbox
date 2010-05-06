@@ -97,6 +97,7 @@ implements AlphaListener
 
 		panel.add(alphaPanel);
 		alphaPanel.addAlphaListener(this);
+
 		panel.add(advOpts);
 		// add each header / matrix to the panel
 		panel.add(essenceHeader);
@@ -134,6 +135,7 @@ implements AlphaListener
 		
 		// add listeners to ensure matrix conformance when each 
 		// matrix changes
+        essence.addCovariateListener(advOpts);
 		essence.addMatrixResizeListener(new MatrixResizeListener() {
 			public void onRows(int rows) 
 			{
