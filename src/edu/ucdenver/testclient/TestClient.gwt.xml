@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='testclient'>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+  <!-- Inherit the default GWT style sheet.  You can change       -->
+  <!-- the theme of your GWT application by uncommenting          -->
+  <!-- any one of the following lines.                            -->
+  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+ <!-- Restlet connector to web services -->
+ <inherits name="org.restlet.Restlet" /> 
+ <!-- UC Denver Web Service Common api -->
+ <inherits name="edu.ucdenver.bios.webservice.common.common"/>
+
+
+
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='edu.ucdenver.testclient.client.TestClient'/>
+
+  <!-- Specify the paths for translatable code                    -->
+  <source path='client'/>
+  <source path='shared'/>
+
+</module>
