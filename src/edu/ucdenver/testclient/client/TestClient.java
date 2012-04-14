@@ -2,11 +2,6 @@ package edu.ucdenver.testclient.client;
 
 import java.util.ArrayList;
 
-import org.restlet.client.Request;
-import org.restlet.client.Response;
-import org.restlet.client.Uniform;
-import org.restlet.client.resource.Result;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,7 +34,7 @@ public class TestClient implements EntryPoint {
      * Create a remote service proxy to talk to the server-side Greeting service.
      */
     private final PowerSvcConnector connector = new PowerSvcConnector();
-
+    
     /**
      * This is the entry point method.
      */
@@ -114,15 +109,17 @@ public class TestClient implements EntryPoint {
                 StudyDesign design = new StudyDesign();
                 design.setName("Test");
                 
-                connector.getPower(design, new Uniform() {
-
-                    @Override
-                    public void handle(Request request, Response response) {
-                        // TODO Auto-generated method stub
-                        Window.alert("response: " + response.getStatus().getCode());
-                    }
-                    
-                });
+                connector.getPower();
+                
+//                new Uniform() {
+//
+//                    @Override
+//                    public void handle(Request request, Response response) {
+//                        // TODO Auto-generated method stub
+//                        Window.alert("response: " + response.getStatus().getCode());
+//                    }
+//                    
+//                });
                         
                         
                         

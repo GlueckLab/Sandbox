@@ -6,13 +6,16 @@
   <!-- the theme of your GWT application by uncommenting          -->
   <!-- any one of the following lines.                            -->
   <inherits name='com.google.gwt.user.theme.clean.Clean'/>
- <!-- Restlet connector to web services -->
- <inherits name="org.restlet.Restlet" /> 
+
  <!-- UC Denver Web Service Common api -->
  <inherits name="edu.ucdenver.bios.webservice.common.common"/>
-
-
-
+ <!--  JSON  -->
+ <inherits name="com.google.gwt.json.JSON" />
+ <!--  RestyGWT
+ <inherits name="org.fusesource/restygwt/RestyGWT" /> -->
+ 
+ <inherits name="name.pehl.piriti.json.JSON" />
+ 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='edu.ucdenver.testclient.client.TestClient'/>
 
