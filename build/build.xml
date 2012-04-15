@@ -25,7 +25,7 @@
 	<property name="target.dir"  value="${explodedzip.dir}"/>
 	<property name="javadoc.dir" value="${basedir}/javadoc" />
 	<property name="thirdparty.dir" value="${basedir}/../../thirdparty" />
-	<property name="gwt.dir" value="${thirdparty.dir}/gwt/2.4.0/lib" />
+	<property name="gwt.dir" value="${thirdparty.dir}/gwt/2.2.0/lib" />
 	<property name="gwt.visualization.dir" value="${thirdparty.dir}/gwt-visualization/1.1/lib" />
 	<property name="WebServiceCommon.dir" value="${basedir}/../../WebServiceCommon/build/bin" />
 	<property name="restlet.dir" value="${thirdparty.dir}/restlet-gwt/2.1/lib" />
