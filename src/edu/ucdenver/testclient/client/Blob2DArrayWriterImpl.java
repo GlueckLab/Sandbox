@@ -5,12 +5,15 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 
 import name.pehl.piriti.json.client.AbstractJsonWriter;
+import name.pehl.piriti.json.client.JsonWriter;
 import edu.ucdenver.bios.webservice.common.domain.Blob2DArray;
 
 public class Blob2DArrayWriterImpl extends AbstractJsonWriter<edu.ucdenver.bios.webservice.common.domain.Blob2DArray> 
-implements edu.ucdenver.testclient.client.DomainObjectSerializer.Blob2DArrayWriter 
+implements Blob2DArrayWriter 
 {
 
+    public interface Blob2DArrayWriter extends JsonWriter<Blob2DArray> {}
+    
     public Blob2DArrayWriterImpl() 
     {
         this.jsonRegistry.register(edu.ucdenver.bios.webservice.common.domain.Blob2DArray.class, this);
@@ -25,7 +28,7 @@ implements edu.ucdenver.testclient.client.DomainObjectSerializer.Blob2DArrayWrit
     @Override
     public String toJson(Blob2DArray model) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("\"data\":{\"data\":[" );
+        buffer.append("{\"data\":[" );
         double[][] data = model.getData();
         int rows = data.length;
         int columns = data[0].length;
@@ -39,7 +42,7 @@ implements edu.ucdenver.testclient.client.DomainObjectSerializer.Blob2DArrayWrit
             }
             buffer.append("]");
         }
-        buffer.append("]}}");
+        buffer.append("]}");
         return buffer.toString();
     }
 

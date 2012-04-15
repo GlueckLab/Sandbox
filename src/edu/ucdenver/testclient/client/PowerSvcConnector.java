@@ -7,8 +7,12 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.TextArea;
 
 import edu.ucdenver.bios.webservice.common.domain.BetaScale;
 import edu.ucdenver.bios.webservice.common.domain.BetweenParticipantFactor;
@@ -46,6 +50,13 @@ public class PowerSvcConnector {
             +"[[1.0,0.0],[0.0,1.0]]}},{\"id\":0,\"name\":\"sigmaError\",\"rows\":1,\"columns\":1,\"data\":{\"data\":[[1.0]]}},"
             +"{\"id\":0,\"name\":\"betweenSubjectContrast\",\"rows\":1,\"columns\":2,\"data\":{\"data\":[[1.0,-1.0]]}}]}";
         
+        String test = "[{\"nominalPower\":{\"id\":0,\"value\":0.562006757627453},\"actualPower\":0.562006757627453,\"totalSampleSize\":20,\"alpha\":{\"id\":0,\"alphaValue\":0.05},\"betaScale\":{\"id\":0,\"value\":1.0},\"sigmaScale\":{\"id\":0,\"value\":1.0},\"test\":{\"id\":0,\"type\":\"UNIREP\"},\"powerMethod\":{\"id\":0,\"powerMethodEnum\":\"CONDITIONAL\"},\"quantile\":null,\"confidenceInterval\":null},{\"nominalPower\":{\"id\":0,\"value\":0.562006757627453},\"actualPower\":0.562006757627453,\"totalSampleSize\":20,\"alpha\":{\"id\":0,\"alphaValue\":0.05},\"betaScale\":{\"id\":0,\"value\":1.0},\"sigmaScale\":{\"id\":0,\"value\":1.0},\"test\":{\"id\":0,\"type\":\"UNIREP\"},\"powerMethod\":{\"id\":0,\"powerMethodEnum\":\"CONDITIONAL\"},\"quantile\":null,\"confidenceInterval\":null},{\"nominalPower\":{\"id\":0,\"value\":0.562006757627453},\"actualPower\":0.562006757627453,\"totalSampleSize\":20,\"alpha\":{\"id\":0,\"alphaValue\":0.05},\"betaScale\":{\"id\":0,\"value\":1.0},\"sigmaScale\":{\"id\":0,\"value\":1.0},\"test\":{\"id\":0,\"type\":\"UNIREP\"},\"powerMethod\":{\"id\":0,\"powerMethodEnum\":\"CONDITIONAL\"},\"quantile\":null,\"confidenceInterval\":null}]";
+
+
+
+        serializer.powerResultListFromJSON(test);
+//        serializer.bsListFromJSON(test);
+        
         
         StudyDesign design = this.buildUnivariateMatrixDesign(SolutionTypeEnum.POWER);
         List<BetweenParticipantFactor> betweenParticipantFactorList = new ArrayList<BetweenParticipantFactor>();        
@@ -70,9 +81,9 @@ public class PowerSvcConnector {
         
         try 
         {
-            
-            Window.alert("JSON:" + serializer.toJSON(design));
-            
+           
+            String entity = serializer.toJSON(design);
+            Window.alert(entity);
             
             RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/power/power");
 
@@ -99,47 +110,7 @@ public class PowerSvcConnector {
         {
            Window.alert("Failed to send the request: " + e.getMessage());
         }     
-        
-//        
-//        ClientResource r = new ClientResource("http://localhost:8080/power/power");
-//        r.getRequest().setEntity(ttestStudyDesign, MediaType.APPLICATION_JSON);
-//        r.setOnResponse(new Uniform() {
-//
-//            @Override
-//            public void handle(Request request, Response response) {
-//                Window.alert("entity: " + response.getEntity());
-//                
-//            }
-//            
-//        });
-//        r.post(ttestStudyDesign);
-//        r.post(ttestStudyDesign, MediaType.APPLICATION_JSON);
-        
-        
-        
-        
-        
-        
-        
-//       // Client resource for Power Web Service
-//        ClientResource r = new ClientResource("http://localhost:8080/power/power/");
-//        // Set the callback object invoked when the response is received.
-//        r.setOnResponse(handler);
-//        
-//        NamedMatrix matrix = new NamedMatrix("test");
-//        double[][] data = {{1,2},{3,4}};
-//        matrix.setRows(2);
-//        matrix.setColumns(2);
-//        matrix.setData(data);
-//        
-//        r.put(matrix,MediaType.APPLICATION_JAVA_OBJECT_GWT);
-//        
-//        try{
-//            // Translate the JSON String to a Person bean
-//            Person p = (Person)JsonizerParser.parse(jsonizer, json);
-//          }catch(JsonizerException e){
-//            Window.alert('JSON Translation Error!');
-//          }
+
         
     }
     

@@ -11,8 +11,6 @@
  <inherits name="edu.ucdenver.bios.webservice.common.common"/>
  <!--  JSON  -->
  <inherits name="com.google.gwt.json.JSON" />
- <!--  RestyGWT
- <inherits name="org.fusesource/restygwt/RestyGWT" /> -->
  
  <inherits name="name.pehl.piriti.json.JSON" />
  

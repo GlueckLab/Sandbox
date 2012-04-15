@@ -108,7 +108,7 @@ public class TestClient implements EntryPoint {
 
                 StudyDesign design = new StudyDesign();
                 design.setName("Test");
-                
+
                 connector.getPower();
                 
 //                new Uniform() {
