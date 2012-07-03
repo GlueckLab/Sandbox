@@ -1,0 +1,2 @@
+serviceClass: edu.ucdenver.bios.bugreport.client.SendEmailService
+path: 3D690D4518ADB66A9D7C91B2CC9B30BA.gwt.rpc
