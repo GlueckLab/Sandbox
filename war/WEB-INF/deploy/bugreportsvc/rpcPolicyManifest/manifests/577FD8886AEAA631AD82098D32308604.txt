@@ -1,2 +1,0 @@
-serviceClass: edu.ucdenver.bios.bugreport.client.GreetingService
-path: DA5F2E74C75D4014FDD342357D60E7C5.gwt.rpc
