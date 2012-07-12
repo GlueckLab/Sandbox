@@ -29,6 +29,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.restlet.resource.Post;
+
 import edu.ucdenver.bios.bugreportsvc.application.BugReportSvcConstants;
 import edu.ucdenver.bios.webservice.common.domain.BugReport;
 /**
@@ -45,7 +47,7 @@ public class ReportBugServerResource implements ReportBugResource
      * It will retrun a success message if the bug reporting is successful
      * else returns a exception message.
      */
-    @Override
+    @Post
     public String sendEmail(BugReport bugReport) {
         
         
@@ -77,11 +79,11 @@ public class ReportBugServerResource implements ReportBugResource
             
             message.setRecipients(Message.RecipientType.TO, BugReportSvcConstants.TO);
             
-            message.setSubject(bugReport.getSubject());
+            message.setSubject(bugReport.getBugSubject());
             
-            message.setText(bugReport.getBugName()+
-                    "\n\n"+bugReport.getPriorrity()+
-                    "\n\n"+bugReport.getDescription());
+            message.setText("Bug Name"+bugReport.getBugName()+
+                    "\n\n Priority of the Bug"+bugReport.getBugPriority()+
+                    "\n\n Description "+bugReport.getBugDescription());
             
             Transport.send(message);
             
