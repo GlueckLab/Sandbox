@@ -10,9 +10,16 @@ import edu.ucdenver.bios.bugreportsvc.resource.ReportBugServerResource;
 
 public class BugReportApplication extends Application
 {
-    public BugReportApplication(final Context parentContext)
+    /**
+     * Class which dispatches the http requests to the appropriate handler
+     * class for Bug Tracking Service.
+     * @param parentContext
+     */
+    public BugReportApplication(final Context parentContext) throws Exception
     {
         super(parentContext);
+        
+        BugReportLogger.getInstance().info("Bug Tracking Service Starting..");
     }
     
     public Restlet createInBoundRoot()
