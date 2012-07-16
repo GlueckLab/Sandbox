@@ -18,12 +18,15 @@
  * MA  02110-1301, USA.
  */
 package edu.ucdenver.bios.bugreportsvc.resource;
+
+import org.restlet.resource.ServerResource;
+
 /**
  * 
  * @author VIJAY AKULA
  *
  */
-public class DefaultResource 
+public class DefaultResource extends ServerResource
 {
     public String represent()
     {

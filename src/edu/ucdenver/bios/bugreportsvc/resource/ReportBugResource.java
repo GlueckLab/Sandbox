@@ -19,6 +19,8 @@
  */
 package edu.ucdenver.bios.bugreportsvc.resource;
 
+import org.restlet.resource.Post;
+
 import edu.ucdenver.bios.webservice.common.domain.BugReport;
 /**
  * 
@@ -31,5 +33,6 @@ public interface ReportBugResource {
      * @param bugReport
      * @return Returns a message after reporting the bug.
      */
+    @Post
     public String sendEmail(BugReport bugReport);
 }

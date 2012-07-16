@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.restlet.resource.Post;
+import org.restlet.resource.ServerResource;
 
 import edu.ucdenver.bios.bugreportsvc.application.BugReportSvcConstants;
 import edu.ucdenver.bios.webservice.common.domain.BugReport;
@@ -39,10 +40,10 @@ import edu.ucdenver.bios.webservice.common.domain.BugReport;
  *
  */
 
-public class ReportBugServerResource implements ReportBugResource
+public class ReportBugServerResource extends ServerResource implements ReportBugResource
 {
     /**
-     * Implementation of the {@link ReportBugResource} interface.
+     * Implementation of the Report Bug Resource interface.
      * 
      * It will retrun a success message if the bug reporting is successful
      * else returns a exception message.
