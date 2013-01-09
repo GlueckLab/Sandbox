@@ -1,0 +1,727 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D7FC6E1169BA35400DD0475 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D7FC6E0169BA35400DD0475 /* Foundation.framework */; };
+		1D7FC79F169BA63400DD0475 /* BetaScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC713169BA63400DD0475 /* BetaScale.m */; };
+		1D7FC7A0169BA63400DD0475 /* BetaScaleList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC715169BA63400DD0475 /* BetaScaleList.m */; };
+		1D7FC7A1169BA63400DD0475 /* BetweenParticipantFactor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC717169BA63400DD0475 /* BetweenParticipantFactor.m */; };
+		1D7FC7A2169BA63400DD0475 /* BetweenParticipantFactorList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC719169BA63400DD0475 /* BetweenParticipantFactorList.m */; };
+		1D7FC7A3169BA63400DD0475 /* Blob2DArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC71B169BA63400DD0475 /* Blob2DArray.m */; };
+		1D7FC7A4169BA63400DD0475 /* BugReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC71D169BA63400DD0475 /* BugReport.m */; };
+		1D7FC7A5169BA63400DD0475 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC71F169BA63400DD0475 /* Category.m */; };
+		1D7FC7A6169BA63400DD0475 /* CategoryList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC721169BA63400DD0475 /* CategoryList.m */; };
+		1D7FC7A7169BA63400DD0475 /* ClusterNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC723169BA63400DD0475 /* ClusterNode.m */; };
+		1D7FC7A8169BA63400DD0475 /* ClusterNodeList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC725169BA63400DD0475 /* ClusterNodeList.m */; };
+		1D7FC7A9169BA63400DD0475 /* ConfidenceInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC727169BA63400DD0475 /* ConfidenceInterval.m */; };
+		1D7FC7AA169BA63400DD0475 /* ConfidenceIntervalDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC729169BA63400DD0475 /* ConfidenceIntervalDescription.m */; };
+		1D7FC7AB169BA63400DD0475 /* Covariance.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC72B169BA63400DD0475 /* Covariance.m */; };
+		1D7FC7AC169BA63400DD0475 /* CovarianceSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC72D169BA63400DD0475 /* CovarianceSet.m */; };
+		1D7FC7AD169BA63400DD0475 /* Hypothesis.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC72F169BA63400DD0475 /* Hypothesis.m */; };
+		1D7FC7AE169BA63400DD0475 /* HypothesisBetweenParticipantMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC731169BA63400DD0475 /* HypothesisBetweenParticipantMapping.m */; };
+		1D7FC7AF169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC733169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.m */; };
+		1D7FC7B0169BA63400DD0475 /* HypothesisSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC735169BA63400DD0475 /* HypothesisSet.m */; };
+		1D7FC7B1169BA63400DD0475 /* NamedMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC737169BA63400DD0475 /* NamedMatrix.m */; };
+		1D7FC7B2169BA63400DD0475 /* NamedMatrixList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC739169BA63400DD0475 /* NamedMatrixList.m */; };
+		1D7FC7B3169BA63400DD0475 /* NamedMatrixSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC73B169BA63400DD0475 /* NamedMatrixSet.m */; };
+		1D7FC7B4169BA63400DD0475 /* NominalPower.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC73D169BA63400DD0475 /* NominalPower.m */; };
+		1D7FC7B5169BA63400DD0475 /* NominalPowerList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC73F169BA63400DD0475 /* NominalPowerList.m */; };
+		1D7FC7B6169BA63400DD0475 /* PowerCurveDataSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC741169BA63400DD0475 /* PowerCurveDataSeries.m */; };
+		1D7FC7B7169BA63400DD0475 /* PowerCurveDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC743169BA63400DD0475 /* PowerCurveDescription.m */; };
+		1D7FC7B8169BA63400DD0475 /* PowerMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC745169BA63400DD0475 /* PowerMethod.m */; };
+		1D7FC7B9169BA63400DD0475 /* PowerMethodList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC747169BA63400DD0475 /* PowerMethodList.m */; };
+		1D7FC7BA169BA63400DD0475 /* PowerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC749169BA63400DD0475 /* PowerResult.m */; };
+		1D7FC7BB169BA63400DD0475 /* PowerResultList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC74B169BA63400DD0475 /* PowerResultList.m */; };
+		1D7FC7BC169BA63400DD0475 /* Quantile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC74D169BA63400DD0475 /* Quantile.m */; };
+		1D7FC7BD169BA63400DD0475 /* QuantileList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC74F169BA63400DD0475 /* QuantileList.m */; };
+		1D7FC7BE169BA63400DD0475 /* RelativeGroupSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC751169BA63400DD0475 /* RelativeGroupSize.m */; };
+		1D7FC7BF169BA63400DD0475 /* RelativeGroupSizeList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC753169BA63400DD0475 /* RelativeGroupSizeList.m */; };
+		1D7FC7C0169BA63400DD0475 /* RepeatedMeasuresNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC755169BA63400DD0475 /* RepeatedMeasuresNode.m */; };
+		1D7FC7C1169BA63400DD0475 /* RepeatedMeasuresNodeList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC757169BA63400DD0475 /* RepeatedMeasuresNodeList.m */; };
+		1D7FC7C2169BA63400DD0475 /* ResponseList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC759169BA63400DD0475 /* ResponseList.m */; };
+		1D7FC7C3169BA63400DD0475 /* ResponseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC75B169BA63400DD0475 /* ResponseNode.m */; };
+		1D7FC7C4169BA63400DD0475 /* SampleSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC75D169BA63400DD0475 /* SampleSize.m */; };
+		1D7FC7C5169BA63400DD0475 /* SampleSizeList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC75F169BA63400DD0475 /* SampleSizeList.m */; };
+		1D7FC7C6169BA63400DD0475 /* SigmaScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC761169BA63400DD0475 /* SigmaScale.m */; };
+		1D7FC7C7169BA63400DD0475 /* SigmaScaleList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC763169BA63400DD0475 /* SigmaScaleList.m */; };
+		1D7FC7C8169BA63400DD0475 /* Spacing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC765169BA63400DD0475 /* Spacing.m */; };
+		1D7FC7C9169BA63400DD0475 /* StandardDeviation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC767169BA63400DD0475 /* StandardDeviation.m */; };
+		1D7FC7CA169BA63400DD0475 /* StatisticalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC769169BA63400DD0475 /* StatisticalTest.m */; };
+		1D7FC7CB169BA63400DD0475 /* StatisticalTestList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC76B169BA63400DD0475 /* StatisticalTestList.m */; };
+		1D7FC7CC169BA63400DD0475 /* StudyDesign.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC76D169BA63400DD0475 /* StudyDesign.m */; };
+		1D7FC7CD169BA63400DD0475 /* StudyNamedMatrixList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC770169BA63400DD0475 /* StudyNamedMatrixList.m */; };
+		1D7FC7CE169BA63400DD0475 /* TypeIError.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC772169BA63400DD0475 /* TypeIError.m */; };
+		1D7FC7CF169BA63400DD0475 /* TypeIErrorList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC774169BA63400DD0475 /* TypeIErrorList.m */; };
+		1D7FC7D0169BA63400DD0475 /* UuidCovariance.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC776169BA63400DD0475 /* UuidCovariance.m */; };
+		1D7FC7D1169BA63400DD0475 /* UuidCovarianceName.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC778169BA63400DD0475 /* UuidCovarianceName.m */; };
+		1D7FC7D2169BA63400DD0475 /* UuidHypothesis.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC77A169BA63400DD0475 /* UuidHypothesis.m */; };
+		1D7FC7D3169BA63400DD0475 /* UuidHypothesisType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC77C169BA63400DD0475 /* UuidHypothesisType.m */; };
+		1D7FC7D4169BA63400DD0475 /* UuidMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC77E169BA63400DD0475 /* UuidMatrix.m */; };
+		1D7FC7D5169BA63400DD0475 /* UuidMatrixName.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC780169BA63400DD0475 /* UuidMatrixName.m */; };
+		1D7FC7D6169BA63400DD0475 /* UuidPowerCurveDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC782169BA63400DD0475 /* UuidPowerCurveDescription.m */; };
+		1D7FC7D7169BA63400DD0475 /* WebServiceCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC784169BA63400DD0475 /* WebServiceCommon.m */; };
+		1D7FC7D8169BA63400DD0475 /* WebServiceCommonObjectiveC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC786169BA63400DD0475 /* WebServiceCommonObjectiveC.m */; };
+		1D7FC7D9169BA63400DD0475 /* CovarianceEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC789169BA63400DD0475 /* CovarianceEnum.m */; };
+		1D7FC7DA169BA63400DD0475 /* Enums.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC78B169BA63400DD0475 /* Enums.m */; };
+		1D7FC7DB169BA63400DD0475 /* HorizontalAxisEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC78D169BA63400DD0475 /* HorizontalAxisEnum.m */; };
+		1D7FC7DC169BA63400DD0475 /* HypothesisEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC78F169BA63400DD0475 /* HypothesisEnum.m */; };
+		1D7FC7DD169BA63400DD0475 /* HypothesisTrendEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC791169BA63400DD0475 /* HypothesisTrendEnum.m */; };
+		1D7FC7DE169BA63400DD0475 /* PowerEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC793169BA63400DD0475 /* PowerEnum.m */; };
+		1D7FC7DF169BA63400DD0475 /* RepeatedMeasuresDimension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC795169BA63400DD0475 /* RepeatedMeasuresDimension.m */; };
+		1D7FC7E0169BA63400DD0475 /* SolutionEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC797169BA63400DD0475 /* SolutionEnum.m */; };
+		1D7FC7E1169BA63400DD0475 /* StatisticalTestEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC799169BA63400DD0475 /* StatisticalTestEnum.m */; };
+		1D7FC7E2169BA63400DD0475 /* StratificationEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC79B169BA63400DD0475 /* StratificationEnum.m */; };
+		1D7FC7E3169BA63400DD0475 /* StudyDesignList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC79C169BA63400DD0475 /* StudyDesignList.m */; };
+		1D7FC7E4169BA63400DD0475 /* StudyDesignViewEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D7FC79E169BA63400DD0475 /* StudyDesignViewEnum.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D7FC6DB169BA35400DD0475 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1D7FC6DD169BA35400DD0475 /* libWebServiceCommonObjectiveC.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWebServiceCommonObjectiveC.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D7FC6E0169BA35400DD0475 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D7FC6EF169BA3D100DD0475 /* WebServiceCommonObjectiveC-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebServiceCommonObjectiveC-Prefix.pch"; sourceTree = "<group>"; };
+		1D7FC6F7169BA3F300DD0475 /* AFHTTPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
+		1D7FC6F8169BA3F300DD0475 /* AFHTTPClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
+		1D7FC6F9169BA3F300DD0475 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		1D7FC6FA169BA3F300DD0475 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		1D7FC6FB169BA3F300DD0475 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
+		1D7FC6FC169BA3F300DD0475 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
+		1D7FC6FD169BA3F300DD0475 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
+		1D7FC6FE169BA3F300DD0475 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
+		1D7FC6FF169BA3F300DD0475 /* AFJSONUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFJSONUtilities.h; sourceTree = "<group>"; };
+		1D7FC700169BA3F300DD0475 /* AFJSONUtilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFJSONUtilities.m; sourceTree = "<group>"; };
+		1D7FC701169BA3F300DD0475 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		1D7FC702169BA3F300DD0475 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		1D7FC703169BA3F300DD0475 /* AFNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		1D7FC704169BA3F300DD0475 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
+		1D7FC705169BA3F300DD0475 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
+		1D7FC706169BA3F300DD0475 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		1D7FC707169BA3F300DD0475 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		1D7FC708169BA3F300DD0475 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
+		1D7FC709169BA3F300DD0475 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
+		1D7FC70A169BA3F300DD0475 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		1D7FC70B169BA3F300DD0475 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		1D7FC712169BA63400DD0475 /* BetaScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetaScale.h; sourceTree = "<group>"; };
+		1D7FC713169BA63400DD0475 /* BetaScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BetaScale.m; sourceTree = "<group>"; };
+		1D7FC714169BA63400DD0475 /* BetaScaleList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetaScaleList.h; sourceTree = "<group>"; };
+		1D7FC715169BA63400DD0475 /* BetaScaleList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BetaScaleList.m; sourceTree = "<group>"; };
+		1D7FC716169BA63400DD0475 /* BetweenParticipantFactor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetweenParticipantFactor.h; sourceTree = "<group>"; };
+		1D7FC717169BA63400DD0475 /* BetweenParticipantFactor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BetweenParticipantFactor.m; sourceTree = "<group>"; };
+		1D7FC718169BA63400DD0475 /* BetweenParticipantFactorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetweenParticipantFactorList.h; sourceTree = "<group>"; };
+		1D7FC719169BA63400DD0475 /* BetweenParticipantFactorList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BetweenParticipantFactorList.m; sourceTree = "<group>"; };
+		1D7FC71A169BA63400DD0475 /* Blob2DArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blob2DArray.h; sourceTree = "<group>"; };
+		1D7FC71B169BA63400DD0475 /* Blob2DArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Blob2DArray.m; sourceTree = "<group>"; };
+		1D7FC71C169BA63400DD0475 /* BugReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BugReport.h; sourceTree = "<group>"; };
+		1D7FC71D169BA63400DD0475 /* BugReport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BugReport.m; sourceTree = "<group>"; };
+		1D7FC71E169BA63400DD0475 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
+		1D7FC71F169BA63400DD0475 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
+		1D7FC720169BA63400DD0475 /* CategoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryList.h; sourceTree = "<group>"; };
+		1D7FC721169BA63400DD0475 /* CategoryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryList.m; sourceTree = "<group>"; };
+		1D7FC722169BA63400DD0475 /* ClusterNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterNode.h; sourceTree = "<group>"; };
+		1D7FC723169BA63400DD0475 /* ClusterNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClusterNode.m; sourceTree = "<group>"; };
+		1D7FC724169BA63400DD0475 /* ClusterNodeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterNodeList.h; sourceTree = "<group>"; };
+		1D7FC725169BA63400DD0475 /* ClusterNodeList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClusterNodeList.m; sourceTree = "<group>"; };
+		1D7FC726169BA63400DD0475 /* ConfidenceInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfidenceInterval.h; sourceTree = "<group>"; };
+		1D7FC727169BA63400DD0475 /* ConfidenceInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfidenceInterval.m; sourceTree = "<group>"; };
+		1D7FC728169BA63400DD0475 /* ConfidenceIntervalDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfidenceIntervalDescription.h; sourceTree = "<group>"; };
+		1D7FC729169BA63400DD0475 /* ConfidenceIntervalDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfidenceIntervalDescription.m; sourceTree = "<group>"; };
+		1D7FC72A169BA63400DD0475 /* Covariance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Covariance.h; sourceTree = "<group>"; };
+		1D7FC72B169BA63400DD0475 /* Covariance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Covariance.m; sourceTree = "<group>"; };
+		1D7FC72C169BA63400DD0475 /* CovarianceSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CovarianceSet.h; sourceTree = "<group>"; };
+		1D7FC72D169BA63400DD0475 /* CovarianceSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CovarianceSet.m; sourceTree = "<group>"; };
+		1D7FC72E169BA63400DD0475 /* Hypothesis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hypothesis.h; sourceTree = "<group>"; };
+		1D7FC72F169BA63400DD0475 /* Hypothesis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hypothesis.m; sourceTree = "<group>"; };
+		1D7FC730169BA63400DD0475 /* HypothesisBetweenParticipantMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HypothesisBetweenParticipantMapping.h; sourceTree = "<group>"; };
+		1D7FC731169BA63400DD0475 /* HypothesisBetweenParticipantMapping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HypothesisBetweenParticipantMapping.m; sourceTree = "<group>"; };
+		1D7FC732169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HypothesisRepeatedMeasuresMapping.h; sourceTree = "<group>"; };
+		1D7FC733169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HypothesisRepeatedMeasuresMapping.m; sourceTree = "<group>"; };
+		1D7FC734169BA63400DD0475 /* HypothesisSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HypothesisSet.h; sourceTree = "<group>"; };
+		1D7FC735169BA63400DD0475 /* HypothesisSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HypothesisSet.m; sourceTree = "<group>"; };
+		1D7FC736169BA63400DD0475 /* NamedMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedMatrix.h; sourceTree = "<group>"; };
+		1D7FC737169BA63400DD0475 /* NamedMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedMatrix.m; sourceTree = "<group>"; };
+		1D7FC738169BA63400DD0475 /* NamedMatrixList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedMatrixList.h; sourceTree = "<group>"; };
+		1D7FC739169BA63400DD0475 /* NamedMatrixList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedMatrixList.m; sourceTree = "<group>"; };
+		1D7FC73A169BA63400DD0475 /* NamedMatrixSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedMatrixSet.h; sourceTree = "<group>"; };
+		1D7FC73B169BA63400DD0475 /* NamedMatrixSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedMatrixSet.m; sourceTree = "<group>"; };
+		1D7FC73C169BA63400DD0475 /* NominalPower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NominalPower.h; sourceTree = "<group>"; };
+		1D7FC73D169BA63400DD0475 /* NominalPower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NominalPower.m; sourceTree = "<group>"; };
+		1D7FC73E169BA63400DD0475 /* NominalPowerList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NominalPowerList.h; sourceTree = "<group>"; };
+		1D7FC73F169BA63400DD0475 /* NominalPowerList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NominalPowerList.m; sourceTree = "<group>"; };
+		1D7FC740169BA63400DD0475 /* PowerCurveDataSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerCurveDataSeries.h; sourceTree = "<group>"; };
+		1D7FC741169BA63400DD0475 /* PowerCurveDataSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerCurveDataSeries.m; sourceTree = "<group>"; };
+		1D7FC742169BA63400DD0475 /* PowerCurveDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerCurveDescription.h; sourceTree = "<group>"; };
+		1D7FC743169BA63400DD0475 /* PowerCurveDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerCurveDescription.m; sourceTree = "<group>"; };
+		1D7FC744169BA63400DD0475 /* PowerMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerMethod.h; sourceTree = "<group>"; };
+		1D7FC745169BA63400DD0475 /* PowerMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerMethod.m; sourceTree = "<group>"; };
+		1D7FC746169BA63400DD0475 /* PowerMethodList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerMethodList.h; sourceTree = "<group>"; };
+		1D7FC747169BA63400DD0475 /* PowerMethodList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerMethodList.m; sourceTree = "<group>"; };
+		1D7FC748169BA63400DD0475 /* PowerResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerResult.h; sourceTree = "<group>"; };
+		1D7FC749169BA63400DD0475 /* PowerResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerResult.m; sourceTree = "<group>"; };
+		1D7FC74A169BA63400DD0475 /* PowerResultList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerResultList.h; sourceTree = "<group>"; };
+		1D7FC74B169BA63400DD0475 /* PowerResultList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerResultList.m; sourceTree = "<group>"; };
+		1D7FC74C169BA63400DD0475 /* Quantile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quantile.h; sourceTree = "<group>"; };
+		1D7FC74D169BA63400DD0475 /* Quantile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Quantile.m; sourceTree = "<group>"; };
+		1D7FC74E169BA63400DD0475 /* QuantileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuantileList.h; sourceTree = "<group>"; };
+		1D7FC74F169BA63400DD0475 /* QuantileList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuantileList.m; sourceTree = "<group>"; };
+		1D7FC750169BA63400DD0475 /* RelativeGroupSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativeGroupSize.h; sourceTree = "<group>"; };
+		1D7FC751169BA63400DD0475 /* RelativeGroupSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelativeGroupSize.m; sourceTree = "<group>"; };
+		1D7FC752169BA63400DD0475 /* RelativeGroupSizeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativeGroupSizeList.h; sourceTree = "<group>"; };
+		1D7FC753169BA63400DD0475 /* RelativeGroupSizeList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelativeGroupSizeList.m; sourceTree = "<group>"; };
+		1D7FC754169BA63400DD0475 /* RepeatedMeasuresNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatedMeasuresNode.h; sourceTree = "<group>"; };
+		1D7FC755169BA63400DD0475 /* RepeatedMeasuresNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatedMeasuresNode.m; sourceTree = "<group>"; };
+		1D7FC756169BA63400DD0475 /* RepeatedMeasuresNodeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatedMeasuresNodeList.h; sourceTree = "<group>"; };
+		1D7FC757169BA63400DD0475 /* RepeatedMeasuresNodeList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatedMeasuresNodeList.m; sourceTree = "<group>"; };
+		1D7FC758169BA63400DD0475 /* ResponseList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseList.h; sourceTree = "<group>"; };
+		1D7FC759169BA63400DD0475 /* ResponseList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseList.m; sourceTree = "<group>"; };
+		1D7FC75A169BA63400DD0475 /* ResponseNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseNode.h; sourceTree = "<group>"; };
+		1D7FC75B169BA63400DD0475 /* ResponseNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseNode.m; sourceTree = "<group>"; };
+		1D7FC75C169BA63400DD0475 /* SampleSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleSize.h; sourceTree = "<group>"; };
+		1D7FC75D169BA63400DD0475 /* SampleSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleSize.m; sourceTree = "<group>"; };
+		1D7FC75E169BA63400DD0475 /* SampleSizeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleSizeList.h; sourceTree = "<group>"; };
+		1D7FC75F169BA63400DD0475 /* SampleSizeList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleSizeList.m; sourceTree = "<group>"; };
+		1D7FC760169BA63400DD0475 /* SigmaScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SigmaScale.h; sourceTree = "<group>"; };
+		1D7FC761169BA63400DD0475 /* SigmaScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SigmaScale.m; sourceTree = "<group>"; };
+		1D7FC762169BA63400DD0475 /* SigmaScaleList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SigmaScaleList.h; sourceTree = "<group>"; };
+		1D7FC763169BA63400DD0475 /* SigmaScaleList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SigmaScaleList.m; sourceTree = "<group>"; };
+		1D7FC764169BA63400DD0475 /* Spacing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spacing.h; sourceTree = "<group>"; };
+		1D7FC765169BA63400DD0475 /* Spacing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spacing.m; sourceTree = "<group>"; };
+		1D7FC766169BA63400DD0475 /* StandardDeviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardDeviation.h; sourceTree = "<group>"; };
+		1D7FC767169BA63400DD0475 /* StandardDeviation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardDeviation.m; sourceTree = "<group>"; };
+		1D7FC768169BA63400DD0475 /* StatisticalTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatisticalTest.h; sourceTree = "<group>"; };
+		1D7FC769169BA63400DD0475 /* StatisticalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatisticalTest.m; sourceTree = "<group>"; };
+		1D7FC76A169BA63400DD0475 /* StatisticalTestList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatisticalTestList.h; sourceTree = "<group>"; };
+		1D7FC76B169BA63400DD0475 /* StatisticalTestList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatisticalTestList.m; sourceTree = "<group>"; };
+		1D7FC76C169BA63400DD0475 /* StudyDesign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyDesign.h; sourceTree = "<group>"; };
+		1D7FC76D169BA63400DD0475 /* StudyDesign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyDesign.m; sourceTree = "<group>"; };
+		1D7FC76E169BA63400DD0475 /* StudyDesignList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyDesignList.h; sourceTree = "<group>"; };
+		1D7FC76F169BA63400DD0475 /* StudyNamedMatrixList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyNamedMatrixList.h; sourceTree = "<group>"; };
+		1D7FC770169BA63400DD0475 /* StudyNamedMatrixList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyNamedMatrixList.m; sourceTree = "<group>"; };
+		1D7FC771169BA63400DD0475 /* TypeIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeIError.h; sourceTree = "<group>"; };
+		1D7FC772169BA63400DD0475 /* TypeIError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypeIError.m; sourceTree = "<group>"; };
+		1D7FC773169BA63400DD0475 /* TypeIErrorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeIErrorList.h; sourceTree = "<group>"; };
+		1D7FC774169BA63400DD0475 /* TypeIErrorList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypeIErrorList.m; sourceTree = "<group>"; };
+		1D7FC775169BA63400DD0475 /* UuidCovariance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidCovariance.h; sourceTree = "<group>"; };
+		1D7FC776169BA63400DD0475 /* UuidCovariance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidCovariance.m; sourceTree = "<group>"; };
+		1D7FC777169BA63400DD0475 /* UuidCovarianceName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidCovarianceName.h; sourceTree = "<group>"; };
+		1D7FC778169BA63400DD0475 /* UuidCovarianceName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidCovarianceName.m; sourceTree = "<group>"; };
+		1D7FC779169BA63400DD0475 /* UuidHypothesis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidHypothesis.h; sourceTree = "<group>"; };
+		1D7FC77A169BA63400DD0475 /* UuidHypothesis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidHypothesis.m; sourceTree = "<group>"; };
+		1D7FC77B169BA63400DD0475 /* UuidHypothesisType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidHypothesisType.h; sourceTree = "<group>"; };
+		1D7FC77C169BA63400DD0475 /* UuidHypothesisType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidHypothesisType.m; sourceTree = "<group>"; };
+		1D7FC77D169BA63400DD0475 /* UuidMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidMatrix.h; sourceTree = "<group>"; };
+		1D7FC77E169BA63400DD0475 /* UuidMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidMatrix.m; sourceTree = "<group>"; };
+		1D7FC77F169BA63400DD0475 /* UuidMatrixName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidMatrixName.h; sourceTree = "<group>"; };
+		1D7FC780169BA63400DD0475 /* UuidMatrixName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidMatrixName.m; sourceTree = "<group>"; };
+		1D7FC781169BA63400DD0475 /* UuidPowerCurveDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UuidPowerCurveDescription.h; sourceTree = "<group>"; };
+		1D7FC782169BA63400DD0475 /* UuidPowerCurveDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UuidPowerCurveDescription.m; sourceTree = "<group>"; };
+		1D7FC783169BA63400DD0475 /* WebServiceCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServiceCommon.h; sourceTree = "<group>"; };
+		1D7FC784169BA63400DD0475 /* WebServiceCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServiceCommon.m; sourceTree = "<group>"; };
+		1D7FC785169BA63400DD0475 /* WebServiceCommonObjectiveC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServiceCommonObjectiveC.h; sourceTree = "<group>"; };
+		1D7FC786169BA63400DD0475 /* WebServiceCommonObjectiveC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServiceCommonObjectiveC.m; sourceTree = "<group>"; };
+		1D7FC788169BA63400DD0475 /* CovarianceEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CovarianceEnum.h; sourceTree = "<group>"; };
+		1D7FC789169BA63400DD0475 /* CovarianceEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CovarianceEnum.m; sourceTree = "<group>"; };
+		1D7FC78A169BA63400DD0475 /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
+		1D7FC78B169BA63400DD0475 /* Enums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enums.m; sourceTree = "<group>"; };
+		1D7FC78C169BA63400DD0475 /* HorizontalAxisEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HorizontalAxisEnum.h; sourceTree = "<group>"; };
+		1D7FC78D169BA63400DD0475 /* HorizontalAxisEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HorizontalAxisEnum.m; sourceTree = "<group>"; };
+		1D7FC78E169BA63400DD0475 /* HypothesisEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HypothesisEnum.h; sourceTree = "<group>"; };
+		1D7FC78F169BA63400DD0475 /* HypothesisEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HypothesisEnum.m; sourceTree = "<group>"; };
+		1D7FC790169BA63400DD0475 /* HypothesisTrendEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HypothesisTrendEnum.h; sourceTree = "<group>"; };
+		1D7FC791169BA63400DD0475 /* HypothesisTrendEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HypothesisTrendEnum.m; sourceTree = "<group>"; };
+		1D7FC792169BA63400DD0475 /* PowerEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PowerEnum.h; sourceTree = "<group>"; };
+		1D7FC793169BA63400DD0475 /* PowerEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PowerEnum.m; sourceTree = "<group>"; };
+		1D7FC794169BA63400DD0475 /* RepeatedMeasuresDimension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatedMeasuresDimension.h; sourceTree = "<group>"; };
+		1D7FC795169BA63400DD0475 /* RepeatedMeasuresDimension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatedMeasuresDimension.m; sourceTree = "<group>"; };
+		1D7FC796169BA63400DD0475 /* SolutionEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SolutionEnum.h; sourceTree = "<group>"; };
+		1D7FC797169BA63400DD0475 /* SolutionEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SolutionEnum.m; sourceTree = "<group>"; };
+		1D7FC798169BA63400DD0475 /* StatisticalTestEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatisticalTestEnum.h; sourceTree = "<group>"; };
+		1D7FC799169BA63400DD0475 /* StatisticalTestEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatisticalTestEnum.m; sourceTree = "<group>"; };
+		1D7FC79A169BA63400DD0475 /* StratificationEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StratificationEnum.h; sourceTree = "<group>"; };
+		1D7FC79B169BA63400DD0475 /* StratificationEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StratificationEnum.m; sourceTree = "<group>"; };
+		1D7FC79C169BA63400DD0475 /* StudyDesignList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyDesignList.m; sourceTree = "<group>"; };
+		1D7FC79D169BA63400DD0475 /* StudyDesignViewEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudyDesignViewEnum.h; sourceTree = "<group>"; };
+		1D7FC79E169BA63400DD0475 /* StudyDesignViewEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudyDesignViewEnum.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D7FC6DA169BA35400DD0475 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D7FC6E1169BA35400DD0475 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1D7FC6D2169BA35400DD0475 = {
+			isa = PBXGroup;
+			children = (
+				1D7FC710169BA63400DD0475 /* Src */,
+				1D7FC6F5169BA3F300DD0475 /* Externals */,
+				1D7FC6EE169BA3D100DD0475 /* Supporting Files */,
+				1D7FC6DF169BA35400DD0475 /* Frameworks */,
+				1D7FC6DE169BA35400DD0475 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1D7FC6DE169BA35400DD0475 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC6DD169BA35400DD0475 /* libWebServiceCommonObjectiveC.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1D7FC6DF169BA35400DD0475 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC6E0169BA35400DD0475 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1D7FC6EE169BA3D100DD0475 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC6EF169BA3D100DD0475 /* WebServiceCommonObjectiveC-Prefix.pch */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1D7FC6F5169BA3F300DD0475 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC6F6169BA3F300DD0475 /* AFNetworking */,
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		1D7FC6F6169BA3F300DD0475 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC6F7169BA3F300DD0475 /* AFHTTPClient.h */,
+				1D7FC6F8169BA3F300DD0475 /* AFHTTPClient.m */,
+				1D7FC6F9169BA3F300DD0475 /* AFHTTPRequestOperation.h */,
+				1D7FC6FA169BA3F300DD0475 /* AFHTTPRequestOperation.m */,
+				1D7FC6FB169BA3F300DD0475 /* AFImageRequestOperation.h */,
+				1D7FC6FC169BA3F300DD0475 /* AFImageRequestOperation.m */,
+				1D7FC6FD169BA3F300DD0475 /* AFJSONRequestOperation.h */,
+				1D7FC6FE169BA3F300DD0475 /* AFJSONRequestOperation.m */,
+				1D7FC6FF169BA3F300DD0475 /* AFJSONUtilities.h */,
+				1D7FC700169BA3F300DD0475 /* AFJSONUtilities.m */,
+				1D7FC701169BA3F300DD0475 /* AFNetworkActivityIndicatorManager.h */,
+				1D7FC702169BA3F300DD0475 /* AFNetworkActivityIndicatorManager.m */,
+				1D7FC703169BA3F300DD0475 /* AFNetworking.h */,
+				1D7FC704169BA3F300DD0475 /* AFPropertyListRequestOperation.h */,
+				1D7FC705169BA3F300DD0475 /* AFPropertyListRequestOperation.m */,
+				1D7FC706169BA3F300DD0475 /* AFURLConnectionOperation.h */,
+				1D7FC707169BA3F300DD0475 /* AFURLConnectionOperation.m */,
+				1D7FC708169BA3F300DD0475 /* AFXMLRequestOperation.h */,
+				1D7FC709169BA3F300DD0475 /* AFXMLRequestOperation.m */,
+				1D7FC70A169BA3F300DD0475 /* UIImageView+AFNetworking.h */,
+				1D7FC70B169BA3F300DD0475 /* UIImageView+AFNetworking.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		1D7FC710169BA63400DD0475 /* Src */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC711169BA63400DD0475 /* Domain */,
+				1D7FC787169BA63400DD0475 /* Enums */,
+			);
+			path = Src;
+			sourceTree = "<group>";
+		};
+		1D7FC711169BA63400DD0475 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC712169BA63400DD0475 /* BetaScale.h */,
+				1D7FC713169BA63400DD0475 /* BetaScale.m */,
+				1D7FC714169BA63400DD0475 /* BetaScaleList.h */,
+				1D7FC715169BA63400DD0475 /* BetaScaleList.m */,
+				1D7FC716169BA63400DD0475 /* BetweenParticipantFactor.h */,
+				1D7FC717169BA63400DD0475 /* BetweenParticipantFactor.m */,
+				1D7FC718169BA63400DD0475 /* BetweenParticipantFactorList.h */,
+				1D7FC719169BA63400DD0475 /* BetweenParticipantFactorList.m */,
+				1D7FC71A169BA63400DD0475 /* Blob2DArray.h */,
+				1D7FC71B169BA63400DD0475 /* Blob2DArray.m */,
+				1D7FC71C169BA63400DD0475 /* BugReport.h */,
+				1D7FC71D169BA63400DD0475 /* BugReport.m */,
+				1D7FC71E169BA63400DD0475 /* Category.h */,
+				1D7FC71F169BA63400DD0475 /* Category.m */,
+				1D7FC720169BA63400DD0475 /* CategoryList.h */,
+				1D7FC721169BA63400DD0475 /* CategoryList.m */,
+				1D7FC722169BA63400DD0475 /* ClusterNode.h */,
+				1D7FC723169BA63400DD0475 /* ClusterNode.m */,
+				1D7FC724169BA63400DD0475 /* ClusterNodeList.h */,
+				1D7FC725169BA63400DD0475 /* ClusterNodeList.m */,
+				1D7FC726169BA63400DD0475 /* ConfidenceInterval.h */,
+				1D7FC727169BA63400DD0475 /* ConfidenceInterval.m */,
+				1D7FC728169BA63400DD0475 /* ConfidenceIntervalDescription.h */,
+				1D7FC729169BA63400DD0475 /* ConfidenceIntervalDescription.m */,
+				1D7FC72A169BA63400DD0475 /* Covariance.h */,
+				1D7FC72B169BA63400DD0475 /* Covariance.m */,
+				1D7FC72C169BA63400DD0475 /* CovarianceSet.h */,
+				1D7FC72D169BA63400DD0475 /* CovarianceSet.m */,
+				1D7FC72E169BA63400DD0475 /* Hypothesis.h */,
+				1D7FC72F169BA63400DD0475 /* Hypothesis.m */,
+				1D7FC730169BA63400DD0475 /* HypothesisBetweenParticipantMapping.h */,
+				1D7FC731169BA63400DD0475 /* HypothesisBetweenParticipantMapping.m */,
+				1D7FC732169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.h */,
+				1D7FC733169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.m */,
+				1D7FC734169BA63400DD0475 /* HypothesisSet.h */,
+				1D7FC735169BA63400DD0475 /* HypothesisSet.m */,
+				1D7FC736169BA63400DD0475 /* NamedMatrix.h */,
+				1D7FC737169BA63400DD0475 /* NamedMatrix.m */,
+				1D7FC738169BA63400DD0475 /* NamedMatrixList.h */,
+				1D7FC739169BA63400DD0475 /* NamedMatrixList.m */,
+				1D7FC73A169BA63400DD0475 /* NamedMatrixSet.h */,
+				1D7FC73B169BA63400DD0475 /* NamedMatrixSet.m */,
+				1D7FC73C169BA63400DD0475 /* NominalPower.h */,
+				1D7FC73D169BA63400DD0475 /* NominalPower.m */,
+				1D7FC73E169BA63400DD0475 /* NominalPowerList.h */,
+				1D7FC73F169BA63400DD0475 /* NominalPowerList.m */,
+				1D7FC740169BA63400DD0475 /* PowerCurveDataSeries.h */,
+				1D7FC741169BA63400DD0475 /* PowerCurveDataSeries.m */,
+				1D7FC742169BA63400DD0475 /* PowerCurveDescription.h */,
+				1D7FC743169BA63400DD0475 /* PowerCurveDescription.m */,
+				1D7FC744169BA63400DD0475 /* PowerMethod.h */,
+				1D7FC745169BA63400DD0475 /* PowerMethod.m */,
+				1D7FC746169BA63400DD0475 /* PowerMethodList.h */,
+				1D7FC747169BA63400DD0475 /* PowerMethodList.m */,
+				1D7FC748169BA63400DD0475 /* PowerResult.h */,
+				1D7FC749169BA63400DD0475 /* PowerResult.m */,
+				1D7FC74A169BA63400DD0475 /* PowerResultList.h */,
+				1D7FC74B169BA63400DD0475 /* PowerResultList.m */,
+				1D7FC74C169BA63400DD0475 /* Quantile.h */,
+				1D7FC74D169BA63400DD0475 /* Quantile.m */,
+				1D7FC74E169BA63400DD0475 /* QuantileList.h */,
+				1D7FC74F169BA63400DD0475 /* QuantileList.m */,
+				1D7FC750169BA63400DD0475 /* RelativeGroupSize.h */,
+				1D7FC751169BA63400DD0475 /* RelativeGroupSize.m */,
+				1D7FC752169BA63400DD0475 /* RelativeGroupSizeList.h */,
+				1D7FC753169BA63400DD0475 /* RelativeGroupSizeList.m */,
+				1D7FC754169BA63400DD0475 /* RepeatedMeasuresNode.h */,
+				1D7FC755169BA63400DD0475 /* RepeatedMeasuresNode.m */,
+				1D7FC756169BA63400DD0475 /* RepeatedMeasuresNodeList.h */,
+				1D7FC757169BA63400DD0475 /* RepeatedMeasuresNodeList.m */,
+				1D7FC758169BA63400DD0475 /* ResponseList.h */,
+				1D7FC759169BA63400DD0475 /* ResponseList.m */,
+				1D7FC75A169BA63400DD0475 /* ResponseNode.h */,
+				1D7FC75B169BA63400DD0475 /* ResponseNode.m */,
+				1D7FC75C169BA63400DD0475 /* SampleSize.h */,
+				1D7FC75D169BA63400DD0475 /* SampleSize.m */,
+				1D7FC75E169BA63400DD0475 /* SampleSizeList.h */,
+				1D7FC75F169BA63400DD0475 /* SampleSizeList.m */,
+				1D7FC760169BA63400DD0475 /* SigmaScale.h */,
+				1D7FC761169BA63400DD0475 /* SigmaScale.m */,
+				1D7FC762169BA63400DD0475 /* SigmaScaleList.h */,
+				1D7FC763169BA63400DD0475 /* SigmaScaleList.m */,
+				1D7FC764169BA63400DD0475 /* Spacing.h */,
+				1D7FC765169BA63400DD0475 /* Spacing.m */,
+				1D7FC766169BA63400DD0475 /* StandardDeviation.h */,
+				1D7FC767169BA63400DD0475 /* StandardDeviation.m */,
+				1D7FC768169BA63400DD0475 /* StatisticalTest.h */,
+				1D7FC769169BA63400DD0475 /* StatisticalTest.m */,
+				1D7FC76A169BA63400DD0475 /* StatisticalTestList.h */,
+				1D7FC76B169BA63400DD0475 /* StatisticalTestList.m */,
+				1D7FC76C169BA63400DD0475 /* StudyDesign.h */,
+				1D7FC76D169BA63400DD0475 /* StudyDesign.m */,
+				1D7FC76E169BA63400DD0475 /* StudyDesignList.h */,
+				1D7FC76F169BA63400DD0475 /* StudyNamedMatrixList.h */,
+				1D7FC770169BA63400DD0475 /* StudyNamedMatrixList.m */,
+				1D7FC771169BA63400DD0475 /* TypeIError.h */,
+				1D7FC772169BA63400DD0475 /* TypeIError.m */,
+				1D7FC773169BA63400DD0475 /* TypeIErrorList.h */,
+				1D7FC774169BA63400DD0475 /* TypeIErrorList.m */,
+				1D7FC775169BA63400DD0475 /* UuidCovariance.h */,
+				1D7FC776169BA63400DD0475 /* UuidCovariance.m */,
+				1D7FC777169BA63400DD0475 /* UuidCovarianceName.h */,
+				1D7FC778169BA63400DD0475 /* UuidCovarianceName.m */,
+				1D7FC779169BA63400DD0475 /* UuidHypothesis.h */,
+				1D7FC77A169BA63400DD0475 /* UuidHypothesis.m */,
+				1D7FC77B169BA63400DD0475 /* UuidHypothesisType.h */,
+				1D7FC77C169BA63400DD0475 /* UuidHypothesisType.m */,
+				1D7FC77D169BA63400DD0475 /* UuidMatrix.h */,
+				1D7FC77E169BA63400DD0475 /* UuidMatrix.m */,
+				1D7FC77F169BA63400DD0475 /* UuidMatrixName.h */,
+				1D7FC780169BA63400DD0475 /* UuidMatrixName.m */,
+				1D7FC781169BA63400DD0475 /* UuidPowerCurveDescription.h */,
+				1D7FC782169BA63400DD0475 /* UuidPowerCurveDescription.m */,
+				1D7FC783169BA63400DD0475 /* WebServiceCommon.h */,
+				1D7FC784169BA63400DD0475 /* WebServiceCommon.m */,
+				1D7FC785169BA63400DD0475 /* WebServiceCommonObjectiveC.h */,
+				1D7FC786169BA63400DD0475 /* WebServiceCommonObjectiveC.m */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		1D7FC787169BA63400DD0475 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				1D7FC788169BA63400DD0475 /* CovarianceEnum.h */,
+				1D7FC789169BA63400DD0475 /* CovarianceEnum.m */,
+				1D7FC78A169BA63400DD0475 /* Enums.h */,
+				1D7FC78B169BA63400DD0475 /* Enums.m */,
+				1D7FC78C169BA63400DD0475 /* HorizontalAxisEnum.h */,
+				1D7FC78D169BA63400DD0475 /* HorizontalAxisEnum.m */,
+				1D7FC78E169BA63400DD0475 /* HypothesisEnum.h */,
+				1D7FC78F169BA63400DD0475 /* HypothesisEnum.m */,
+				1D7FC790169BA63400DD0475 /* HypothesisTrendEnum.h */,
+				1D7FC791169BA63400DD0475 /* HypothesisTrendEnum.m */,
+				1D7FC792169BA63400DD0475 /* PowerEnum.h */,
+				1D7FC793169BA63400DD0475 /* PowerEnum.m */,
+				1D7FC794169BA63400DD0475 /* RepeatedMeasuresDimension.h */,
+				1D7FC795169BA63400DD0475 /* RepeatedMeasuresDimension.m */,
+				1D7FC796169BA63400DD0475 /* SolutionEnum.h */,
+				1D7FC797169BA63400DD0475 /* SolutionEnum.m */,
+				1D7FC798169BA63400DD0475 /* StatisticalTestEnum.h */,
+				1D7FC799169BA63400DD0475 /* StatisticalTestEnum.m */,
+				1D7FC79A169BA63400DD0475 /* StratificationEnum.h */,
+				1D7FC79B169BA63400DD0475 /* StratificationEnum.m */,
+				1D7FC79C169BA63400DD0475 /* StudyDesignList.m */,
+				1D7FC79D169BA63400DD0475 /* StudyDesignViewEnum.h */,
+				1D7FC79E169BA63400DD0475 /* StudyDesignViewEnum.m */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D7FC6DC169BA35400DD0475 /* WebServiceCommonObjectiveC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D7FC6EB169BA35400DD0475 /* Build configuration list for PBXNativeTarget "WebServiceCommonObjectiveC" */;
+			buildPhases = (
+				1D7FC6D9169BA35400DD0475 /* Sources */,
+				1D7FC6DA169BA35400DD0475 /* Frameworks */,
+				1D7FC6DB169BA35400DD0475 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WebServiceCommonObjectiveC;
+			productName = WebServiceCommonObjectiveC;
+			productReference = 1D7FC6DD169BA35400DD0475 /* libWebServiceCommonObjectiveC.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1D7FC6D4169BA35400DD0475 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "University of Colorado Denver";
+			};
+			buildConfigurationList = 1D7FC6D7169BA35400DD0475 /* Build configuration list for PBXProject "WebServiceCommonObjectiveC" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1D7FC6D2169BA35400DD0475;
+			productRefGroup = 1D7FC6DE169BA35400DD0475 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D7FC6DC169BA35400DD0475 /* WebServiceCommonObjectiveC */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D7FC6D9169BA35400DD0475 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D7FC79F169BA63400DD0475 /* BetaScale.m in Sources */,
+				1D7FC7A0169BA63400DD0475 /* BetaScaleList.m in Sources */,
+				1D7FC7A1169BA63400DD0475 /* BetweenParticipantFactor.m in Sources */,
+				1D7FC7A2169BA63400DD0475 /* BetweenParticipantFactorList.m in Sources */,
+				1D7FC7A3169BA63400DD0475 /* Blob2DArray.m in Sources */,
+				1D7FC7A4169BA63400DD0475 /* BugReport.m in Sources */,
+				1D7FC7A5169BA63400DD0475 /* Category.m in Sources */,
+				1D7FC7A6169BA63400DD0475 /* CategoryList.m in Sources */,
+				1D7FC7A7169BA63400DD0475 /* ClusterNode.m in Sources */,
+				1D7FC7A8169BA63400DD0475 /* ClusterNodeList.m in Sources */,
+				1D7FC7A9169BA63400DD0475 /* ConfidenceInterval.m in Sources */,
+				1D7FC7AA169BA63400DD0475 /* ConfidenceIntervalDescription.m in Sources */,
+				1D7FC7AB169BA63400DD0475 /* Covariance.m in Sources */,
+				1D7FC7AC169BA63400DD0475 /* CovarianceSet.m in Sources */,
+				1D7FC7AD169BA63400DD0475 /* Hypothesis.m in Sources */,
+				1D7FC7AE169BA63400DD0475 /* HypothesisBetweenParticipantMapping.m in Sources */,
+				1D7FC7AF169BA63400DD0475 /* HypothesisRepeatedMeasuresMapping.m in Sources */,
+				1D7FC7B0169BA63400DD0475 /* HypothesisSet.m in Sources */,
+				1D7FC7B1169BA63400DD0475 /* NamedMatrix.m in Sources */,
+				1D7FC7B2169BA63400DD0475 /* NamedMatrixList.m in Sources */,
+				1D7FC7B3169BA63400DD0475 /* NamedMatrixSet.m in Sources */,
+				1D7FC7B4169BA63400DD0475 /* NominalPower.m in Sources */,
+				1D7FC7B5169BA63400DD0475 /* NominalPowerList.m in Sources */,
+				1D7FC7B6169BA63400DD0475 /* PowerCurveDataSeries.m in Sources */,
+				1D7FC7B7169BA63400DD0475 /* PowerCurveDescription.m in Sources */,
+				1D7FC7B8169BA63400DD0475 /* PowerMethod.m in Sources */,
+				1D7FC7B9169BA63400DD0475 /* PowerMethodList.m in Sources */,
+				1D7FC7BA169BA63400DD0475 /* PowerResult.m in Sources */,
+				1D7FC7BB169BA63400DD0475 /* PowerResultList.m in Sources */,
+				1D7FC7BC169BA63400DD0475 /* Quantile.m in Sources */,
+				1D7FC7BD169BA63400DD0475 /* QuantileList.m in Sources */,
+				1D7FC7BE169BA63400DD0475 /* RelativeGroupSize.m in Sources */,
+				1D7FC7BF169BA63400DD0475 /* RelativeGroupSizeList.m in Sources */,
+				1D7FC7C0169BA63400DD0475 /* RepeatedMeasuresNode.m in Sources */,
+				1D7FC7C1169BA63400DD0475 /* RepeatedMeasuresNodeList.m in Sources */,
+				1D7FC7C2169BA63400DD0475 /* ResponseList.m in Sources */,
+				1D7FC7C3169BA63400DD0475 /* ResponseNode.m in Sources */,
+				1D7FC7C4169BA63400DD0475 /* SampleSize.m in Sources */,
+				1D7FC7C5169BA63400DD0475 /* SampleSizeList.m in Sources */,
+				1D7FC7C6169BA63400DD0475 /* SigmaScale.m in Sources */,
+				1D7FC7C7169BA63400DD0475 /* SigmaScaleList.m in Sources */,
+				1D7FC7C8169BA63400DD0475 /* Spacing.m in Sources */,
+				1D7FC7C9169BA63400DD0475 /* StandardDeviation.m in Sources */,
+				1D7FC7CA169BA63400DD0475 /* StatisticalTest.m in Sources */,
+				1D7FC7CB169BA63400DD0475 /* StatisticalTestList.m in Sources */,
+				1D7FC7CC169BA63400DD0475 /* StudyDesign.m in Sources */,
+				1D7FC7CD169BA63400DD0475 /* StudyNamedMatrixList.m in Sources */,
+				1D7FC7CE169BA63400DD0475 /* TypeIError.m in Sources */,
+				1D7FC7CF169BA63400DD0475 /* TypeIErrorList.m in Sources */,
+				1D7FC7D0169BA63400DD0475 /* UuidCovariance.m in Sources */,
+				1D7FC7D1169BA63400DD0475 /* UuidCovarianceName.m in Sources */,
+				1D7FC7D2169BA63400DD0475 /* UuidHypothesis.m in Sources */,
+				1D7FC7D3169BA63400DD0475 /* UuidHypothesisType.m in Sources */,
+				1D7FC7D4169BA63400DD0475 /* UuidMatrix.m in Sources */,
+				1D7FC7D5169BA63400DD0475 /* UuidMatrixName.m in Sources */,
+				1D7FC7D6169BA63400DD0475 /* UuidPowerCurveDescription.m in Sources */,
+				1D7FC7D7169BA63400DD0475 /* WebServiceCommon.m in Sources */,
+				1D7FC7D8169BA63400DD0475 /* WebServiceCommonObjectiveC.m in Sources */,
+				1D7FC7D9169BA63400DD0475 /* CovarianceEnum.m in Sources */,
+				1D7FC7DA169BA63400DD0475 /* Enums.m in Sources */,
+				1D7FC7DB169BA63400DD0475 /* HorizontalAxisEnum.m in Sources */,
+				1D7FC7DC169BA63400DD0475 /* HypothesisEnum.m in Sources */,
+				1D7FC7DD169BA63400DD0475 /* HypothesisTrendEnum.m in Sources */,
+				1D7FC7DE169BA63400DD0475 /* PowerEnum.m in Sources */,
+				1D7FC7DF169BA63400DD0475 /* RepeatedMeasuresDimension.m in Sources */,
+				1D7FC7E0169BA63400DD0475 /* SolutionEnum.m in Sources */,
+				1D7FC7E1169BA63400DD0475 /* StatisticalTestEnum.m in Sources */,
+				1D7FC7E2169BA63400DD0475 /* StratificationEnum.m in Sources */,
+				1D7FC7E3169BA63400DD0475 /* StudyDesignList.m in Sources */,
+				1D7FC7E4169BA63400DD0475 /* StudyDesignViewEnum.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D7FC6E9169BA35400DD0475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1D7FC6EA169BA35400DD0475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1D7FC6EC169BA35400DD0475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/WebServiceCommonObjectiveC.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Supporting Files/WebServiceCommonObjectiveC-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		1D7FC6ED169BA35400DD0475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/WebServiceCommonObjectiveC.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Supporting Files/WebServiceCommonObjectiveC-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D7FC6D7169BA35400DD0475 /* Build configuration list for PBXProject "WebServiceCommonObjectiveC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D7FC6E9169BA35400DD0475 /* Debug */,
+				1D7FC6EA169BA35400DD0475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1D7FC6EB169BA35400DD0475 /* Build configuration list for PBXNativeTarget "WebServiceCommonObjectiveC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D7FC6EC169BA35400DD0475 /* Debug */,
+				1D7FC6ED169BA35400DD0475 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1D7FC6D4169BA35400DD0475 /* Project object */;
+}
