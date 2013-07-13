@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  
+ * Study Design Service for the GLIMMPSE Software System.  
+ * This service stores study design definitions for users of the GLIMMSE interface.
+ * Service contain all information related to a power or sample size calculation.  
+ * The Study Design Service simplifies communication between different screens in the user interface.
+ * 
+ * Copyright (C) 2010 Regents of the University of Colorado.  
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ -->
+ 
+ <!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>	
+	<!-- <typedef name="solutionType" class="edu.bios.ucdenver.jasypt.StudyDesignTest.GenericEnumUserType">
+		<param name="enumClass">edu.ucdenver.bios.webservice.common.enums.SolutionTypeEnum</param>
+	</typedef>	
+	
+	<typedef name="viewType" class="edu.bios.ucdenver.jasypt.StudyDesignTest.GenericEnumUserType">
+		<param name="enumClass">edu.ucdenver.bios.webservice.common.enums.StudyDesignViewTypeEnum</param>
+	</typedef> -->	
+		
+	<class name="edu.ucdenver.bios.webservice.common.domain.StudyDesign" table="STUDY_DESIGN" lazy="false">
+        <id name="uuid"><generator class="assigned"/></id>						
+		<!-- <property name="flagSolveFor" column="flagSolveFor">			
+		</property>-->
+		<property name="gaussianCovariate" column="hasGaussianCovariate"/> 
+		<property name="name" column="name" type="java.lang.String"/>
+		<property name="participantLabel" column="participantLabel" type="java.lang.String"/>	
+		
+		<!-- <property name="solutionTypeEnum" 
+		column="solutionType" 
+		type="solutionType"
+		not-null="false"
+		update="false"/>
+		
+		<property name="viewTypeEnum" 
+		column="viewType" 
+		type="viewType"
+		not-null="false"
+		update="false"/>
+			
+		Begin : Mapping of List objects	
+			<list name="alphaList" table="STUDY_ALPHA_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.TypeIError" 
+				column="id" lazy="false"/>			 			  		  
+			</list>
+					
+			<list name="betaScaleList" table="STUDY_BETA_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.BetaScale" 
+			  	column="id" lazy="false"/>		 			  		  
+			</list>
+			
+			<list name="statisticalTestList" table="STUDY_STATISTICAL_TEST_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.StatisticalTest" 
+			  	column="id" lazy="false"/>			 			  		  
+			</list>
+			
+			<list name="responseList" table="STUDY_RESPONSE_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.ResponseNode" 
+			  	column="id" lazy="false"/>		 			  		  
+			</list>
+			
+			<list name="nominalPowerList" table="STUDY_NOMINAL_POWER_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.NominalPower" 
+			  	column="id" lazy="false"/>			 			  		  
+			</list>	
+			 			
+			<list name="sigmaScaleList" table="STUDY_SIGMA_SCALE_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.SigmaScale" 
+			  	column="id" lazy="false"/>		 			  		  
+			</list>
+			
+			<list name="quantileList" table="STUDY_QUANTILE_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.Quantile" 
+			  	column="id" lazy="false"/>	 			  		  
+			</list>
+			
+			<list name="relativeGroupSizeList" table="STUDY_RELATIVE_GROUP_SIZE_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.RelativeGroupSize" 
+			  	column="id" lazy="false"/>	 			  		  
+			</list>									
+			
+			<list name="powerMethodList" table="STUDY_POWER_METHOD_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.PowerMethod" 
+				column="id" lazy="false"/>		 			  		  
+			</list>
+			
+			<list name="sampleSizeList" table="STUDY_SAMPLE_SIZE_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid" unique="true"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.SampleSize" 
+			  	column="id" lazy="false"/>			 			  		  
+			</list>	
+						 
+		End : Mapping of List objects
+		
+		Begin : Mapping of Matrix objects			    		     	 
+	     	 <set name="matrixSet" table="STUDY_MATRIX_MAP" lazy="false">
+		        <key column="uuid"/>
+		        <many-to-many column="id" unique="true" lazy="false" class="edu.ucdenver.bios.webservice.common.domain.NamedMatrix"/>
+		    </set>
+     	 End : Mapping of Matrix objects     	 	
+     	 
+     	 Begin : Mapping of BetweenParticipantFactor object     	 		
+			<list name="betweenParticipantFactorList" table="STUDY_BETWEEN_PARTICIPANT_EFFECTS_MAP" lazy="false" cascade="all" inverse="false" mutable="true" optimistic-lock="true" embed-xml="true">
+			  <key column="uuid"/> 
+			  <list-index column="listorder"/>
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.BetweenParticipantFactor" 
+			  	column="id"/>			 		 			  		 
+			</list>
+     	 End : Mapping of BetweenParticipantFactor object
+     	 
+     	 Begin : Mapping List of ClusterNode					
+			<bag name="clusteringTree" table="STUDY_CLUSTERING_MAP" cascade="all" lazy="false">
+			  <key column="uuid"/> 			
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.ClusterNode" 
+			  	column="id"/>		 			  		  
+			</bag>	
+		End : Mapping List of ClusterNode
+		
+		Begin : Mapping of RepeatedMeasures object     	 	
+			<bag name="repeatedMeasuresTree" table="STUDY_REPEATED_MEASURES_MAP" cascade="all" lazy="false">
+			  <key column="uuid"/> 			
+			  <many-to-many class="edu.ucdenver.bios.webservice.common.domain.RepeatedMeasuresNode" 
+			  	column="id"/>		 			  		  
+			</bag>
+   	 	End : Mapping of BetweenParticipantFactor object		     							
+		
+		Begin : Mapping of Covariance object
+		    <set name="covariance" table="STUDY_COVARIANCE_MAP" lazy="false">
+		        <key column="uuid"/>
+		        <many-to-many column="id" unique="true" lazy="false" class="edu.ucdenver.bios.webservice.common.domain.Covariance"/>
+		    </set>
+	    End : Mapping of Covariance object
+	    
+	    Begin : Mapping of Hypothesis object
+		    <set name="hypothesis" table="STUDY_HYPOTHESIS_MAP" lazy="false">
+		        <key column="uuid"/>
+		        <many-to-many column="id" unique="true" lazy="false" class="edu.ucdenver.bios.webservice.common.domain.Hypothesis"/>
+		    </set>
+	    End : Mapping of Covariance object
+	    		
+		Begin : Mapping of Confidence Interval Description
+			<join table="STUDY_CONFIDENCE_MAP" optional="true">
+		        <key column="uuid" unique="true"/>
+	       	 	<many-to-one lazy="false" name="confidenceIntervalDescriptions" column="id" not-null="true" unique="true"/>
+		    </join>
+	    End : Mapping of Confidence Interval Description
+	    
+	    Begin : Mapping of Power Curve Description
+		    <join table="STUDY_POWER_CURVE_MAP" optional="true">
+		        <key column="uuid" unique="true"/>
+	       	 	<many-to-one lazy="false" name="powerCurveDescriptions" column="id" not-null="true" unique="true"/>
+		    </join>	 
+	    End : Mapping of Power Curve Description			  -->    	   
+		
+	</class>	
+</hibernate-mapping>
