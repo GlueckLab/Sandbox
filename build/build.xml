@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="testclient" default="zip" basedir=".">
+	<property environment="env"/>
+	<property name="apache.home" value="${env.APACHE_HOME}" />
+	
+	<!--This should only assign a value if the environment does NOT
+	contain one for apache.home, as ANT won't modify a property
+	once it has been set.  HOWEVER, it doesn't seem to work even if
+	the env.APACHE_HOME is not set.  I have commented it out
+	<property file="./build.properties"/>-->
+
+	<!--This is another try which doesn't work, as ANT complains
+	that you can't nest a "property" inside a "not"-->
+	<!--
+	<condition property="${apache.home}">
+	   <not>
+	   	<echo>env value not found</echo>
+	     <property file="./build.properties"/>
+	   </not>
+	</condition>-->
+	
+	<property name="module.name" value="edu.ucdenver.testclient.TestClient" />
+    <property name="source.dir" value="${basedir}/../src" />
+	<property name="explodedzip.dir" value="${basedir}/testclient" />
+	<property name="target.dir"  value="${explodedzip.dir}"/>
+	<property name="javadoc.dir" value="${basedir}/javadoc" />
+	<property name="thirdparty.dir" value="${basedir}/../../thirdparty" />
+	<property name="gwt.dir" value="${thirdparty.dir}/gwt/2.2.0/lib" />
+	<property name="gwt.visualization.dir" value="${thirdparty.dir}/gwt-visualization/1.1/lib" />
+	<property name="WebServiceCommon.dir" value="${basedir}/../../WebServiceCommon/build/bin" />
+	<property name="restlet.dir" value="${thirdparty.dir}/restlet-gwt/2.1/lib" />
+
+	<property name="zip.file" value="${ant.project.name}.zip" />
+	<property name="war.dir" value="${basedir}/../war"/>
+	<property name="checkstyle.dir" value="${thirdparty.dir}/checkstyle/5.3"/>
+	<property name="svcname" value="glimmpse" />
+	
+  	<path id="compile.path">
+  		<pathelement location="${source.dir}"/>
+  		<fileset dir="${gwt.dir}">
+  			<include name="gwt-dev.jar"/>
+<!--  			<include name="gwt-servlet-deps.jar"/> -->
+  			<include name="gwt-user.jar"/>
+  		   <include name="validation-api-1.0.0.GA.jar"/>
+  			<include name="validation-api-1.0.0.GA-sources.jar"/>
+  		</fileset>
+  		<fileset dir="${gwt.visualization.dir}">
+  			<include name="gwt-visualization.jar"/>
+  		</fileset>
+  		<fileset dir="${restlet.dir}">
+  			<include name="org.restlet.jar"/>
+  		</fileset>
+  		<fileset dir="${WebServiceCommon.dir}">
+  			<include name="edu.ucdenver.bios.webservice.common-gwt-1.0.0.jar"/>
+  		</fileset>
+  	</path>
+	
+	
+	<target name="clean" description="deletes all generated files">
+		<delete dir="${explodedzip.dir}"/>
+    	<delete dir="${javadoc.dir}"/> 
+	</target>
+
+	<target name="prepare" description="creates output directories">
+	    <mkdir dir="${target.dir}"/>
+        <mkdir dir="${javadoc.dir}"/> 
+	</target>
+	
+  	<target name="compile.gwt" 
+    	description="compiles Java source files to JavaScript">
+    	<java classname="com.google.gwt.dev.Compiler" fork="true">
+            <arg value="-logLevel" />
+            <arg value="TRACE" />
+            <arg value="-war" />
+            <arg value="${target.dir}" />
+            <arg value="-style" />
+            <arg value="obfuscated" />
+            <arg value="${module.name}" />
+            <jvmarg value="-Xmx256m" />
+            <jvmarg value="-Xss64M" />
+            <classpath>
+                <path refid="compile.path" />
+            </classpath>
+    	</java>
+  	</target>
+
+	<target name="copy" 
+		description="Copy front-end files (static html, images, etc) to the exploded zip directory" >
+		  <copy todir="${explodedzip.dir}" file="${war.dir}/TestClient.html" />
+		  <copy todir="${explodedzip.dir}" file="${war.dir}/TestClient.css" />
+	</target>
+	
+	<target name="zip" depends="clean,prepare,compile.gwt,copy"
+	  description="builds the zip file">
+	  <delete file="${zip.file}"/>
+	  <zip destfile="${zip.file}"
+	       basedir="${target.dir}"
+	    />
+	</target>
+
+	
+
+		
+	<!--This is a debugging target which prints all env variable values -->
+	<target name="showProperties">
+		<echoproperties />
+	</target>	
+	
+
+
+	
+
+</project>
